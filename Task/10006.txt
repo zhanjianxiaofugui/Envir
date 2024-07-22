@@ -1,0 +1,12 @@
+[setup]
+; MainTitle = <offx=|15|y=15|fontsize=|16|font=|1|><color=ff7700 [主线]  新手指引一></offx>
+MainTitle = 新手指引六
+MainID=1
+IsMain=0
+stepcount = 1
+title = <$TASKVAL(1).S0>
+ID= 10006
+; stepstitle1 = <color=ff7700 [主线]  新手指引六>\点击: <color=28ef01 查看详情>\等级: 等级达到<color=28ef01 48>级\ \
+stepstitle1 = <color=ff7700 [主线]  新手指引六>\目标: <color=28ef01 在逆魔古刹击杀20只怪物>\进度: <color=28ef01 {$TASKVAL(10006).I3} / 20只>\奖励: <color=28ef01 首冲礼包>\          <color=249 点击前往>
+stepDESC1 = <color=graygolden 任务：><color=green {$TASKVAL(1).S0}>\奖励：<color=green {$TASKVAL(1).I1}经验>\<color=green {$TASKVAL(1).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(1).I3}/{$TASKVAL(1).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(1).S1}>\
+

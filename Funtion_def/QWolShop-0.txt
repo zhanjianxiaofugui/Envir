@@ -1,0 +1,86 @@
+;此脚本为商城脚本，用于实现各种与商城有关的功能
+[@_商城_购买物品]
+
+
+
+[@BuyShopItem10101]
+#IF
+CheckBagSize 2
+#ACT
+give 回城石 1
+gamegold - 100
+CHOOSEPOS 2 225 445 <$PARAM(10)>
+break
+#elseACT
+messagebox 你的包裹空间不足！
+Break
+[@BuyShopItem10210]
+#IF
+CheckBagSize 2
+#ACT
+MOV N$购买物品金额 <$Param(6)>
+MULT N$购买物品金额 15000
+MOV N$TEMP <$ITEMCOUNT[超级祝福神油]>
+Take 超级祝福神油 <$str(N$TEMP)>
+INC N$TEMP <$Param(6)>
+give 超级祝福神油 <$str(N$TEMP)>
+gamegold - <$str(N$购买物品金额)>
+#elseACT
+messagebox 你的包裹空间不足！
+Break
+[@BuyShopItem10209]
+#IF
+CheckBagSize 2
+#ACT
+MOV N$购买物品金额 <$Param(6)>
+MULT N$购买物品金额 100
+MOV N$TEMP <$ITEMCOUNT[仓库扩充符]>
+Take 仓库扩充符 <$str(N$TEMP)>
+INC N$TEMP <$Param(6)>
+give 仓库扩充符 <$str(N$TEMP)>
+gamegold - <$str(N$购买物品金额)>
+#elseACT
+messagebox 你的包裹空间不足！
+Break
+[@BuyShopItem10208]
+#IF
+CheckBagSize 2
+#ACT
+MOV N$购买物品金额 <$Param(6)>
+MULT N$购买物品金额 100
+MOV N$TEMP <$ITEMCOUNT[包裹扩充符]>
+Take 包裹扩充符 <$str(N$TEMP)>
+INC N$TEMP <$Param(6)>
+give 包裹扩充符 <$str(N$TEMP)>
+gamegold - <$str(N$购买物品金额)>
+#elseACT
+messagebox 你的包裹空间不足！
+Break
+[@BuyShopItem10205]
+#IF
+CheckBagSize 2
+#ACT
+MOV N$购买物品金额 <$Param(6)>
+MULT N$购买物品金额 10000
+MOV N$TEMP <$ITEMCOUNT[枸菊帝皇丸]>
+Take 枸菊帝皇丸 <$str(N$TEMP)>
+INC N$TEMP <$Param(6)>
+give 枸菊帝皇丸 <$str(N$TEMP)>
+gamegold - <$str(N$购买物品金额)>
+#elseACT
+messagebox 你的包裹空间不足！
+Break
+[@BuyShopItem10203]
+#IF
+CheckBagSize 2
+#ACT
+MOV N$购买物品金额 <$Param(6)>
+MULT N$购买物品金额 388
+MOV N$TEMP <$ITEMCOUNT[千魔石]>
+Take 千魔石 <$str(N$TEMP)>
+INC N$TEMP <$Param(6)>
+give 千魔石 <$str(N$TEMP)>
+gamegold - <$str(N$购买物品金额)>
+#elseACT
+messagebox 你的包裹空间不足！
+Break

@@ -1,0 +1,28 @@
+[setup]
+; MainTitle = <offx=|15|y=15|fontsize=|16|font=|1|><color=ff7700 [主线]  新手指引一></offx>
+MainTitle = 新手指引一
+MainID=1
+IsMain=0
+stepcount = 10
+title = <$TASKVAL(1).S0>
+ID= 10001
+; stepstitle1 = <color=ff7700 [主线]  新手指引一>\目标: <color=28ef01 点击自动喝药>\ 奖励: <color=28ef01 获得自动喝药使用权限>\         <color=249 点击前往>
+;stepDESC1 = <color=graygolden 任务：><color=green {$TASKVAL(1).S0}>\奖励：<color=green {$TASKVAL(1).I1}经验>\<color=green {$TASKVAL(1).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(1).I3}/{$TASKVAL(1).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(1).S1}>\
+
+; stepstitle2 = <color=ff7700 [主线]  新手指引二>\目标: <color=28ef01 前往老兵获得新手助力>\ 奖励: <color=28ef01 全套基础装备，月光宝盒(小)X2，双倍经验卡X1，10万绑定金币，随机神石，回城神石>\         <color=249 点击前往>
+;stepDESC1 = <color=graygolden 任务：><color=green {$TASKVAL(1).S0}>\奖励：<color=green {$TASKVAL(1).I1}经验>\<color=green {$TASKVAL(1).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(1).I3}/{$TASKVAL(1).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(1).S1}>\
+
+stepstitle1 = <color=ff7700 [主线]  新手指引一>\目标: <color=28ef01 前往书店老板，学习技能>\奖励: 获得<color=28ef01 {$TASKVAL(10001).S3}>\          <color=249 点击前往>
+;stepDESC2 = <color=graygolden 任务：><color=green {$TASKVAL(1).S0}>\奖励：<color=green {$TASKVAL(1).I1}经验>\<color=green {$TASKVAL(1).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(1).I3}/{$TASKVAL(1).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(1).S1}>\
+
+stepstitle2 = <color=ff7700 [主线]  新手指引二>\目标: <color=28ef01 在矿区击杀5只怪物>\进度: <color=28ef01 {$TASKVAL(10001).I3} / 5只>\奖励: <color=28ef01 真魂珠>\          <color=249 点击前往>
+;stepDESC3 = <color=graygolden 任务：><color=green {$TASKVAL(1).S0}>\奖励：<color=green {$TASKVAL(1).I1}经验>\<color=green {$TASKVAL(1).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(1).I3}/{$TASKVAL(1).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(1).S1}>\
+
+stepstitle3 = <color=ff7700 [主线]  新手指引三>\目标: <color=28ef01 在将军坟击杀10只怪物>\进度: <color=28ef01 {$TASKVAL(10001).I3} / 10只>\奖励: <color=28ef01 黄岳盾>\          <color=249 点击前往>
+
+stepstitle4 = <color=ff7700 [主线]  新手指引四>\目标: <color=28ef01 在机关洞击杀15只怪物>\进度: <color=28ef01 {$TASKVAL(10001).I3} / 15只>\奖励: <color=28ef01 命魂(未觉醒)>\          <color=249 点击前往>
+
+stepstitle5 = <color=ff7700 [主线]  新手指引五>\目标: <color=28ef01 在逆魔古刹击杀20只怪物>\进度: <color=28ef01 {$TASKVAL(10001).I3} / 20只>\奖励: <color=28ef01 首冲礼包>\          <color=249 点击前往>
+
+stepstitle6 =           <color=ff7700 [许仙大陆]>\神武，微复古，小极品+5\无赞助，无会员，无日充\首充免费领，贸易自由
+

@@ -1,0 +1,558 @@
+;此脚本为功能脚本，用于实现手游小地图界面自定义触发
+[@MAIN]
+#IF
+TRUE
+#ACT
+GOTO @BOSSNEW
+
+[@BOSSNEW]
+#IF
+!EQUAL $CLIENTFLAG 1
+#ACT
+SETMINIMAPCFG 10085 <$M>#0#-10#40#-10 10 -15
+#SAY
+<Button|id=mapclose|x=822.0|y=-4.0|nimg=public/button/btn_close_01.png|_localZOrder=0|link=@关闭菜单>
+<Button|id=1|x=720.0|y=410|width=120|height=40|size=18|color=251|nimg=public/028.png|text=使用随机|link=@使用随机>
+<Button|id=2|x=720.0|y=470|width=120|height=40|size=18|color=251|nimg=public/028.png|text=使用回城|link=@使用回城>
+;<Button|id=3|x=720.0|y=470|width=120|height=40|size=18|color=251|nimg=public/028.png|text=使用空间传送|link=@使用空间随机>
+<Button|id=4|x=720.0|y=350|width=120|height=40|size=18|color=251|nimg=public/028.png|text=使用探魔球|link=@使用探魔球>
+
+#If
+CheckMapName 0
+#SAY
+<RText|id=5|x=372.0|y=249.0|color=243|width=60|size=14|text=镖局>
+<RText|id=6|x=300.0|y=305.0|color=243|width=60|size=14|text=收镖点>
+
+#If
+CheckMapName T011
+#SAY
+<RText|id=5|a=2|x=300.0|y=220.0|color=250|width=60|size=14|text=矿洞二层>
+
+#If
+CheckMapName T022
+#SAY
+<RText|id=5|a=2|x=145.0|y=400.0|color=250|width=60|size=14|text=矿洞三层>
+
+#If
+CheckMapName T015
+#SAY
+<RText|id=5|a=2|x=230.0|y=410.0|color=250|width=60|size=14|text=尸王殿>
+
+#If
+CheckMapName L004
+#SAY
+<RText|id=5|a=2|x=280.0|y=305.0|color=250|width=60|size=14|text=千尸殿>
+
+#If
+CheckMapName H071
+#SAY
+<RText|id=5|a=2|x=390.0|y=310.0|color=250|width=50|size=14|text=将军坟二层>
+
+#If
+CheckMapName H072
+#SAY
+<RText|id=5|a=2|x=445.0|y=350.0|color=250|width=50|size=14|text=将军坟三层>
+
+#If
+CheckMapName H073
+#SAY
+<RText|id=5|a=2|x=300.0|y=310.0|color=250|width=60|size=14|text=将军殿>
+
+#If
+CheckMapName H074
+#SAY
+<RText|id=5|a=2|x=585.0|y=385.0|color=250|width=60|size=14|text=秦皇陵>
+
+#If
+CheckMapName M005
+#SAY
+<RText|id=5|a=2|x=295.0|y=235.0|color=250|width=60|size=14|text=机关道二>
+
+#If
+CheckMapName M004
+#SAY
+<RText|id=5|a=2|x=110.0|y=475.0|color=250|width=60|size=14|text=中枢大殿>
+
+#If
+CheckMapName M018
+#SAY
+<RText|id=5|a=2|x=345.0|y=345.0|color=250|width=60|size=14|text=千机堂>
+
+#If
+CheckMapName N001
+#SAY
+<RText|id=5|a=2|x=205.0|y=455.0|color=250|width=60|size=14|text=蛇谷二层>
+
+#If
+CheckMapName N002
+#SAY
+<RText|id=5|a=2|x=300.0|y=455.0|color=250|width=60|size=14|text=蛇谷三层>
+
+#If
+CheckMapName N003
+#SAY
+<RText|id=5|a=2|x=412.0|y=300.0|color=250|width=60|size=14|text=蛇谷四层>
+
+#If
+CheckMapName N006
+#SAY
+<RText|id=5|a=2|x=350.0|y=390.0|color=250|width=60|size=14|text=五蛇殿>
+
+#If
+CheckMapName N008
+#SAY
+<RText|id=5|a=2|x=372.0|y=325.0|color=250|width=60|size=14|text=神秘暗殿>
+
+#If
+CheckMapName S025
+#SAY
+<RText|id=5|a=2|x=460.0|y=345.0|color=250|width=50|size=14|text=逆魔古刹二层>
+
+#If
+CheckMapName S023
+#SAY
+<RText|id=5|a=2|x=540.0|y=400.0|color=250|width=50|size=14|text=逆魔古刹三层>
+
+#If
+CheckMapName S024
+#SAY
+<RText|id=5|a=2|x=540.0|y=400.0|color=250|width=60|size=14|text=逆魔大殿>
+
+#If
+CheckMapName S026
+#SAY
+<RText|id=5|a=2|x=620.0|y=395.0|color=250|width=60|size=14|text=封魔大殿>
+
+#If
+CheckMapName J001
+#SAY
+<RText|id=5|a=2|x=620.0|y=250.0|color=250|width=60|size=14|text=青玉宫>
+
+#If
+CheckMapName J005
+#SAY
+<RText|id=5|a=2|x=145.0|y=185.0|color=250|width=60|size=14|text=生死门>
+
+#If
+CheckMapName J006
+#SAY
+<RText|id=5|a=2|x=135.0|y=235.0|color=250|width=60|size=14|text=九不回>
+<RText|id=6|a=2|x=140.0|y=180.0|color=250|width=60|size=14|text=尸上行>
+
+#If
+CheckMapName J007
+#SAY
+<RText|id=5|a=2|x=70.0|y=365.0|color=250|width=60|size=14|text=黑暗轮回>
+
+#If
+CheckMapName J009
+#SAY
+<RText|id=5|a=2|x=150.0|y=425.0|color=250|width=60|size=14|text=魔穴>
+
+#If
+CheckMapName J010
+#SAY
+<RText|id=5|a=2|x=310.0|y=390.0|color=250|width=60|size=14|text=封印之地>
+
+#If
+CheckMapName TT001
+#SAY
+<RText|id=5|a=2|x=130.0|y=320.0|color=250|width=60|size=14|text=二道廊线>
+
+#If
+CheckMapName TT002
+#SAY
+<RText|id=5|a=2|x=310.0|y=165.0|color=250|width=60|size=14|text=三角排楼>
+<RText|id=6|a=2|x=130.0|y=300.0|color=250|width=60|size=14|text=一手遮天>
+#If
+CheckMapName TT003
+#SAY
+<RText|id=5|a=2|x=320.0|y=145.0|color=250|width=60|size=14|text=二道廊线>
+<RText|id=6|a=2|x=115.0|y=300.0|color=250|width=60|size=14|text=四方擂台>
+<RText|id=7|a=2|x=512.0|y=305.0|color=250|width=60|size=14|text=四方擂台>
+
+
+#If
+CheckMapName TT004
+#SAY
+<RText|id=5|a=2|x=335.0|y=140.0|color=250|width=60|size=14|text=五行宫殿>
+<RText|id=6|a=2|x=135.0|y=310.0|color=250|width=60|size=14|text=三角排楼>
+<RText|id=7|a=2|x=540.0|y=315.0|color=250|width=60|size=14|text=三角排楼>
+
+#If
+CheckMapName TT005
+#SAY
+<RText|id=5|a=2|x=345.0|y=140.0|color=250|width=60|size=14|text=四方擂台>
+<RText|id=6|a=2|x=140.0|y=315.0|color=250|width=60|size=14|text=六道轮回>
+<RText|id=7|a=2|x=545.0|y=310.0|color=250|width=60|size=14|text=六道轮回>
+<RText|id=8|a=2|x=340.0|y=460.0|color=250|width=60|size=14|text=六道轮回>
+
+#If
+CheckMapName TT006
+#SAY
+<RText|id=5|a=2|x=350.0|y=160.0|color=250|width=60|size=14|text=七旋关卡>
+<RText|id=6|a=2|x=160.0|y=300.0|color=250|width=60|size=14|text=五行宫殿>
+<RText|id=7|a=2|x=545.0|y=300.0|color=250|width=60|size=14|text=五行宫殿>
+<RText|id=8|a=2|x=350.0|y=470.0|color=250|width=60|size=14|text=五行宫殿>
+
+#If
+CheckMapName TT007
+#SAY
+<RText|id=5|a=2|x=380.0|y=170.0|color=250|width=60|size=14|text=六道轮回>
+<RText|id=6|a=2|x=375.0|y=310.0|color=250|width=60|size=14|text=八仙纵横>
+
+#If
+CheckMapName TT008
+#SAY
+<RText|id=5|a=2|x=300.0|y=340.0|color=250|width=60|size=14|text=七旋关卡>
+<RText|id=6|a=2|x=400.0|y=300.0|color=250|width=60|size=14|text=九重云霄>
+
+#If
+CheckMapName TT009
+#SAY
+<RText|id=5|a=2|x=455.0|y=260.0|color=250|width=60|size=14|text=八仙纵横>
+
+#If
+CheckMapName MC014
+#SAY
+<RText|id=5|a=2|x=210.0|y=215.0|color=250|width=60|size=14|text=铁血魔城>
+
+#If
+CheckMapName MH001
+#SAY
+<RText|id=5|a=2|x=235.0|y=305.0|color=250|width=60|size=14|text=离开>
+<RText|id=6|a=2|x=460.0|y=295.0|color=250|width=60|size=14|text=炼狱深处>
+
+#If
+CheckMapName MH002
+#SAY
+<RText|id=5|a=2|x=355.0|y=180.0|color=250|width=60|size=14|text=炼狱三层>
+
+#If
+CheckMapName MH003
+#SAY
+<RText|id=5|a=2|x=550.0|y=372.0|color=250|width=60|size=14|text=炼狱三层>
+
+#If
+CheckMapName MH004
+#SAY
+<RText|id=5|a=2|x=285.0|y=310.0|color=250|width=60|size=14|text=炼狱三层>
+
+#If
+CheckMapName MH005
+#SAY
+<RText|id=5|a=2|x=390.0|y=205.0|color=250|width=60|size=14|text=海滨平原>
+
+#If
+CheckMapName MH006
+#SAY
+<RText|id=5|a=2|x=360.0|y=460.0|color=250|width=60|size=14|text=海滨平原>
+
+#If
+CheckMapName MH007
+#SAY
+<RText|id=5|a=2|x=515.0|y=215.0|color=250|width=60|size=14|text=海滨平原>
+
+#If
+CheckMapName MH008
+#SAY
+<RText|id=5|a=2|x=180.0|y=375.0|color=250|width=60|size=14|text=离开>
+<RText|id=6|a=2|x=500.0|y=295.0|color=250|width=60|size=14|text=炼狱五层>
+
+#If
+CheckMapName MH009
+#SAY
+<RText|id=5|a=2|x=110.0|y=465.0|color=250|width=60|size=14|text=密林>
+
+#If
+CheckMapName MH010
+#SAY
+<RText|id=5|a=2|x=550.0|y=210.0|color=250|width=60|size=14|text=密林>
+
+#If
+CheckMapName MH011
+#SAY
+<RText|id=5|a=2|x=130.0|y=265.0|color=250|width=60|size=14|text=密林>
+
+#If
+CheckMapName MH012
+#SAY
+<RText|id=5|a=2|x=175.0|y=330.0|color=250|width=60|size=14|text=离开>
+<RText|id=6|a=2|x=590.0|y=330.0|color=250|width=60|size=14|text=炼狱七层>
+
+#If
+CheckMapName MH013
+#SAY
+<RText|id=5|a=2|x=210.0|y=265.0|color=250|width=60|size=14|text=炼狱八层>
+
+#If
+CheckMapName MH014
+#SAY
+<RText|id=5|a=2|x=310.0|y=420.0|color=250|width=60|size=14|text=炼狱八层>
+
+#If
+CheckMapName MH015
+#SAY
+<RText|id=5|a=2|x=540.0|y=310.0|color=250|width=60|size=14|text=炼狱八层>
+
+#If
+CheckMapName MH016
+#SAY
+<RText|id=5|a=2|x=495.0|y=255.0|color=250|width=60|size=14|text=幽静空间>
+#If
+CheckMapName MH017
+#SAY
+<RText|id=5|a=2|x=480.0|y=310.0|color=250|width=60|size=14|text=幽静空间>
+#If
+CheckMapName MH018
+#SAY
+<RText|id=5|a=2|x=510.0|y=230.0|color=250|width=60|size=14|text=幽静空间>
+
+#If
+CheckMapName MH019
+#SAY
+<RText|id=5|a=2|x=560.0|y=380.0|color=250|width=60|size=14|text=离开>
+<RText|id=6|a=2|x=155.0|y=220.0|color=250|width=60|size=14|text=炼狱十层>
+
+#If
+CheckMapName MH020
+#SAY
+<RText|id=5|a=2|x=145.0|y=260.0|color=250|width=60|size=14|text=炼狱十一层>
+#If
+CheckMapName MH021
+#SAY
+<RText|id=5|a=2|x=585.0|y=450.0|color=250|width=60|size=14|text=炼狱十一层>
+#If
+CheckMapName MH022
+#SAY
+<RText|id=5|a=2|x=510.0|y=300.0|color=250|width=60|size=14|text=炼狱十一层>
+
+
+#If
+CheckMapName MH023
+#SAY
+<RText|id=5|a=2|x=460.0|y=330.0|color=250|width=60|size=14|text=投石谷>
+#If
+CheckMapName MH024
+#SAY
+<RText|id=5|a=2|x=610.0|y=335.0|color=250|width=60|size=14|text=投石谷>
+#If
+CheckMapName MH025
+#SAY
+<RText|id=5|a=2|x=150.0|y=310.0|color=250|width=60|size=14|text=投石谷>
+
+#If
+CheckMapName MH026
+#SAY
+<RText|id=5|a=2|x=598.0|y=320.0|color=250|width=60|size=14|text=离开>
+<RText|id=6|a=2|x=330.0|y=340.0|color=250|width=60|size=14|text=炼狱十三层>
+
+#If
+CheckMapName MH027
+#SAY
+<RText|id=5|a=2|x=645.0|y=205.0|color=250|width=60|size=14|text=炼狱十四层>
+#If
+CheckMapName MH028
+#SAY
+<RText|id=5|a=2|x=300.0|y=240.0|color=250|width=60|size=14|text=炼狱十四层>
+#If
+CheckMapName MH029
+#SAY
+<RText|id=5|a=2|x=560.0|y=305.0|color=250|width=60|size=14|text=炼狱十四层>
+
+#If
+CheckMapName MH030
+#SAY
+<RText|id=5|a=2|x=315.0|y=230.0|color=250|width=60|size=14|text=炼狱十五层>
+#If
+CheckMapName MH031
+#SAY
+<RText|id=5|a=2|x=420.0|y=440.0|color=250|width=60|size=14|text=炼狱十五层>
+#If
+CheckMapName MH032
+#SAY
+<RText|id=5|a=2|x=295.0|y=240.0|color=250|width=60|size=14|text=炼狱十五层>
+
+#If
+CheckMapName MH033
+#SAY
+<RText|id=5|a=2|x=200.0|y=415.0|color=250|width=60|size=14|text=红池>
+#If
+CheckMapName MH034
+#SAY
+<RText|id=5|a=2|x=480.0|y=410.0|color=250|width=60|size=14|text=红池>
+#If
+CheckMapName MH035
+#SAY
+<RText|id=5|a=2|x=320.0|y=350.0|color=250|width=60|size=14|text=红池>
+
+#If
+CheckMapName MH036
+#SAY
+<RText|id=5|a=2|x=270.0|y=255.0|color=250|width=60|size=14|text=离开>
+<RText|id=6|a=2|x=510.0|y=275.0|color=250|width=60|size=14|text=炼狱十七层>
+
+#If
+CheckMapName MH037
+#SAY
+<RText|id=5|a=2|x=130.0|y=305.0|color=250|width=60|size=14|text=炼狱十八层>
+#If
+CheckMapName MH038
+#SAY
+<RText|id=5|a=2|x=180.0|y=305.0|color=250|width=60|size=14|text=炼狱十八层>
+#If
+CheckMapName MH039
+#SAY
+<RText|id=5|a=2|x=590.0|y=325.0|color=250|width=60|size=14|text=炼狱十八层>
+
+#If
+CheckMapName MH040
+#SAY
+<RText|id=5|a=2|x=220.0|y=316.0|color=250|width=60|size=14|text=百木峰>
+
+#If
+CheckMapName MH043
+#SAY
+<RText|id=5|a=2|x=330.0|y=250.0|color=250|width=60|size=14|text=松山>
+<RText|id=6|a=2|x=240.0|y=435.0|color=250|width=60|size=14|text=离开>
+
+#If
+CheckMapName MH044
+#SAY
+<RText|id=5|a=2|x=530.0|y=230.0|color=250|width=60|size=14|text=炼狱二十一层>
+<RText|id=6|a=2|x=375.0|y=225.0|color=250|width=60|size=14|text=离开>
+
+#If
+CheckMapName MH045
+#SAY
+<RText|id=5|a=2|x=360.0|y=220.0|color=250|width=60|size=14|text=炼狱二十二层>
+
+#If
+CheckMapName MH048
+#SAY
+<RText|id=5|a=2|x=415.0|y=200.0|color=250|width=60|size=14|text=炼狱二十三层>
+
+#If
+CheckMapName MH051
+#SAY
+<RText|id=5|a=2|x=235.0|y=200.0|color=250|width=60|size=14|text=桃园>
+
+#If
+CheckMapName MC001
+#SAY
+<RText|id=5|a=2|x=280.0|y=190.0|color=250|width=60|size=14|text=地下魔域二层>
+
+#If
+CheckMapName MC002
+#SAY
+<RText|id=5|a=2|x=505.0|y=230.0|color=250|width=60|size=14|text=地下魔域一层>
+<RText|id=6|a=2|x=545.0|y=375.0|color=250|width=60|size=14|text=地下魔域三层>
+
+#If
+CheckMapName MC003
+#SAY
+<RText|id=5|a=2|x=560.0|y=385.0|color=250|width=60|size=14|text=地下魔域二层>
+<RText|id=6|a=2|x=440.0|y=295.0|color=250|width=60|size=14|text=地下魔域四层>
+<RText|id=7|a=2|x=605.0|y=210.0|color=250|width=60|size=14|text=地下魔域四层>
+
+#If
+CheckMapName MC004
+#SAY
+<RText|id=5|a=2|x=420.0|y=325.0|color=250|width=60|size=14|text=地下魔域三层>
+<RText|id=6|a=2|x=280.0|y=435.0|color=250|width=60|size=14|text=地下魔域五层>
+<RText|id=7|a=2|x=570.0|y=190.0|color=250|width=60|size=14|text=地下魔域三层>
+
+#If
+CheckMapName MC005
+#SAY
+<RText|id=5|a=2|x=640.0|y=175.0|color=250|width=60|size=14|text=地下魔域四层>
+<RText|id=6|a=2|x=220.0|y=445.0|color=250|width=60|size=14|text=地下魔域六层>
+
+#If
+CheckMapName MC006
+#SAY
+<RText|id=5|a=2|x=260.0|y=340.0|color=250|width=60|size=14|text=地下魔域五层>
+<RText|id=6|a=2|x=400.0|y=310.0|color=250|width=60|size=14|text=心之魔域>
+<RText|id=7|a=2|x=330.0|y=255.0|color=250|width=60|size=14|text=心之魔域>
+<RText|id=8|a=2|x=230.0|y=215.0|color=250|width=60|size=14|text=地下魔域七层>
+
+#If
+CheckMapName MC007
+#SAY
+<RText|id=5|a=2|x=170.0|y=430.0|color=250|width=60|size=14|text=地下魔域八层>
+<RText|id=6|a=2|x=610.0|y=200.0|color=250|width=60|size=14|text=地下魔域六层>
+
+#If
+CheckMapName MC008
+#SAY
+<RText|id=5|a=2|x=210.0|y=200.0|color=250|width=60|size=14|text=地下魔域七层>
+<RText|id=6|a=2|x=460.0|y=450.0|color=250|width=60|size=14|text=密探>
+
+[@使用探魔球]
+#IF
+CHECKITEM 探魔球 1
+#ACT
+GMEXECUTE 使用物品 探魔球
+BREAK
+#ELSEACT
+SENDMSG 19 你没有【探魔球】
+BREAK
+[@使用空间随机]
+#IF
+CHECKITEM 空间传送石 1
+#ACT
+GMEXECUTE 使用物品 空间传送石
+BREAK
+#ELSEACT
+SENDMSG 19 你没有【空间传送石】
+BREAK
+
+[@使用回城]
+#IF
+CHECKITEM 回城石 1
+#ACT
+GMEXECUTE 使用物品 回城石
+BREAK
+#IF
+CHECKITEM 回城石1 1
+#ACT
+GMEXECUTE 使用物品 回城石1
+BREAK
+#ELSEACT
+SENDMSG 19 你没有回城道具！
+BREAK
+
+
+[@使用随机]
+#IF
+CHECKITEM 随机神石 1
+#ACT
+GMEXECUTE 使用物品 随机神石
+BREAK
+#IF
+CHECKITEM 随机神石1 1
+#ACT
+GMEXECUTE 使用物品 随机神石1
+BREAK
+#ELSEACT
+SENDMSG 19 你没有随机道具！
+BREAK
+
+[@使用探魔球]
+#IF
+CHECKITEM 探魔球 1
+#ACT
+GMEXECUTE 使用物品 探魔球
+BREAK
+#IF
+CHECKITEM 永久探魔球 1
+#ACT
+GMEXECUTE 使用物品 永久探魔球
+BREAK
+#ELSEACT
+SENDMSG 19 你没有探魔球！
+BREAK
+
+[@关闭菜单]
+#ACT
+OPENUI 1101 2

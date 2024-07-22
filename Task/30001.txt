@@ -1,0 +1,40 @@
+[setup]
+;主任务标题  显示在客户端树型框主题标上
+MainTitle=新手指引
+;主任务ID值
+MainID=1
+;是否为主线任务 0=主线 1=支线 客户端会自动在该任务标题前增加上(主) (支)  文字进行区分
+IsMain=0
+;本任务内几个步骤
+stepcount = 10
+;任务标题
+title = 新手指引
+;任务ID值
+ID = 30001
+;任务描述
+; stepDESC1 = <color=faa755 任务：设置自动喝药>\描述：\   <color= 打开自动喝药界面，勾选最低消耗的><color=00ff00 回血保护方式>\<color= 并设置成><color=00ff00 自动喝药>
+;主界面小任务框里的标题
+; stepstitle1 =  <去购物商场/@@goto 7 购物商场 53,31>  <color=red 这个是自动跑任务坐标>
+; stepstitle1 = 目标: <color= 设置自动喝药>\<color=00ff00 打开自动喝药界面设置>
+
+
+; stepDESC2 = <color=faa755 任务：寻找老兵>\奖励:\   <color=28ef01 双倍经验卡X1，10万绑定金币，月光宝盒小X2，>\<color=28ef01 随机神石X1，回程神石X1>\<点击前往/@@goto 1 老兵 251,249>
+; stepstitle2 = 目标: <color= 寻找老兵>\<点击前往/@@goto 1 老兵 251,249>
+
+stepDESC1 = <color=faa755 任务：前往书店老板，学习<color=28ef01 <$TASKVAL(30001).S3>>>\描述:\    <点击前往/@@goto 1 老兵 238,254>
+stepstitle1 = 目标: 前往书店老板，学习\<color=28ef01 <$TASKVAL(30001).S3>>, <点击前往/@@goto 0 书店老板 494,245>
+
+stepDESC2 = <color= 前往矿区击杀5只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/5只\奖励：\    <color=28ef01 初级魂珠*1>
+stepstitle2 = 目标: <color= 前往矿区击杀5只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/5只   <点击前往/@@goto 0 中州老兵 472,224>
+
+stepDESC3 = <color= 任务：前往将军坟击杀10只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/10只\奖励：\    <color=28ef01 初级盾牌*1>
+stepstitle3 = 目标: <color= 前往将军坟击杀10只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/10只   <点击前往/@@goto 0 中州老兵 472,224>
+
+stepDESC4 = <color= 任务：前往机关洞击杀15只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/15只\奖励：\    <color=28ef01 初级命魂*1>
+stepstitle4 = 目标: <color= 前往机关洞击杀15只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/15只   <点击前往/@@goto 0 中州老兵 472,224>
+
+stepDESC5 = <color= 任务：前往逆魔古刹击杀20只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/20只\奖励：\    <color=28ef01 首充礼包或者50万绑定金币+命魂石*10>
+stepstitle5 = 目标: <color= 前往逆魔古刹击杀20只怪>\进度: <color=28ef01 <$TASKVAL(30001).I0>>/20只   <点击前往/@@goto 0 中州老兵 472,224>
+
+stepDESC6 = <color=faa755 领取新手引导奖励>\描述:\    <color= 在‘首冲礼包活动’处领取50万绑定金币+命魂石*10>
+stepstitle6 = <color= 在‘首冲礼包活动’处领取>\<color= 50万绑定金币+命魂石*10>

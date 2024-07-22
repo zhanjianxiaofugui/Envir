@@ -1,0 +1,12 @@
+[setup]
+; MainTitle = <offx=|15|y=15|fontsize=|16|font=|1|><color=ff7700 [主线]  新手指引一></offx>
+MainTitle = 每日任务
+MainID=1
+IsMain=0
+stepcount = 1
+ID= 20002
+stepstitle1 = <color=ff7700 每日任务>\<color=28ef01 炼狱第7层杀怪><color=28ef01 {$TASKVAL(20002).I3} / 100只>\<color=28ef01 炼狱第8层杀怪><color=28ef01 {$TASKVAL(20002).I4} / 100只>\<color=28ef01 炼狱第9层杀怪><color=28ef01 {$TASKVAL(20002).I5} / 100只>\奖励: <color=28ef01 5000W经验+3000绑定元宝>\          <color=249 点击前往>
+; stepstitle1 = <color=ff7700 [主线]  新手指引六>\目标: <color=28ef01 等级达到48级>\进度: <color=28ef01 {$TASKVAL(10001).I3} / {$TASKVAL(10001).I4}级>\奖励: <color=28ef01 {$TASKVAL(10001).S5}>\          <color=249 点击进往>
+; stepstitle1 = <Text|color=70|size=16|text=[日常]  每日奖励>\ <Text|y=45|color=255|size=14|text=点击: ><Text|x=65|y=43|color=222|size=16|text=查看详情|link=@jff><Text|y=68|color=255|size=14|text=刷新时间剩余:><Text|x=120|y=66|color=222|size=16|text={$TASKVAL(20001).I1}分钟|link=@1>\ \
+;stepDESC1 = <color=graygolden 任务：><color=green {$TASKVAL(1).S0}>\奖励：<color=green {$TASKVAL(1).I1}经验>\<color=green {$TASKVAL(1).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(1).I3}/{$TASKVAL(1).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(1).S1}>\
+

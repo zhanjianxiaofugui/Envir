@@ -1,0 +1,10 @@
+[setup]
+MainTitle = 五色任务--<$TASKVAL(5).S0>
+MainID=1
+IsMain=1
+stepcount = 1
+title = <$TASKVAL(5).S0>
+ID= 5
+stepstitle1 = 任务：<color=green 击杀{$TASKVAL(5).S0}>\奖励：<color=green {$TASKVAL(5).I1}经验>\<color=green {$TASKVAL(5).I2}手册经验>\进度：<color=green 当前击杀><color=FF9400 {$TASKVAL(5).I3}/{$TASKVAL(5).I4}><color=green 只>\位置：<color=AFFF00 {$TASKVAL(5).S1}>\
+stepDESC1 = <color=graygolden 任务：><color=green {$TASKVAL(5).S0}>\奖励：<color=green {$TASKVAL(5).I1}经验>\<color=green {$TASKVAL(5).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(5).I3}/{$TASKVAL(5).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(5).S1}>\
+

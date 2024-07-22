@@ -1,0 +1,14 @@
+[setup]
+; MainTitle = <offx=|15|y=15|fontsize=|16|font=|1|><color=ff7700 [主线]  新手指引一></offx>
+MainTitle = 新手指引五
+MainID=1
+IsMain=0
+stepcount = 1
+title = <$TASKVAL(1).S0>
+ID= 10005
+; stepstitle1 = <color=ff7700 [主线]  新手指引五>\点击: <color=28ef01 查看详情>\等级: 等级达到<color=28ef01 46>级\ \
+stepstitle1 = <color=ff7700 [主线]  新手指引五>\目标: <color=28ef01 在机关洞击杀15只怪物>\进度: <color=28ef01 {$TASKVAL(10005).I3} / 15只>\奖励: <color=28ef01 命魂(未觉醒)>\          <color=249 点击前往>
+
+; stepstitle1 = <Text|color=70|size=16|text=[日常]  每日奖励>\ <Text|y=45|color=255|size=14|text=点击: ><Text|x=65|y=43|color=222|size=16|text=查看详情|link=@jff><Text|y=68|color=255|size=14|text=刷新时间剩余:><Text|x=120|y=66|color=222|size=16|text={$TASKVAL(20001).I1}分钟|link=@1>\ \
+stepDESC1 = <color=graygolden 任务：><color=green {$TASKVAL(1).S0}>\奖励：<color=green {$TASKVAL(1).I1}经验>\<color=green {$TASKVAL(1).I2}手册经验>\进度：<color=green 当前击杀>{$TASKVAL(1).I3}/{$TASKVAL(1).I4}<color=green 只>\位置：<color=AFFF00 {$TASKVAL(1).S1}>\
+

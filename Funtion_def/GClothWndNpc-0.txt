@@ -1,0 +1,41 @@
+;此脚本为功能脚本，用于实现F10界面自定义触发
+
+[@MAIN]
+#ACT
+SETPLAYCFG F10SHOW 1
+SETPLAYCFG F10SHOWTIP 1
+SETPLAYCFG F10PACKIDX 3
+SETPLAYCFG F10INDEX 63130
+;SETPLAYCFG F10X -300
+;SETPLAYCFG F10Y -100
+SETPLAYCFG RUN 0
+SETPLAYCFG F10NAME 1
+SETPLAYCFG F10CLOSEBTN 1
+GOTO @端游装备属性
+
+
+[@端游装备属性]
+#IF
+!EQUAL <$HUMAN(当前佩戴法宝)> 
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\短寿法宝.ini <$HUMAN(当前佩戴法宝)> <$JOB>第<$HUMAN(<$HUMAN(当前佩戴法宝)>重数)>阶 S$角色显示法宝
+split <$STR(S$角色显示法宝)> | S$角色显示法宝
+
+#IF
+EQUAL $CLIENTFLAG 1
+#SAY
+<@@!BTN 3,63206,3,63206,3,63217,450,-10,关闭/@关闭界面>\
+; <offx=|190|y=|20|><@@!PIC2 3,63129,0,0><|off>\
+<offx=|290|y=|40|fontsize=|18|font=|0|><color=GREEN <$username>><|off>\
+
+#IF
+!EQUAL <$HUMAN(当前佩戴法宝)> 
+#say
+<offx=|155|y=|-120|><@@!PIC2 3,<$STR(S$角色显示法宝_2)>,0,0><|off>\
+
+[@关闭界面]
+#IF
+TRUE
+#ACT
+OpenUi 101 2
+BREAK

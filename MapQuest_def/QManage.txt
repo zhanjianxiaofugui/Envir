@@ -1,0 +1,2325 @@
+[@GlobalVar]
+#CALL [\登陆设置\全局变量.txt] @全局变量
+
+[@GuildVar]
+#CALL [\登陆设置\行会变量.txt] @行会变量
+
+[@Initialize]
+#CALL [\登陆设置\个人变量.txt] @个人变量
+
+#IF
+TRUE
+#ACT
+MOV D97 1
+
+[@Resume]
+;每日
+#IF
+RANDOM 1
+#ACT
+GOTO @Login
+BREAK
+
+[@Login]
+#IF
+TRUE
+#ACT
+#CALL [\登陆设置\按钮界面.txt] @按钮界面
+#CALL [\登陆设置\新手登陆.txt] @新手登陆
+#CALL [\登陆设置\登陆执行.txt] @登陆执行
+#CALL [\封号系统\在线封号.txt] @临时封号
+#CALL [\封号系统\封号系统.txt] @绿色封号
+#CALL [\登陆设置\登陆限制.txt] @登陆限制
+;#CALL [\登陆设置\主线任务.txt] @主线任务
+
+
+
+
+
+[@LoginNotice]
+#IF
+TRUE
+#ACT
+SetOnTimer 1 1
+DelayCall 5 @测试区寄存活动发奖
+
+[@测试区寄存活动发奖]
+#If
+True
+#ACt
+MOV S1 ..\QuestDiary\寄存活动记录.txt
+MOV N$寄存记录行数 <$TXTLINE(<$STR(S1)>)>
+MOV N$TEMP 0
+for N$TEMP > <$STR(N$寄存记录行数)>
+ReadRandomStr ..\QuestDiary\寄存活动记录.txt S1 <$STR(N$TEMP)>
+goto @判断是否账号正确2
+INC N$TEMP 1
+EndFor
+
+
+[@判断是否账号正确2]
+#IF
+!POS <$STR(S1)> ☆<$ACCOUNT>
+#ACT
+break
+#IF
+true
+#ACT
+SPLIT <$STR(S1)> | S$寄存记录分割
+Mailgive 绑定元宝 <$STR(S$寄存记录分割_2)>
+Sendmail 1 寄存活动 你好<$Username>:测试区寄存活动奖励物品已发放! 
+DELVARLIST <$STR(S1)> ..\QuestDiary\寄存活动记录.txt
+
+
+
+[@timer2扣钱]
+#If
+True
+#Act
+MOV N$花费金币值 50000
+MOV N$金币数量 <$BINDGOLD>
+INC N$金币数量 <$GOLDCOUNT>
+#If
+SMALL <$BINDGOLD> <$STR(N$花费金币值)>
+#Act
+DEC N$花费金币值 <$BINDGOLD>
+money 绑定金币 - <$BINDGOLD>
+money 金币 - <$STR(N$花费金币值)>
+#elseACT
+money 绑定金币 - <$STR(N$花费金币值)>
+Break
+
+[@OnTimer2]
+#If
+True
+#Act
+MOV N$花费金币值 50000
+MOV N$金币数量 <$BINDGOLD>
+INC N$金币数量 <$GOLDCOUNT>
+MOV N$判断保护回城地图类别 0
+
+#IFONE
+Equal <$STR(S$保护回城地图)> N001
+Equal <$STR(S$保护回城地图)> N002
+Equal <$STR(S$保护回城地图)> N003
+#ACt
+MOV N$判断保护回城地图类别 1
+
+#IFONE
+Equal <$STR(S$保护回城地图)> S025
+Equal <$STR(S$保护回城地图)> S023
+Equal <$STR(S$保护回城地图)> S024
+#ACt
+MOV N$判断保护回城地图类别 2
+
+#IFONE
+Equal <$STR(S$保护回城地图)> J001
+Equal <$STR(S$保护回城地图)> J005
+Equal <$STR(S$保护回城地图)> J006
+#ACt
+MOV N$判断保护回城地图类别 3
+
+
+#IFONE
+Equal <$STR(S$保护回城地图)> TT001
+Equal <$STR(S$保护回城地图)> TT002
+Equal <$STR(S$保护回城地图)> TT003
+Equal <$STR(S$保护回城地图)> TT004
+Equal <$STR(S$保护回城地图)> TT005
+Equal <$STR(S$保护回城地图)> TT006
+Equal <$STR(S$保护回城地图)> TT007
+
+#ACt
+MOV N$判断保护回城地图类别 4
+
+#IFONE
+Equal <$STR(S$保护回城地图)> MC001
+Equal <$STR(S$保护回城地图)> MC002
+Equal <$STR(S$保护回城地图)> MC003
+Equal <$STR(S$保护回城地图)> MC004
+Equal <$STR(S$保护回城地图)> MC005
+Equal <$STR(S$保护回城地图)> MC006
+#ACt
+MOV N$判断保护回城地图类别 5
+
+#IFONE
+Equal <$STR(S$保护回城地图)> MH001
+Equal <$STR(S$保护回城地图)> MH002
+Equal <$STR(S$保护回城地图)> MH003
+Equal <$STR(S$保护回城地图)> MH004
+Equal <$STR(S$保护回城地图)> MH005
+Equal <$STR(S$保护回城地图)> MH006
+Equal <$STR(S$保护回城地图)> MH007
+Equal <$STR(S$保护回城地图)> MH008
+Equal <$STR(S$保护回城地图)> MH009
+Equal <$STR(S$保护回城地图)> MH010
+Equal <$STR(S$保护回城地图)> MH011
+Equal <$STR(S$保护回城地图)> MH012
+Equal <$STR(S$保护回城地图)> MH013
+Equal <$STR(S$保护回城地图)> MH014
+Equal <$STR(S$保护回城地图)> MH015
+Equal <$STR(S$保护回城地图)> MH016
+Equal <$STR(S$保护回城地图)> MH017
+Equal <$STR(S$保护回城地图)> MH018
+Equal <$STR(S$保护回城地图)> MH020
+Equal <$STR(S$保护回城地图)> MH021
+Equal <$STR(S$保护回城地图)> MH022
+Equal <$STR(S$保护回城地图)> MH023
+Equal <$STR(S$保护回城地图)> MH024
+Equal <$STR(S$保护回城地图)> MH025
+Equal <$STR(S$保护回城地图)> MH027
+Equal <$STR(S$保护回城地图)> MH028
+Equal <$STR(S$保护回城地图)> MH029
+Equal <$STR(S$保护回城地图)> MH030
+Equal <$STR(S$保护回城地图)> MH031
+Equal <$STR(S$保护回城地图)> MH032
+Equal <$STR(S$保护回城地图)> MH033
+Equal <$STR(S$保护回城地图)> MH034
+Equal <$STR(S$保护回城地图)> MH035
+#ACt
+MOV N$判断保护回城地图类别 6
+
+#IF
+Equal <$STR(S$保护回城地图)> MC014
+#ACt
+MOV N$判断保护回城地图类别 7
+
+
+
+#IF
+Equal N$判断保护回城地图类别 0
+#ACt
+Break
+#IF
+Equal <$HUMAN(自动巡航地图<$STR(N$判断保护回城地图类别)>)> 0
+#ACt
+break
+#IF
+Equal <$human(自动巡航自动回城)> 1
+large N$金币数量 <$STR(N$花费金币值)>
+#ACT
+GOTO @timer2扣钱
+Map <$STR(S$保护回城地图)>
+SETOFFTIMER 2
+DelayCall 1 @延迟执行ONTIMER2
+Break
+#If
+Equal <$human(自动巡航自动回城)> 1
+EQUAL N$金币数量 <$STR(N$花费金币值)>
+#Act
+GOTO @timer2扣钱
+Map <$STR(S$保护回城地图)>
+SETOFFTIMER 2
+DelayCall 1 @延迟执行ONTIMER2
+Break
+[@延迟执行ONTIMER2]
+#If
+True
+#Act
+MOV S$挂机 开启
+addFunBtn 0 1 8011 0 " " 0 0  ;挂机 
+OpenAutoKill 1
+sendmsg 7 开启自动挂机！
+MOV S$自动巡航生效flag 关闭
+#CALL [\大哥新加\挂机自动巡航.txt] @自动巡航开始
+
+[@OnTimer3]
+#If
+True
+#Act
+MOV N$花费金币值 50000
+MOV N$金币数量 <$BINDGOLD>
+INC N$金币数量 <$GOLDCOUNT>
+#If
+Equal <$human(自动巡航自动回城)> 1
+large N$金币数量 <$STR(N$花费金币值)>
+#Act
+MOV S$自动巡航生效flag 生效
+sendmsg 15 自动巡航已生效！
+sendmsg 6 自动巡航已生效
+SETOFFTIMER 3
+Break
+#If
+Equal <$human(自动巡航自动回城)> 1
+EQUAL N$金币数量 <$STR(N$花费金币值)>
+#Act
+MOV S$自动巡航生效flag 生效
+sendmsg 15 自动巡航已生效！
+sendmsg 6 自动巡航已生效
+SETOFFTIMER 3
+Break
+[@OnTimer4]
+#IF
+CHECKLEVELEX > 52
+#ACT
+SETOFFTIMER 4
+CalcVar Human 泡点状态 = 暂未开启
+SENDMSG 15 等级超过52级，泡点结束
+BREAK
+
+#IF
+#ACT
+MOV N$随身免费经验 5000
+#IF
+#ACT
+CHANGEEXP + <$STR(N$随身免费经验)>
+
+[@OnTimer5]
+#IF
+CHECKLEVELEX > 57
+#ACT
+SETOFFTIMER 5
+CalcVar Human 泡点状态 = 暂未开启
+SENDMSG 15 等级达到58级，泡点结束
+BREAK
+
+#IF
+TRUE
+#ACT
+MOV N$货币 <$BINDGAMEGOLD>
+INC N$货币 <$GAMEGOLD>
+
+#IF
+SMALL N$货币 100
+CHECKLEVELEX > 52
+#ACT
+SETOFFTIMER 5
+SETOFFTIMER 4
+CalcVar Human 泡点状态 = 暂未开启
+SENDMSG 15 元宝不足，且等级已超过52级，自动关闭泡点
+BREAK
+
+; #IF
+; CHECKGAMEGOLD < 100
+; CHECKLEVELEX > 52
+; #ACT
+; SETOFFTIMER 5
+; SETOFFTIMER 4
+; CalcVar Human 泡点状态 = 暂未开启
+; SENDMSG 15 元宝不足，且等级已超过52级，自动关闭泡点
+; BREAK
+
+#IF
+; CHECKGAMEGOLD > 99
+LARGE N$货币 99
+#ELSEACT
+SETOFFTIMER 5
+SETONTIMER 4 1
+CalcVar Human 泡点状态 = 免费泡点开启中
+SENDMSG 15 元宝不足，自动切换为免费泡点
+BREAK
+
+#IF
+TRUE
+#ACT
+MOV N$随身收费经验 500000
+; GAMEGOLD - 100
+
+;扣元宝,优先扣绑定元宝
+#IF
+!CHECKMONEY 绑定元宝 < 100
+#ACT
+MONEY 绑定元宝 - 100
+#ELSEACT
+MOV N$剩余 100
+DEC N$剩余 <$BINDGAMEGOLD>
+MONEY 绑定元宝 - <$BINDGAMEGOLD>
+MONEY 元宝 - <$STR(N$剩余)>
+
+
+#IF
+TRUE
+#ACT
+CHANGEEXP + <$STR(N$随身收费经验)>
+
+[@OnTimer6]
+;-------------用来触发各种充值页面的逻辑
+#IF
+EQUAL <$HUMAN(累计充值)> 1
+#Act
+#CALL [\顶部按钮\开荒豪礼.txt] @开荒礼包
+
+#IF
+EQUAL <$HUMAN(累计充值)> 2
+#Act
+#CALL [\顶部按钮\累充返利.txt] @累充返利
+
+
+[@OnTimer7]
+;-------------用来触发踢出焰火屠魔
+#IF
+CheckMapName HD001
+#ACT
+mapMOVE 0 473 221
+SETOFFTIMER 7
+SendUi 108 close
+break
+#elseACT
+SETOFFTIMER 7
+
+[@OnTimer8]
+
+#IF
+EQUAL S$挂机 开启
+EQUAL <$HUMAN(自动巡航自动随机)> 1
+CHECKITEM 随机神石 1
+!Large <$LONGDATE> <$STR(N$自动巡航关闭时间戳)>
+#ACT
+GMEXECUTE 使用物品 随机神石
+#elseACT
+SETOFFTIMER 8
+[@OnTimer9]
+#IF
+True
+#ACT
+mapMOVE 2 222 438
+SendUi 108 close
+SETOFFTIMER 9
+BREAK
+[@OnTimer10]
+#IF
+True
+#ACT
+MOV N$当前血量比 <$HP>
+MULT N$当前血量比 100
+DIV N$当前血量比 <$MAXHP>
+#IF
+large N$当前血量比 59
+#ACT
+#CALL [\封号系统\在线封号.txt] @临时封号
+SETOFFTIMER 10
+BREAK
+
+;升仙渡劫
+[@OnTimer11]
+#If
+equal $CLIENTFLAG 1
+#act
+goto @端游雷劈
+#elseact
+goto @手游雷劈
+
+[@端游雷劈]
+#If
+Large N$雷劈次数 0
+#Act
+DELFH 10
+ADDFH 10 3 50701 -188 0 HUM
+MOV N$TEMP <$HP>
+DEC N$TEMP <$STR(N$雷劈次数)>
+Movr N$当前减少数量 0 <$STR(N$TEMP)>
+humanhp - <$STR(N$当前减少数量)>
+SendNumEff 1 <$STR(N$当前减少数量)> $x $y
+DelayGoto 2200 @端游删除雷劈特效
+DEC N$雷劈次数 1
+break
+
+#If
+True
+#Act
+DELFH 10
+SETOFFTIMER 11
+break
+
+[@手游雷劈]
+#If
+Large N$雷劈次数 0
+#Act
+SendUi 106 close
+MOV S$UI3 <Frames|id=1|x=-880.0|y=-455.0|count=27|suffix=.png|speed=9|prefix=<$str(S$雷劈素材地址)>|loop=-1|scale=1>
+SendUi 106 <$STR(S$UI3)>
+MOV N$TEMP <$HP>
+DEC N$TEMP <$STR(N$雷劈次数)>
+Movr N$当前减少数量 0 <$STR(N$TEMP)>
+humanhp - <$STR(N$当前减少数量)>
+SendNumEff 1 <$STR(N$当前减少数量)> $x $y
+DelayGoto 2200 @删除雷劈特效
+DEC N$雷劈次数 1
+break
+
+#If
+True
+#Act
+SETOFFTIMER 11
+break
+
+[@端游删除雷劈特效];todo
+#If
+Equal S$渡劫结果 失败
+Equal N$雷劈次数 0
+#Act
+MOV N$TEMP <$HP>
+DEC N$TEMP 1
+humanhp = 1
+SendNumEff 1 <$STR(N$TEMP)> $x $y
+DELFH 10
+Break
+#If
+Equal S$渡劫结果 成功
+Equal N$雷劈次数 0
+#Act
+MOV N$TEMP <$HP>
+DEC N$TEMP 1
+humanhp = 1
+SendNumEff 1 <$STR(N$TEMP)> $x $y
+Calcvar HUMAN 升仙级数 = 1
+Savevar HUMAN 升仙级数
+Calcvar HUMAN 升仙阶数 + 1
+Savevar HUMAN 升仙阶数
+DELFH 10
+
+Break
+[@删除雷劈特效]
+#If
+Equal S$渡劫结果 失败
+Equal N$雷劈次数 0
+#Act
+MOV N$TEMP <$HP>
+DEC N$TEMP 1
+KILL 0
+SendNumEff 1 <$STR(N$TEMP)> $x $y
+SendUi 106 close
+messagebox 渡劫失败。
+Break
+#If
+Equal S$渡劫结果 成功
+Equal N$雷劈次数 0
+#Act
+MOV N$TEMP <$HP>
+DEC N$TEMP 1
+humanhp = 1
+SendNumEff 1 <$STR(N$TEMP)> $x $y
+SendUi 106 close
+Calcvar HUMAN 升仙级数 = 1
+Savevar HUMAN 升仙级数
+Calcvar HUMAN 升仙阶数 + 1
+Savevar HUMAN 升仙阶数
+messagebox 渡劫成功！
+#CALL [\封号系统\在线封号.txt] @临时封号
+#CALL [\封号系统\封号系统.txt] @绿色封号
+Break
+#If
+True
+#Act
+SendUi 106 close
+[@清理死人]
+#IF
+!ISDOShop
+ISOFFLINE
+#ACT
+KICK
+BREAK
+
+
+[@清理土城宝宝]
+#IF
+!ISDOShop
+ISOFFLINE
+#ACT
+KICK
+BREAK
+#IF
+!EQUAL $JOB 法师
+#ACT
+BREAK
+#IF
+!EQUAL $M 0
+#ACT
+BREAK
+#IF
+CheckSlaveCount < 1
+#ACT
+BREAK
+#IF
+!ISINSAFEZONE
+#ACT
+BREAK
+
+#IF
+CHECKUSERPETGAP 法师３０护卫 < 16
+#ACT
+KILLSLAVE 法师３０护卫 1
+SENDMSG 5 主城内宝宝不得在安全区逗留超过5分钟!否则全部杀死
+
+#IF
+CHECKUSERPETGAP 法师４０护卫 < 16
+#ACT
+KILLSLAVE 法师４０护卫 1
+SENDMSG 5 主城内宝宝不得在安全区逗留超过5分钟!否则全部杀死
+
+#IF
+CHECKUSERPETGAP 法师４４护卫 < 16
+#ACT
+KILLSLAVE 法师４４护卫 1
+SENDMSG 5 主城内宝宝不得在安全区逗留超过5分钟!
+
+#IF
+CHECKUSERPETGAP 法师４８护卫 < 16
+#ACT
+KILLSLAVE 法师４８护卫 1
+SENDMSG 5 主城内宝宝不得在安全区逗留超过5分钟!
+
+[@至尊屠龙检测]
+#IF
+!ISCASTLEMASTER
+CHECKITEM 至尊屠龙 1
+#ACT
+TAKE 至尊屠龙 66
+SENDMSG 11 (*)你不是沙城城主，你的至尊屠龙被系统回收了。
+BREAK
+
+#IF
+!ISCASTLEMASTER
+CHECKITEMW 至尊屠龙 1
+#ACT
+TAKEW 至尊屠龙 1
+SENDMSG 11 (*)你不是沙城城主，你的至尊屠龙被系统回收了。
+BREAK
+
+;--------------------------------------------夺宝
+[@夺宝统计人数]
+#IF
+true
+#ACT
+addlog 101 开始统计夺宝人数 
+
+#If
+!EQUAL $M DBQB1
+!EQUAL $M CJDB1
+#ACt
+break
+#IF
+CheckOfGuild <$STR(A21)>
+#ACT
+INC G21 1
+DELAYCALL 1 @夺宝均分奖励
+
+
+[@夺宝均分奖励]
+
+#If
+EQUAL $M DBQB1
+#ACt
+MOV N$TEMP1 6666
+
+#If
+EQUAL $M CJDB1
+Large G21 4
+#ACt
+;1w变2w
+MOV N$TEMP1 20000
+#If
+EQUAL $M CJDB1
+SMALL G21 5
+#ACt
+MOV N$TEMP1 10000
+
+#If
+Equal A20 <$USERNAME>
+#ACt
+MOV N$TEMP <$STR(N$TEMP1)>
+MULT N$TEMP 20
+DIV N$TEMP 100
+MailGIVE <$STR(A14)> <$STR(N$TEMP)>
+addlog 100 <$Username>夺得宝盒额外获得<$STR(N$TEMP)><$STR(A14)>。
+
+#IF
+TRUE
+#ACT
+MOV N$TEMP <$STR(N$TEMP1)>
+MULT N$TEMP 80
+DIV N$TEMP 100
+SENDMSG 14 恭喜<%s>成功领取了夺宝均分奖励:获得<$FORMULATION[<$STR(N$TEMP)>/<$STR(G21)>]><$STR(A14)>!
+SENDMSG 7 恭喜<%s>成功领取了夺宝均分奖励:获得<$FORMULATION[<$STR(N$TEMP)>/<$STR(G21)>]><$STR(A14)>!
+MailGIVE <$STR(A14)> <$FORMULATION[<$STR(N$TEMP)>/<$STR(G21)>]>
+#IF
+EQUAL $M DBQB1
+#ACT
+Sendmail 1 夺宝奇兵 你好<$Username>:夺宝奇兵奖励物品已发放! 
+addlog 100 <$Username>在夺宝奇兵获得<$FORMULATION[<$STR(N$TEMP)>/<$STR(G21)>]><$STR(A14)>。
+BREAK
+#IF
+EQUAL $M CJDB1
+#ACT
+Sendmail 1 超级夺宝 你好<$Username>:超级夺宝奖励物品已发放! 
+addlog 100 <$Username>在超级夺宝获得<$FORMULATION[<$STR(N$TEMP)>/<$STR(G21)>]><$STR(A14)>。
+BREAK
+;--------------------------------------------沙城
+[@统计沙城人数]
+#IF
+CheckOfGuild $STR(A51)
+CheckMapName SH021
+#ACT
+INC G21 1
+DELAYCALL 1 @沙城均分奖励
+
+[@沙城均分奖励]
+#If
+Equal <$GUILDINFO(<$STR(A51)>).CHIEF> <$USERNAME>
+#ACt
+MOV N$TEMP <$STR(A19)>
+DIV N$TEMP 100
+MULT N$TEMP 20
+MONEY <$STR(A18)> + <$STR(N$TEMP)>
+
+#IF
+TRUE
+#ACT
+MOV N$TEMP <$STR(A19)>
+DIV N$TEMP 100
+MULT N$TEMP 80
+;赞助还没定，定了没领的改为绑元
+MONEY <$STR(A18)> + <$FORMULATION[<$STR(N$TEMP)>/<$STR(G21)>]>
+SENDMSG 14 恭喜<%s>成功领取了沙城奖励，均分了:<$STR(N$TEMP)><$STR(A18)>!
+SENDMSG 7 恭喜<%s>成功领取了沙城奖励，均分了:<$STR(N$TEMP)><$STR(A18)>!
+BREAK
+
+[@夺宝奇兵通知]
+#IF
+!EQUAL $M 128
+#ACT
+MOV P1 100000
+QUERYMSG 夺宝奇兵活动已开始\获胜行会将获得<$STR(A15)><$STR(A14)>\\进入请点击确定 @进入夺宝奇兵
+BREAK
+
+[@进入夺宝奇兵1]
+#IF
+SMALL <$CUSTOMVALUE(80> 1
+#ACT
+MESSAGEBOX 进入夺宝地图需要开启狂暴！
+BREAK
+
+#IF
+!HaveGuild
+#ACT
+MESSAGEBOX 进入夺宝地图需要加入行会！
+BREAK
+
+#IF
+CHECKLEVELEX > 45
+#ACT
+MAPMOVE DBDT
+SENDMSG 14 <%S>气势汹汹的进入了<%m>...........
+BREAK
+#elseACT
+MESSAGEBOX 等级不足45级，无法传送！
+BREAK
+
+[@超级夺宝通知]
+#IF
+!EQUAL $M 128
+#ACT
+QUERYMSG 超级夺宝活动已开始\\获胜行会将获得<$STR(A17)><$STR(A16)>\\进入请点击确定 @进入超级夺宝
+BREAK
+
+[@进入超级夺宝1]
+#IF
+!HaveGuild
+#ACT
+MESSAGEBOX 进入夺宝地图需要加入行会！
+BREAK
+
+#IF
+CHECKLEVELEX < 35
+#ACT
+GMEXECUTE AttackMode 4
+MAPMOVE DBDT2
+SENDMSG 14 <%S>气势汹汹的进入了<%m>...........
+BREAK
+#ELSEACT
+MESSAGEBOX 等级不足35级，无法传送！
+BREAK
+
+[@新区超级夺宝通知]
+#IF
+!EQUAL $M 128
+#ACT
+QUERYMSG 新区超级夺宝活动已开始,获胜者将获得：<$STR(A13)><$STR(A12)>！确定进入 @进入新区夺宝
+BREAK
+
+[@进入新区夺宝1]
+#IF
+SMALL <$CUSTOMVALUE(80> 1
+#ACT
+MESSAGEBOX 进入夺宝地图需要开启狂暴！
+BREAK
+
+#IF
+CHECKLEVELEX > 45
+#ACT
+GMEXECUTE AttackMode 4
+MAPMOVE DBDT2
+SENDMSG 14 <%S>气势汹汹的进入了<%m>...........
+BREAK
+#ELSEACT
+MESSAGEBOX 等级不足35级，无法传送！
+BREAK
+
+[@战斗]
+#IF
+EQUAL $JOB 法师
+CheckSlaveCount > 0
+#ACT
+KILLSLAVE 法师３０护卫 1
+KILLSLAVE 法师４０护卫 1
+KILLSLAVE 法师４４护卫 1
+KILLSLAVE 法师４８护卫 1
+KILLSLAVE
+SENDMSG 5 战斗区域禁止携带宝宝
+
+#IF
+CHECKPETFOLLOW
+#ACT
+KILLSLAVE 丛林豹 1
+KILLSLAVE 踏云豹1 1
+KILLSLAVE 踏云豹2 1
+KILLSLAVE 踏云豹3 1
+KILLSLAVE 蓝焰战马1 1
+SENDMSG 6 战斗区域不能携带灵兽坐骑!
+BREAK
+
+[@全民狂欢通知]
+#IF
+!EQUAL $M 128
+#ACT
+QUERYMSG 全民狂欢活动已开始,地图内可获得超高经验,离指定坐标越近获得经验越高哦,赶快通过活动大厅进入!\进入请点击确定 @进入全民狂欢
+BREAK                 
+
+[@进入全民狂欢1]
+#IF
+CHECKLEVELEX < 35
+#ACT
+MESSAGEBOX 等级不足35级，无法进入！
+BREAK
+
+#IF
+TRUE
+#ACT
+MAPMOVE QMKH 33 52 20
+SENDMSG 16 玩家<%s>进入了<%m>地图.........
+BREAK
+
+
+[@争分夺秒通知]
+#IF
+!EQUAL $M 128
+#ACT
+QUERYMSG 争分夺秒活动已开始,活动奖励：持有令牌者将每分钟获得20元宝！\进入请点击确定 @进入争分夺秒
+BREAK
+
+[@进入争分夺秒1]
+#IF
+CHECKLEVELEX < 35
+#ACT
+MESSAGEBOX 等级不足35级，无法进入！
+BREAK
+
+#IF
+TRUE
+#ACT
+MAPMOVE L006 25 25 5
+SENDMSG 16 玩家<%s>进入了<%m>地图.........
+break
+
+
+
+[@争分夺秒检测]
+#IF
+!EQUAL <$GLOBAL(活动5开关)> 进行中
+!EQUAL <$GLOBAL(活动7开关)> 进行中
+#ACT
+ClearArrow
+TAKE 争分夺秒令牌 66
+MAP 0
+SENDMSG 5 争分夺秒活动已经结束!
+BREAK
+
+#IF
+CHECKITEM 争分夺秒令牌 1
+#ACT
+MONEY 元宝 + 10
+SENDMSG 16 玩家<%s>携带<争分夺秒令牌>在<%m>地图疯狂涨元宝!
+BREAK
+
+[@全民狂欢检测]
+#IF
+!EQUAL <$GLOBAL(活动4开关)> 进行中
+#ACT
+mapmove 2 225 447 3
+SENDMSG 5 【激情泡点】活动已经结束!
+BREAK
+
+#IF
+CHECKUSERPOSGAP SELF QMKH 25 26 < 2
+#ACT
+CHANGEEXP + 70000
+sendmsg 7 获得7万经验！
+sendmsg 0 <$USERNAME>在全名狂欢占领最佳位置！每秒获得7万经验！
+
+#IF
+CHECKUSERPOSGAP SELF QMKH 25 26 > 1
+#ACT
+CHANGEEXP + 30000
+sendmsg 7 获得3万经验！
+
+[@扩展包裹]
+#IF
+CHECKITEM 包裹扩充符 1
+#ACT
+TAKE 包裹扩充符 99
+MOV P8 $BAGSIZE
+INC P8 $PARAM(12)
+BAGSIZE $STR(P8)
+SENDMSG 6 您的包裹扩充完毕，扩充至<$STR(P8)>个包裹格子。
+break
+#ELSEACT
+messagebox 您没有包裹扩充符！
+BREAK
+
+[@扩展仓库]
+#IF
+CHECKITEM 仓库扩充符 1
+#ACT
+MOV P11 $ITEMCOUNT[仓库扩充符]
+StorageSize + $STR(P11)
+TAKE 仓库扩充符 $STR(P11)
+SENDMSG 6 成功扩充<$STR(P11)>个仓库格子！
+BREAK
+#ELSEACT
+SENDMSG 19 您没有仓库扩充符！
+BREAK
+
+[@调整全服爆率]
+#IF
+EQUAL <$HUMAN(个人爆率)>
+#ACT
+VAR Integer HUMAN 个人爆率
+CalcVar HUMAN 个人爆率 = 100
+Savevar HUMAN 个人爆率
+#IF
+true
+#ACT
+MOV N$TEMP <$HUMAN(个人爆率)>
+MULT N$TEMP <$STR(G10)>
+DIV N$TEMP 100
+ChangeCustomValue 34 = <$STR(N$TEMP)> 
+#CALL [\封号系统\在线封号.txt] @临时封号
+
+
+
+[@调整个人累计充值]
+#IF
+equal A$管理员调整累计玩家 <$username>
+#ACT
+Calcvar HUMAN 累计充值 = <$STR(G$管理员调整累计数量)>
+Savevar HUMAN 累计充值
+MOV A$管理员调整累计玩家 
+
+[@调整个人每日充值]
+#IF
+equal <$STR(A$管理员调整每日玩家)> <$username>
+#ACT
+Calcvar HUMAN 每日充值 = <$STR(G$管理员调整每日数量)>
+Savevar HUMAN 每日充值
+MOV A$管理员调整每日玩家 
+
+[@主播助力触发]
+#if
+true
+#act
+MailGIVE 绑定金币 1000000
+MailGIVE 绑定元宝 1000
+MailGIVE 月光宝盒(大) 2 1
+MailGIVE 探魔球 10 1
+Sendmail 1 主播助力 你好<$Username>:主播助力奖励物品已发放! 
+CalcVar Human 主播助力 = 1
+SaveVar Human 主播助力
+CalcVar Human 唯一赞助领取资格 = 1
+SaveVar Human 唯一赞助领取资格
+
+
+
+[@调整个人充值积分]
+#IF
+equal <$STR(A$管理员调整积分玩家)> <$username>
+#ACT
+Calcvar HUMAN 充值积分 = <$STR(G$管理员调整积分数量)>
+Savevar HUMAN 充值积分
+MOV A$管理员调整积分玩家 
+
+
+
+[@记录管理员操作]
+#If
+True
+#Act
+;时间|管理员|操作类型|玩家名|数据
+MOV S$管理员操作记录 <$DATETIME>|<$STR(S$管理员姓名)>|<$STR(S$管理员操作类型)>|<$USERNAME>|<$STR(S$管理员操作情况)>
+INSERTVARLIST 1 <$STR(S$管理员操作记录)> ..\QuestDiary\数据文件\后台管理操作记录.txt
+
+;-----------------------------刷榜,关闭排行榜.zzw.2023.09.22
+
+[@检测管理操作]
+;-----------------------------------监测元宝
+
+#IF
+EQUAL $STR(A$接受者名字) <$USERNAME>
+EQUAL $STR(A$开启信息标识) 发送
+#ACT
+SendMail 100 管理员信息 <$STR(A$记录信息)>
+MOV A$开启信息标识 接收
+MESSAGEBOX 管理员给您发送了一条留言信息.
+MOV S$管理员操作类型 留言
+MOV S$管理员操作情况 发送留言：<$STR(A$记录信息)>
+Goto @记录管理员操作
+BREAK
+
+#IF
+EQUAL $STR(A$接受者名字) <$USERNAME>
+EQUAL $STR(A$开启应答标识) 发送
+#ACT
+Mailgive $STR(A$管理员给予物品) $STR(G$管理员给予物品数量) $STR(A$管理员是否绑定该物品)
+Sendmail 100 来自管理补发 你好<$Username>:补发已发放! 
+MOV A$开启应答标识 接收
+MESSAGEBOX 管理员给您发送了道具已接收到邮件包含[<$STR(A$管理员给予物品)>]*[<$STR(G$管理员给予物品数量)>].
+MOV S$管理员操作类型 邮件补发
+MOV S$管理员操作情况 发送邮件：邮件包含[<$STR(A$管理员给予物品)>]*[<$STR(G$管理员给予物品数量)>].
+Goto @记录管理员操作
+BREAK
+;------------------------------------------------------主播发奖
+#IF
+EQUAL $STR(A$接受者名字) <$USERNAME>
+EQUAL $STR(A$主播发奖应答标识) 开启
+#ACT
+MailGIVE 超级天山雪莲 1 1
+MailGIVE 月光宝盒(大) 1 1
+MailGIVE 绑定金币 200000
+
+SendMail 1 主播助力 你好<$Username>:主播助力礼包已发放! 
+MOV S$管理员操作类型 主播助力礼包
+MOV S$管理员操作情况 主播助力礼包：主播给<$Username>发送了主播助力礼包!
+Goto @记录管理员操作
+MOV A$接受者名字
+MOV A$主播发奖应答标识
+BREAK
+;------------------------------------------------------只有充值
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$假充值应答标识) 开启
+#ACT
+Calcvar HUMAN 每日充值 + <$STR(G$管理员给予假充值数量)>
+Savevar HUMAN 每日充值
+Calcvar HUMAN 累计充值 + <$STR(G$管理员给予假充值数量)>
+Savevar HUMAN 累计充值
+MOV A$假充值应答标识 接收
+MESSAGEBOX 管理员发送了[<$STR(G$管理员给予假充值数量)>]元充值!
+MOV G$管理员给予假充值数量 0
+MOV A$接受者名字2 
+MOV S$管理员操作类型 假充值
+MOV S$管理员操作情况 假充值：发送了[<$STR(G$管理员给予假充值数量)>]元充值!
+Goto @记录管理员操作
+break
+;------------------------------------------------------真实充值
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$真充值应答标识) 开启
+#ACT
+Calcvar HUMAN 充值积分 + <$STR(G$管理员给予真充值数量)>
+Savevar HUMAN 充值积分
+Calcvar HUMAN 每日充值 + <$STR(G$管理员给予真充值数量)>
+Savevar HUMAN 每日充值
+Calcvar HUMAN 累计充值 + <$STR(G$管理员给予真充值数量)>
+Savevar HUMAN 累计充值
+Calcvar HUMAN 排除真充兑换的累计充值 + <$STR(G$管理员给予真充值数量)>
+Savevar HUMAN 排除真充兑换的累计充值
+MONEY 11 + <$MULT.<$STR(G$管理员给予真充值数量)>.10>
+MONEY 元宝 + <$MULT.$STR(G$管理员给予真充值数量).100>
+goto @后台赠送
+MOV A$真充值应答标识 接收
+MESSAGEBOX 管理员发送了[<$STR(G$管理员给予真充值数量)>]元充值,合计[<$MULT.$STR(G$管理员给予真充值数量).100>]+[<$STR(N$额外赠送)>]元宝已到账!
+MOV S$管理员操作情况 真实充值：发送了[<$STR(G$管理员给予真充值数量)>]元充值,合计[<$MULT.$STR(G$管理员给予真充值数量).100>]+[<$STR(N$额外赠送)>]元宝已到账!
+Goto @记录管理员操作
+
+MOV G$管理员给予真充值数量 0
+MOV A$接受者名字2 
+MOV S$管理员操作类型 真实充值
+
+break
+;------------------------------------------------------收取背包星空云母
+#IF
+EQUAL $STR(A$接受者名字) <$USERNAME>
+EQUAL $STR(A$拿走玩家云母标识) 开启
+checkitem 星空云母 <$STR(G$收取星空云母数量)>
+#ACT
+messagebox 满足条件！<$DATETIME>
+Take 星空云母 <$STR(G$收取星空云母数量)>
+MOV S$管理员操作类型 收取背包物品
+MOV S$管理员操作情况 收取背包物品：收取了[<$USERNAME>]背包物品[星空云母]*[<$STR(G$收取星空云母数量)>]个!
+Goto @记录管理员操作
+MOV A$接受者名字2
+MOV A$拿走玩家云母标识
+MOV G$收取星空云母数量
+;------------------------------------------------------收取背包物品
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$拿走玩家背包物品标识) 开启
+#ACT
+Take <$STR(A$设置背包物品名字)> <$STR(G$设置背包物品数量)>
+MOV A$接受者名字2
+MOV A$拿走玩家背包物品标识 接收
+MOV S$管理员操作类型 收取背包物品
+MOV S$管理员操作情况 收取背包物品：收取了[<$USERNAME>]背包物品[<$STR(A$设置背包物品名字)>]*[<$STR(G$设置背包物品数量)>]个!
+Goto @记录管理员操作
+;------------------------------------------------------收取身上物品
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$拿走玩家身上物品标识) 开启
+#ACT
+TakeW <$STR(A$设置身上物品名字)> <$STR(G$设置身上物品数量)>
+MOV A$接受者名字2
+MOV A$拿走玩家身上物品标识 接收
+MOV S$管理员操作类型 收取身上物品
+MOV S$管理员操作情况 收取身上物品：收取了[<$USERNAME>]身上物品[<$STR(A$设置身上物品名字)>]*[<$STR(G$设置身上物品数量)>]个!
+Goto @记录管理员操作
+;------------------------------------------------------月卡开启
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$玩家投资计划天数加1) 开启
+#ACT
+Calcvar HUMAN 投资计划领取天数 = 0
+Savevar HUMAN 投资计划领取天数
+Calcvar HUMAN 投资计划购买时间戳 = <$LONGDATE>
+Savevar HUMAN 投资计划购买时间戳
+Mailgive 金币 1500000
+Mailgive 月光宝盒(大) 5 1
+Sendmail 1 月享礼包 你好<$Username>:月享礼包奖励物品已发放!
+
+MOV A$接受者名字2
+MOV A$玩家投资计划天数加1 接收
+MOV S$管理员操作类型 月卡开启
+MOV S$管理员操作情况 月卡开启：给<$USERNAME>开启月卡!
+Goto @记录管理员操作
+;------------------------------------------------------提取真充额度修改
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$玩家任务修改flag) 开启
+#Act
+delTask 10001
+delTask 10002
+delTask 10003
+delTask 10004
+delTask 10005
+delTask 10006
+
+AddTask 10001
+UpdateTask 10001 1
+CalcVar Human 新手任务ID = 10001
+SaveVar Human 新手任务ID
+CalcVar Human 新手任务领取1 = 0
+SaveVar Human 新手任务领取1
+CalcVar Human 新手任务领取2 = 0
+SaveVar Human 新手任务领取2
+MOV A$接受者名字2
+MOV A$玩家任务修改flag 接收
+;------------------------------------------------------主播给id
+#If
+EQUAL $STR(A$主播角色名称) <$USERNAME>
+#Act
+sendmsg 6  此账号ID：<$ACCOUNT>
+MOV A$主播角色名称
+;------------------------------------------------------给玩家发指定极品道具
+#If
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+#Act
+MOV S$管理员操作类型 给玩家发指定极品道具
+MOV S$管理员操作情况 给玩家发指定极品道具：给<$USERNAME>道具：<$STR(A$给玩家发指定极品道具名称)>+<$STR(G$给玩家发指定极品道具极品数据)>!
+Goto @记录管理员操作
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+#Act
+MOV N$TEMP <$STR(G$给玩家发指定极品道具极品数据)>
+div N$TEMP 10
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+equal $STR(A$给玩家发指定极品道具名称) 未觉醒
+#Act
+GIVE 命魂(未觉醒) 1 1
+UPGRADEUSERITEM <$PARAM(10)> 176 = <$STR(G$给玩家发指定极品道具极品数据)>
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+equal $STR(A$给玩家发指定极品道具名称) 怒血
+#Act
+GIVE 命魂●怒血 1 1
+INC N$TEMP 0
+UPGRADEUSERITEM <$PARAM(10)> 176 = <$STR(G$给玩家发指定极品道具极品数据)>
+UPGRADEUSERITEM <$PARAM(10)> 177 = <$STR(N$TEMP)>
+UPGRADEUSERITEM <$PARAM(10)> 178 = <$STR(N$TEMP)>
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+equal $STR(A$给玩家发指定极品道具名称) 金刚
+#Act
+GIVE 命魂●金刚 1 1
+INC N$TEMP 5
+UPGRADEUSERITEM <$PARAM(10)> 176 = <$STR(G$给玩家发指定极品道具极品数据)>
+UPGRADEUSERITEM <$PARAM(10)> 177 = <$STR(N$TEMP)>
+UPGRADEUSERITEM <$PARAM(10)> 178 = <$STR(N$TEMP)>
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+equal $STR(A$给玩家发指定极品道具名称) 雷炎
+#Act
+GIVE 命魂●雷炎 1 1
+INC N$TEMP 10
+UPGRADEUSERITEM <$PARAM(10)> 176 = <$STR(G$给玩家发指定极品道具极品数据)>
+UPGRADEUSERITEM <$PARAM(10)> 177 = <$STR(N$TEMP)>
+UPGRADEUSERITEM <$PARAM(10)> 178 = <$STR(N$TEMP)>
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+equal $STR(A$给玩家发指定极品道具名称) 镇魔
+#Act
+GIVE 命魂●镇魔 1 1
+INC N$TEMP 15
+UPGRADEUSERITEM <$PARAM(10)> 176 = <$STR(G$给玩家发指定极品道具极品数据)>
+UPGRADEUSERITEM <$PARAM(10)> 177 = <$STR(N$TEMP)>
+UPGRADEUSERITEM <$PARAM(10)> 178 = <$STR(N$TEMP)>
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+equal $STR(A$给玩家发指定极品道具名称) 御灵
+#Act
+GIVE 命魂●御灵 1 1
+INC N$TEMP 20
+UPGRADEUSERITEM <$PARAM(10)> 176 = <$STR(G$给玩家发指定极品道具极品数据)>
+UPGRADEUSERITEM <$PARAM(10)> 177 = <$STR(N$TEMP)>
+UPGRADEUSERITEM <$PARAM(10)> 178 = <$STR(N$TEMP)>
+#IF
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+equal $STR(A$给玩家发指定极品道具名称) 长生
+#Act
+GIVE 命魂●长生 1 1
+INC N$TEMP 25
+UPGRADEUSERITEM <$PARAM(10)> 176 = <$STR(G$给玩家发指定极品道具极品数据)>
+UPGRADEUSERITEM <$PARAM(10)> 177 = <$STR(N$TEMP)>
+UPGRADEUSERITEM <$PARAM(10)> 178 = <$STR(N$TEMP)>
+#If
+EQUAL $STR(A$接受者名字2) <$USERNAME>
+EQUAL $STR(A$给玩家发指定极品道具) 开启
+#Act
+MOV A$接受者名字2
+MOV A$给玩家发指定极品道具 接收
+
+[@后台赠送]
+#IFONE
+equal <$STR(G$管理员给予真充值数量)> 1000
+equal <$STR(G$管理员给予真充值数量)> 2000
+equal <$STR(G$管理员给予真充值数量)> 3000
+equal <$STR(G$管理员给予真充值数量)> 5000
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\在线充值.ini  在线充值  <$STR(G$管理员给予真充值数量)>赠送  S$后台充值赠送
+split <$STR(S$后台充值赠送)> | S$后台充值赠送
+MONEY <$STR(S$后台充值赠送_0)> + <$STR(S$后台充值赠送_1)>
+sendmsg 7 额外赠送<$STR(S$后台充值赠送_1)><$STR(S$后台充值赠送_0)>!
+break
+
+
+;#IF
+;EQUAL $STR(S$包裹) 开启
+;#ACT
+;SendUi 102 $STR(S$UI2)
+;BREAK
+
+[@实时监控元宝]
+#IF
+EQUAL $M 128
+#ACT
+break
+
+#IF
+!large <$HUMAN(累计充值)> 10
+CHECKMONEY 元宝 > 10000000
+#ACT
+mapmove 128
+sendmsg 7 检测发现你的元宝涉嫌违规，已入狱，如有疑问请联系客服！
+break
+
+#IF
+!equal <$HUMAN(累计充值)> 0
+CHECKMONEY 元宝 > <$FORMULATION[(<$HUMAN(累计充值)>*1000)*100]>
+#ACT
+mapmove 128
+sendmsg 7 检测发现你的元宝涉嫌违规，已入狱，如有疑问请联系客服！
+break
+
+#IF
+!equal <$HUMAN(累计充值)> 0
+CHECKMONEY 元宝 > <$FORMULATION[(<$HUMAN(累计充值)>*1000)*100]>
+#ACT
+mapmove 128
+sendmsg 7 检测发现你的元宝涉嫌违规，已入狱，如有疑问请联系客服！
+break
+
+[@每日数据重置]
+#IF
+!Equal <$HUMAN(每日清零)> <$DATE>
+#ACT
+Calcvar HUMAN 每日清零 = <$DATE>
+Savevar HUMAN 每日清零
+
+Calcvar HUMAN 每日充值 = 0
+Savevar HUMAN 每日充值
+
+CALCVAR HUMAN 元宝捐献数量 = 0
+SAVEVAR HUMAN 元宝捐献数量
+
+Calcvar HUMAN 限购标签1 = 0
+Savevar HUMAN 限购标签1
+Calcvar HUMAN 限购标签2 = 0
+Savevar HUMAN 限购标签2
+Calcvar HUMAN 限购标签3 = 0
+Savevar HUMAN 限购标签3
+
+Calcvar HUMAN 每日36 = 0
+Savevar HUMAN 每日36
+Calcvar HUMAN 每日188 = 0
+Savevar HUMAN 每日188
+Calcvar HUMAN 每日388 = 0
+Savevar HUMAN 每日388
+Calcvar HUMAN 每日488 = 0
+Savevar HUMAN 每日488
+
+ChangeCustomValue 48 = 0
+;焰火屠魔
+CalcVar HUMAN 焰火次数 = 0
+Savevar HUMAN 焰火次数
+
+;神断广袖戒指
+Calcvar HUMAN 每日已被偷取元宝 = 0
+Savevar HUMAN 每日已被偷取元宝
+
+;副本
+Calcvar HUMAN 个人副本1层 = 0
+Savevar HUMAN 个人副本1层
+Calcvar HUMAN 个人副本2层 = 0
+Savevar HUMAN 个人副本2层
+Calcvar HUMAN 个人副本3层 = 0
+Savevar HUMAN 个人副本3层
+Calcvar HUMAN 个人副本4层 = 0
+Savevar HUMAN 个人副本4层
+Calcvar HUMAN 个人副本5层 = 0
+Savevar HUMAN 个人副本5层
+Calcvar HUMAN 个人副本1奖励 = 0
+Savevar HUMAN 个人副本1奖励
+Calcvar HUMAN 个人副本2奖励 = 0
+Savevar HUMAN 个人副本2奖励
+Calcvar HUMAN 个人副本3奖励 = 0
+Savevar HUMAN 个人副本3奖励
+Calcvar HUMAN 个人副本4奖励 = 0
+Savevar HUMAN 个人副本4奖励
+Calcvar HUMAN 个人副本5奖励 = 0
+Savevar HUMAN 个人副本5奖励
+
+Calcvar HUMAN 每日回收元宝 = 0
+Savevar HUMAN 每日回收元宝
+
+Calcvar HUMAN 炼狱7层杀怪数量 = 0
+Savevar HUMAN 炼狱7层杀怪数量
+Calcvar HUMAN 炼狱8层杀怪数量 = 0
+Savevar HUMAN 炼狱8层杀怪数量
+Calcvar HUMAN 炼狱9层杀怪数量 = 0
+Savevar HUMAN 炼狱9层杀怪数量
+Calcvar HUMAN 每日杀怪领取 = 0
+Savevar HUMAN 每日杀怪领取
+Calcvar HUMAN BOSS积分 = 0
+Savevar HUMAN BOSS积分
+Calcvar HUMAN 每日BOSS领取 = 0
+Savevar HUMAN 每日BOSS领取
+Calcvar HUMAN 物品八购买次数 = 0
+Savevar HUMAN 物品八购买次数
+Calcvar HUMAN 物品四购买次数 = 0
+Savevar HUMAN 物品四购买次数
+
+Calcvar HUMAN 今日真充兑换额度 = 8
+Savevar HUMAN 今日真充兑换额度
+Calcvar HUMAN 今日真充兑换情况 = 0
+Savevar HUMAN 今日真充兑换情况
+Calcvar HUMAN 今日膨胀券使用情况 = 0
+Savevar HUMAN 今日膨胀券使用情况
+Calcvar HUMAN 千魔领域进入次数 = 0
+Savevar HUMAN 千魔领域进入次数
+Calcvar HUMAN 每日祈福次数 = 0
+Savevar HUMAN 每日祈福次数
+
+Calcvar HUMAN 投资计划领取天数 = 0
+Savevar HUMAN 投资计划领取天数
+Calcvar HUMAN 提取真充修改值 = 0
+Savevar HUMAN 提取真充修改值
+Calcvar HUMAN 今日装备回收元宝 = 0
+Savevar HUMAN 今日装备回收元宝
+
+Calcvar HUMAN 元旦礼包1 = 0
+Savevar HUMAN 元旦礼包1
+Calcvar HUMAN 元旦礼包2 = 0
+Savevar HUMAN 元旦礼包2
+Calcvar HUMAN 元旦礼包3 = 0
+Savevar HUMAN 元旦礼包3
+Calcvar HUMAN 元旦礼包4 = 0
+Savevar HUMAN 元旦礼包4
+
+Calcvar HUMAN 元旦充值1 = 0
+Savevar HUMAN 元旦充值1
+Calcvar HUMAN 元旦充值2 = 0
+Savevar HUMAN 元旦充值2
+
+Calcvar HUMAN 元旦充值今日已领取1 = 0
+Savevar HUMAN 元旦充值今日已领取1
+Calcvar HUMAN 元旦充值今日已领取2 = 0
+Savevar HUMAN 元旦充值今日已领取2
+Calcvar HUMAN 押镖次数 = 0
+Savevar HUMAN 押镖次数
+Calcvar HUMAN 每日元宝押镖次数 = 0
+Savevar HUMAN 每日元宝押镖次数
+Calcvar HUMAN 月卡商城购买1 = 0
+Savevar HUMAN 月卡商城购买1
+Calcvar HUMAN 月卡商城购买2 = 0
+Savevar HUMAN 月卡商城购买2
+Calcvar HUMAN 月卡商城购买3 = 0
+Savevar HUMAN 月卡商城购买3
+Calcvar HUMAN 假日礼包购买1 = 0
+Savevar HUMAN 假日礼包购买1
+Calcvar HUMAN 假日礼包购买2 = 0
+Savevar HUMAN 假日礼包购买2
+DELSKILL 战争牢笼
+
+
+[@GetExpFucn]
+;#IF
+;true
+;#ACT
+;MOV N$限制等级 70
+;
+;#IF
+;CHECKLEVELEX > <$STR(N$限制等级)>
+;#ACT
+;CHANGEEXP = 0
+;;#CALL [\封号系统\在线封号.txt] @临时封号
+;#CALL [\封号系统\封号系统.txt] @绿色封号
+;INC N$限制等级 1
+;sendmsg 17 为保持游戏的可玩性，当前等级限制为<$STR(N$限制等级)>级,您暂时不能获得经验! 255 253
+;Break
+
+;#IF
+;equal $PARAM(21) 0
+;#ACT
+;AddItemExp 月光宝盒 $PARAM(20)
+;Break
+;===================================================================超值礼包
+[@端游超值礼包倒计时更新]
+#if
+!equal $CLIENTFLAG 1
+#act
+break
+
+
+#if
+large N$端游超值礼包倒计时显示 0
+#act
+dec N$端游超值礼包倒计时显示 1
+; sendmsg 6 1==<$STR(N$端游超值礼包倒计时显示)>==<$human(超值礼包剩余时间)>
+SendUi 101 close
+SendUi 101 <@@!XYBTN#323,63112,3,63111,3,63112,10,300,/@打开超值礼包界面>\<offx=|15|y=|380|fontsize=|12|xy=|1|><color=red#32剩余:<$STR(N$端游超值礼包倒计时显示)>分钟><|off>\
+#elseact
+; sendmsg 6 2==<$STR(N$端游超值礼包倒计时显示)>==<$human(超值礼包剩余时间)>
+CalcVar human 超值礼包剩余时间 = 0
+SaveVar human 超值礼包剩余时间
+SendUi 101 close
+
+[@新版天下第一被取消]
+#IF
+true
+#ACT
+sendmsg 6 您的天下第一称号被别人抢走啦!!
+CALCVAR HUMAN 天下第一被取消flag = 0
+SAVEVAR HUMAN 天下第一被取消flag
+CALCVAR HUMAN 当前佩戴称号素材 =
+SAVEVAR HUMAN 当前佩戴称号素材
+#CALL [\封号系统\在线封号.txt] @临时封号
+Break
+[@天下第一被取消]
+#IF
+true
+#ACT
+#CALL [\封号系统\在线封号.txt] @临时封号
+Break
+[@穿云箭救急]
+#IF
+CHECKOFGUILD $GLOBAL(江湖01)
+!EQUAL $USERNAME $GLOBAL(江湖03)
+#SAY
+\
+<$GLOBAL(江湖02)>\\
+<前往支援/@前往支援>\\
+#ACT
+SHOWHUMEFFECT 44
+DELAYGOTO 20000 @关闭对话
+break
+
+[@关闭对话]
+#IF
+#ACT
+BREAK
+
+[@前往支援]
+#IF
+EQUAL $M 128
+#ACT
+MESSAGEBOX 监狱内禁止传送！
+BREAK
+
+#IF
+CHECKOFGUILD $GLOBAL(江湖01)
+#ACT
+Gmexecute GOTO <$GLOBAL(江湖04)> <$GLOBAL(江湖05)> <$GLOBAL(江湖06)> 2
+goto @支援检测
+break
+CLOSE
+#elseact
+SENDMSG 7 穿云箭20秒救急时间已过。
+break
+
+[@支援检测]
+#IF
+POSINLIST |<$M>| ..\QuestDiary\无理取闹\数据文件\禁止穿云箭地图.txt
+#ACT
+SENDMSG 7 当前所在地图不允许传送
+break
+CLOSE
+
+[@接待地图泡点]
+#IF
+CheckLevelEx < 35
+#ACT
+CHANGEEXP + 100
+#ELSEACT
+mapmove 2 225 443 3
+SETONTIMER 4 1
+
+#IF
+CheckLevelEx > 34
+#ACT
+#CALL [\任务\新手任务.txt] @接收新手任务一
+BREAK
+
+[@地图限时]
+#IF
+random 1
+#ACT
+MAPMOVE 2 225 447 3
+SENDMSG 7 提示:地图限时已到自动传回城！
+BREAK
+
+
+[@九层妖塔检测]
+#IF
+large $human(九层妖塔时间) 299
+#ACT
+MAPMOVE 1 472 218 3
+Calcvar HUMAN 九层妖塔时间 = 0
+Savevar HUMAN 九层妖塔时间
+SENDMSG 7 提示:地图限时已到自动传回城！
+BREAK
+
+#IF
+true
+#ACT
+Calcvar HUMAN 九层妖塔时间 + 1
+Savevar HUMAN 九层妖塔时间
+SENDMSG 19 提示:当前地图剩余时间<$FORMULATION[300-<$human(九层妖塔时间)>]>秒!
+
+;-------------------------------------一号房
+[@骰王一号房检测]
+#IF
+!equal <$GLOBAL(骰王名字1)> <$username>
+#ACT
+mapmove 2 225 447 3
+sendmsg 7 你已经不是1号房的主人！被强行传出！
+
+;-------------------------------------二号房
+[@骰王二号房检测]
+#IF
+!equal <$GLOBAL(骰王名字2)> <$username>
+#ACT
+mapmove 2 225 447 3
+sendmsg 7 你已经不是2号房的主人！被强行传出！
+
+;-------------------------------------三号房
+[@骰王三号房检测]
+#IF
+!equal <$GLOBAL(骰王名字3)> <$username>
+#ACT
+mapmove 2 225 447 3
+sendmsg 7 你已经不是3号房的主人！被强行传出！
+
+;-------------------------------------四号房
+[@骰王四号房检测]
+#IF
+!equal <$GLOBAL(骰王名字4)> <$username>
+#ACT
+mapmove 2 225 447 3
+sendmsg 7 你已经不是4号房的主人！被强行传出！
+
+;-------------------------------------五号房
+[@骰王五号房检测]
+#IF
+!equal <$GLOBAL(骰王名字5)> <$username>
+#ACT
+mapmove 2 225 447 3
+sendmsg 7 你已经不是5号房的主人！被强行传出！
+
+;-------------------------------------六号房
+[@骰王六号房检测]
+#IF
+!equal <$GLOBAL(骰王名字6)> <$username>
+#ACT
+mapmove 2 225 447 3
+sendmsg 7 你已经不是6号房的主人！被强行传出！
+
+;================================================活动通知
+
+[@超级夺宝开始活动通知]
+#If
+EQUAL <$GLOBAL(超级夺宝)> 开启
+#ACt
+MOV S$通知等级 35
+MOV S$活动名称 超级夺宝
+MOV S$活动地图 CJDB1
+QUERYMSG <$STR(S$活动名称)>活动开始了,是否参加？\进入请点击确定 @确定进入活动
+BREAK
+[@夺宝奇兵开始活动通知]
+#If
+EQUAL <$GLOBAL(夺宝奇兵)> 开启
+#ACt
+MOV S$通知等级 35
+MOV S$活动名称 夺宝奇兵
+MOV S$活动地图 DBQB1
+QUERYMSG <$STR(S$活动名称)>活动开始了,是否参加？\进入请点击确定 @确定进入活动
+BREAK
+[@经验放送开始活动通知]
+#If
+EQUAL <$GLOBAL(经验放送)> 开启
+#ACt
+MOV S$通知等级 35
+MOV S$活动名称 经验放送
+MOV S$活动地图 HDJY
+QUERYMSG <$STR(S$活动名称)>活动开始了,是否参加？\进入请点击确定 @确定进入活动
+BREAK
+[@福利使者开始活动通知]
+#If
+EQUAL <$GLOBAL(福利使者)> 开启
+#ACt
+MOV S$通知等级 35
+MOV S$活动名称 福利使者
+MOV S$活动地图 HDFL
+QUERYMSG <$STR(S$活动名称)>活动开始了,是否参加？\进入请点击确定 @确定进入活动
+BREAK
+[@终极使者开始活动通知]
+#If
+EQUAL <$GLOBAL(终极使者)> 开启
+#ACt
+MOV S$通知等级 35
+MOV S$活动名称 终极使者
+MOV S$活动地图 HDZJ
+QUERYMSG <$STR(S$活动名称)>活动开始了,是否参加？\进入请点击确定 @确定进入活动
+BREAK
+[@沙城争霸开始活动通知]
+#If
+EQUAL <$GLOBAL(沙城争霸)> 开启
+#ACt
+MOV S$通知等级 52
+MOV S$活动名称 沙城争霸
+MOV S$活动地图 3
+QUERYMSG <$STR(S$活动名称)>活动开始了,是否参加？\进入请点击确定 @确定进入活动
+BREAK
+
+
+
+
+[@确定进入活动1]
+#IF
+small <$level> <$STR(S$通知等级)>
+#ACT
+messagebox 等级不足<$STR(S$通知等级)>级!
+break
+#IF
+!HaveGuild
+equal <$STR(S$活动名称)> 夺宝奇兵
+#ACT
+SENDMSG 15 对不起，你没有加入行会无法进入！
+break
+
+#IF
+!HaveGuild
+equal <$STR(S$活动名称)> 超级夺宝
+#ACT
+SENDMSG 15 对不起，你没有加入行会无法进入！
+break
+#IF
+equal <$STR(S$活动名称)> 沙城争霸
+#ACT
+mapmove 3 182 388
+SENDMSG 0 [<$STR(S$活动名称)>]:玩家<<$USERNAME>>进入<$STR(S$活动名称)>地图! 
+break
+#IF
+EQUAL <$GLOBAL(<$STR(S$活动名称)>)> 开启
+#ACT
+MAP <$STR(S$活动地图)>
+SENDMSG 0 [<$STR(S$活动名称)>]:玩家<<$USERNAME>>进入<$STR(S$活动名称)>地图! 
+BREAK
+
+
+[@激情狂奔]
+#IF
+CHECKITEM 逐鹿令牌 1
+#ACT
+take 逐鹿令牌 100
+
+#IF
+!EQUAL <$GLOBAL(活动1开关)> 进行中
+#ACT
+BREAK
+
+#IF
+!ISINSAFEZONE
+#ACT
+BREAK
+
+#IF
+EQUAL S10 $X
+EQUAL S20 $Y
+#ACT
+MOV S10 $X
+MOV S20 $Y
+BREAK
+
+#IF
+RANDOM 50
+#ACT
+MOV S10 $X
+MOV S20 $Y
+GIVE 经验 500000
+SENDMSG 0 [激情狂奔]:玩家<<$USERNAME>>在中州狂奔活动中获得500000点经验.努力奔跑,奖励多多! 
+BREAK
+
+#IF
+RANDOM 20
+#ACT
+MOV S10 $X
+MOV S20 $Y
+ReadRandomStr ..\QuestDiary\数据文件\激情狂奔物品.txt S$激情狂奔物品
+give <$STR(S$激情狂奔物品)> 1
+SENDMSG 0 [激情狂奔]:玩家<<$USERNAME>>在中州狂奔活动中获得<$STR(S$激情狂奔物品)>.努力奔跑,奖励多多! 
+BREAK
+
+#IF
+RANDOM 10
+#ACT
+MOV S10 $X
+MOV S20 $Y
+GIVE 经验 100000
+SENDMSG 0 [激情狂奔]:玩家<<$USERNAME>>在中州狂奔活动中获得100000点经验.努力奔跑,奖励多多! 
+BREAK
+
+#IF
+RANDOM 2
+#ACT
+MOV S10 $X
+MOV S20 $Y
+GIVE 经验 50000
+SENDMSG 0 [激情狂奔]:玩家<<$USERNAME>>在中州狂奔活动中获得50000点经验.努力奔跑,奖励多多!  
+BREAK
+
+
+;-------------------------------------------------------检测
+[@天降财宝检测]
+#IF
+!equal <$GLOBAL(活动2开关)> 进行中
+#ACT
+mapmove 2 225 447 3
+ChangeMode 15 0
+sendmsg 7 【终极使者】活动已经结束,系统自动传出!
+break
+
+[@魔王降临检测]
+#IF
+!equal <$GLOBAL(活动1开关)> 进行中
+#ACT
+mapmove 2 225 447 3
+sendmsg 7 【福利放送】活动已经结束,系统自动传出!
+break
+
+
+;--------------------------------------------------------实时检测
+[@检测捐献排行榜]
+#IF
+TRUE
+#ACT
+READRANDOMSTR ..\QuestDiary\数据文件\捐献排行榜.txt S$捐献榜一 0 0 1 | ;//由大到小，取第1名
+READRANDOMSTR ..\QuestDiary\数据文件\捐献排行榜.txt S$捐献榜二 1 0 1 | ;//由大到小，取第2名
+READRANDOMSTR ..\QuestDiary\数据文件\捐献排行榜.txt S$捐献榜三 2 0 1 | ;//由大到小，取第3名
+#If
+!equal S$捐献榜一
+#ACT
+SPLIT <$STR(S$捐献榜一)> | S$捐献榜一
+CALCVAR GLOBAL 捐献第一名 = <$STR(S$捐献榜一_0)>
+SAVEVAR GLOBAL 捐献第一名
+CALCVAR GLOBAL 捐献第一名数量 = <$STR(S$捐献榜一_1)>
+SAVEVAR GLOBAL 捐献第一名数量
+#If
+!equal S$捐献榜二
+#ACT
+SPLIT <$STR(S$捐献榜二)> | S$捐献榜二
+CALCVAR GLOBAL 捐献第二名 = <$STR(S$捐献榜二_0)>
+SAVEVAR GLOBAL 捐献第二名
+CALCVAR GLOBAL 捐献第二名数量 = <$STR(S$捐献榜二_1)>
+SAVEVAR GLOBAL 捐献第二名数量
+#If
+!equal S$捐献榜三
+#ACT
+SPLIT <$STR(S$捐献榜三)> | S$捐献榜三
+CALCVAR GLOBAL 捐献第三名 = <$STR(S$捐献榜三_0)>
+SAVEVAR GLOBAL 捐献第三名
+CALCVAR GLOBAL 捐献第三名数量 = <$STR(S$捐献榜三_1)>
+SAVEVAR GLOBAL 捐献第三名数量
+
+#IF
+CHECKMAGIC 擒龙手
+!EQUAL <$GLOBAL(捐献第一名)> <$USERNAME>
+#ACT
+DelSkill 擒龙手
+SENDMSG 7 你持有的擒龙手已经被【<$GLOBAL(捐献第一名)>】夺走！火冒三丈！
+
+#IF
+!CHECKMAGIC 擒龙手
+EQUAL <$GLOBAL(捐献第一名)> <$USERNAME>
+#ACT
+AddSkill 擒龙手 3
+SENDMSG 14 恭喜【<$username>】如愿获得单挑神技【擒龙手】！
+SENDMSG 24 恭喜【<$username>】如愿获得单挑神技【擒龙手】！
+
+#IF
+true
+#ACT
+#CALL [\封号系统\在线封号.txt] @临时封号
+
+
+[@清除新手BUFF]
+#IF
+TRUE
+#ACT
+MOV N$时间差 <$LONGDATE>
+DEC N$时间差 <$HUMAN(注册时间)>
+
+#IF
+LARGE <$HUMAN(新手爆率)> 0
+LARGE N$时间差 7200
+#ACT
+Calcvar HUMAN 新手爆率 = 0
+Savevar HUMAN 新手爆率
+#CALL [\封号系统\在线封号.txt] @临时封号
+
+[@世界BOSS阶段buff]
+#IF
+CHECKMAPNAME SJBOSS
+#ACT
+MOV N$TEMP <$HP>
+MULT N$TEMP 30
+DIV N$TEMP 100
+HumanHP - <$STR(N$TEMP)>
+
+[@在线礼包初始化]
+#if
+!equal $CLIENTFLAG 1
+#act
+goto @手游在线礼包初始化
+#elseact
+goto @端游在线礼包初始化
+
+[@端游在线礼包初始化]
+#ifone
+!pos <$human(在线礼包已领取列表)> |10|
+!pos <$human(在线礼包已领取列表)> |25|
+!pos <$human(在线礼包已领取列表)> |50|
+!pos <$human(在线礼包已领取列表)> |80|
+!pos <$human(在线礼包已领取列表)> |120|
+!pos <$human(在线礼包已领取列表)> |180|
+!pos <$human(在线礼包已领取列表)> |240|
+#act
+SendUi 104 <@@!XYBTN#323,63112,3,63111,3,63112,100,300,/@打开在线礼包界面>\
+
+[@手游在线礼包初始化]
+#ifone
+!pos <$human(在线礼包已领取列表)> |10|
+!pos <$human(在线礼包已领取列表)> |25|
+!pos <$human(在线礼包已领取列表)> |50|
+!pos <$human(在线礼包已领取列表)> |80|
+!pos <$human(在线礼包已领取列表)> |120|
+!pos <$human(在线礼包已领取列表)> |180|
+!pos <$human(在线礼包已领取列表)> |240|
+#act
+SendUi 104 <Button|id=zaixian|x=110.0|y=-50.0|scale=1|pimg=picpackage/3/8000.png|color=255|nimg=picpackage/3/8000.png|size=18|text=在线礼包|link=@打开在线礼包界面>
+
+
+[@超值礼包初始化]
+#iF
+!equal $CLIENTFLAG 1
+large <$human(超值礼包剩余时间)> 0
+!equal <$human(超值礼包购买)> 1
+#Act
+; sendmsg 6 超值礼包初始化
+mov S$超值礼包显示
+goto @判断超值礼包倒计时
+mov S$超值礼包显示 <Button|id=chaozhi|x=20.0|y=270.0|children={chaozhi_0}|scale=1|pimg=picpackage/3/8000.png|color=255|nimg=picpackage/3/8000.png|size=18|text=超值礼包|link=@打开超值礼包界面>
+inc S$超值礼包显示 <TIMETIPS|id=chaozhi_0|a=2|x=30|y=60|color=250|size=16|time=<$STR(N$超值礼包倒计时)>|link=@超值礼包倒计时触发>
+mov N$超值礼包倒计时开始时间戳 <$LONGDATE>
+SendUi 101 <$STR(S$超值礼包显示)>
+
+#if
+equal $CLIENTFLAG 1
+large <$human(超值礼包剩余时间)> 0
+!equal <$human(超值礼包购买)> 1
+#Act
+goto @判断超值礼包倒计时
+mov N$端游超值礼包倒计时显示 <$STR(N$超值礼包倒计时)>
+div N$端游超值礼包倒计时显示 60
+mov N$超值礼包倒计时开始时间戳 <$LONGDATE>
+SendUi 101 <@@!XYBTN#323,63112,3,63111,3,63112,10,300,/@打开超值礼包界面>\<offx=|15|y=|380|fontsize=|12|xy=|1|><color=yellow#32剩余:<$STR(N$端游超值礼包倒计时显示)>分钟><|off>\
+
+
+;
+[@判断超值礼包倒计时]
+#iF
+large <$human(超值礼包剩余时间)> 0
+#Act
+mov N$超值礼包倒计时 <$human(超值礼包剩余时间)>
+#elseACT
+mov N$超值礼包倒计时 43200
+
+
+
+[@PlayReconnection]
+#IF
+TRUE
+#ACT
+MOV N$时间间隔 <$LONGDATE>
+DEC N$时间间隔 <$STR(N$玩家登录时间戳)>
+Calcvar HUMAN 在线时长 + <$STR(N$时间间隔)>
+Savevar HUMAN 在线时长
+goto @超值礼包下线重算
+
+;计算在线礼包还剩余多少时间可以领
+; #if
+; true
+; #act
+; mov N$TEMP 0
+; mov N$TEMP <$LONGDATE>
+; dec N$TEMP <$STR(N$在线礼包倒计时开始时间戳)>
+
+; #if
+; small N$TEMP <$STR(N$在线礼包倒计时)>
+; #act
+; dec N$在线礼包倒计时 <$STR(N$TEMP)>
+; ; mov u145 <$STR(N$在线礼包倒计时)> 
+; Calcvar HUMAN 在线礼包剩余时间 = <$STR(N$在线礼包倒计时)>
+; Savevar HUMAN 在线礼包剩余时间
+; #elseact
+; ; mov u145 0
+; Calcvar HUMAN 在线礼包剩余时间 = 0
+; Savevar HUMAN 在线礼包剩余时间
+
+
+[@PlayOffLine]
+#IF
+TRUE
+#ACT
+MOV N$时间间隔 <$LONGDATE>
+DEC N$时间间隔 <$STR(N$玩家登录时间戳)>
+Calcvar HUMAN 在线时长 + <$STR(N$时间间隔)>
+Savevar HUMAN 在线时长
+AutoLogin <$ACCOUNT> <$USERNAME>
+goto @超值礼包下线重算
+
+
+[@超值礼包下线重算]
+;计算超值礼包
+#iF
+large N$超值礼包倒计时开始时间戳 0
+#Act
+mov N$TEMP 0
+mov N$TEMP <$LONGDATE>
+dec N$TEMP <$STR(N$超值礼包倒计时开始时间戳)>
+#elseact
+break
+
+#if
+small N$TEMP <$STR(N$超值礼包倒计时)>
+#act
+dec N$超值礼包倒计时 <$STR(N$TEMP)>
+Calcvar HUMAN 超值礼包剩余时间 = <$STR(N$超值礼包倒计时)> 
+Savevar HUMAN 超值礼包剩余时间
+#elseact
+Calcvar HUMAN 超值礼包剩余时间 = 0
+Savevar HUMAN 超值礼包剩余时间
+
+
+
+
+[@检测自动吃药操作]
+#if
+equal <$human(被停止回血)> 1
+#act
+break
+
+
+#if
+true
+#act
+mov N$总回血值 0
+
+
+;--------------------------天地宝石特殊属性判断
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(神)
+#ACT
+MOV N$TEMP <$HP>
+MULT N$TEMP 100
+DIV N$TEMP <$MAXHP>
+
+#If
+EQUAL <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(神)
+Small N$TEMP 50
+Large <$LONGDATE> <$human(天地宝石神cd时间戳)>
+#ACt
+MOV N$TEMP <$LONGDATE>
+INC N$TEMP 30
+CALCVAR HUMAN 天地宝石神cd时间戳 = <$STR(N$TEMP)>
+SAVEVAR HUMAN 天地宝石神cd时间戳
+MOV N$TEMP <$MAXHP>
+MULT N$TEMP 20
+DIV N$TEMP 100
+HumanHP + <$STR(N$TEMP)>
+inc N$总回血值 <$STR(N$TEMP)>
+
+
+SendNumEff 4 <$STR(N$TEMP)> $x $y
+
+
+#if
+true
+#act
+goto @自动喝药恢复计算
+; sendmsg 6 总回血值：<$STR(N$总回血值)>
+goto @神断装备回血加成1
+
+
+[@神断装备让周围3格内受伤触发]
+#if
+equal <$USERNAME> <$SCRIPTPARAM(1)>
+#Act
+Break
+
+#if
+!equal <$GUILDNAME> 无 
+equal <$GUILDNAME> <$SCRIPTPARAM(2)>
+#act
+break
+
+#if
+true
+#act
+mov N$当前血量 <$HP>
+MULT N$当前血量 <$SCRIPTPARAM(3)>
+DIV N$当前血量 100
+HumanHP - <$STR(N$当前血量)>
+SendNumEff 1 <$STR(N$当前血量)> $x $y
+
+[@取消被停止回血]
+#if
+true
+#act
+CalcVar human 被停止回血 = 0
+SaveVar human 被停止回血
+#CALL [\封号系统\在线封号.txt] @临时封号
+[@停止回血触发]
+#if
+true
+#act
+CalcVar human 被停止回血 = 1
+SaveVar human 被停止回血
+#CALL [\封号系统\在线封号.txt] @临时封号
+DelayCall 2 @取消被停止回血
+
+[@神断广袖戒指效果触发3]
+#if
+true
+#act
+sendmsg 6 被对方的神断广袖戒指偷了50元宝
+money 元宝 - 50
+CalcVar human 每日已被偷取元宝 + 50
+SaveVar human 每日已被偷取元宝
+
+[@神断广袖戒指效果触发2]
+#if
+true
+#act
+sendmsg 6 被对方的神断广袖戒指偷了20元宝
+money 元宝 - 20
+CalcVar human 每日已被偷取元宝 + 20
+SaveVar human 每日已被偷取元宝
+
+[@神断广袖戒指效果触发1]
+#if
+true
+#act
+sendmsg 6 被对方的神断广袖戒指偷了10元宝
+money 元宝 - 10
+CalcVar human 每日已被偷取元宝 + 10
+SaveVar human 每日已被偷取元宝
+
+
+
+[@神断和平模式取消]
+#if
+true
+#act
+GmExeCute AttackMode <$SCRIPTPARAM(1)>
+
+[@神锻赤眼戒指效果触发]
+#if
+true
+#act
+mov S$当前模式 <$ATTACKMODE>
+GmExeCute AttackMode 2
+DelayCall 3 @神断和平模式取消&<$STR(S$当前模式)>
+
+[@神断龙戟戒指效果触发]
+#if
+true
+#act
+mov S$当前模式 <$ATTACKMODE>
+GmExeCute AttackMode 2
+DelayCall 2 @神断和平模式取消&<$STR(S$当前模式)>
+
+[@神断星云戒指效果触发]
+#if
+true
+#act
+mov S$当前模式 <$ATTACKMODE>
+GmExeCute AttackMode 2
+DelayCall 1 @神断和平模式取消&<$STR(S$当前模式)>
+
+
+[@神断装备回血加成1]
+#ifone
+equal <$ITEMINFO[$USEITEMMAKEINDEX(7)].NAME> 神断流光戒指
+equal <$ITEMINFO[$USEITEMMAKEINDEX(8)].NAME> 神断流光戒指
+#act
+mov N$当前神断回血加成百分比 5
+mov N$触发需要的元宝 5000
+; sendmsg 5 神断流光戒指效果触发
+goto @神断装备回血加成2
+
+#ifone
+equal <$ITEMINFO[$USEITEMMAKEINDEX(7)].NAME> 神断混元戒指
+equal <$ITEMINFO[$USEITEMMAKEINDEX(8)].NAME> 神断混元戒指
+#act
+mov N$当前神断回血加成百分比 10
+mov N$触发需要的元宝 10000
+; sendmsg 5 神断混元戒指效果触发
+goto @神断装备回血加成2
+
+#ifone
+equal <$ITEMINFO[$USEITEMMAKEINDEX(7)].NAME> 神锻寰宇戒指
+equal <$ITEMINFO[$USEITEMMAKEINDEX(8)].NAME> 神锻寰宇戒指
+#act
+mov N$当前神断回血加成百分比 25
+mov N$触发需要的元宝 20000
+; sendmsg 5 神锻寰宇戒指效果触发
+goto @神断装备回血加成2
+
+
+[@神断装备回血加成2]
+#if
+checkmoney 元宝 < <$STR(N$触发需要的元宝)>
+#act
+break
+#elseact
+goto @计算天地宝石回血量
+
+#if
+true
+#act
+; sendmsg 6 111==<$STR(N$总回血值)>
+MULT N$总回血值 <$STR(N$当前神断回血加成百分比)>
+; sendmsg 6 222==<$STR(N$总回血值)>
+DIV N$总回血值 100
+; sendmsg 6 333==<$STR(N$总回血值)>
+HumanHP + <$STR(N$总回血值)>
+
+SendNumEff 4 <$STR(N$总回血值)> $x $y
+; sendmsg 5 额外回血：<$STR(N$总回血值)>
+
+[@计算天地宝石回血量]
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(小)
+#ACT
+INC N$总回血值 10
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(中)
+#ACT
+INC N$总回血值 20
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(大)
+#ACT
+INC N$总回血值 30
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(极)
+#ACT
+INC N$总回血值 40
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(绝)
+#ACT
+INC N$总回血值 50
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(臻)
+#ACT
+INC N$总回血值 70
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(圣)
+#ACT
+INC N$总回血值 90
+#IF
+equal <$ITEMINFO[$USEITEMMAKEINDEX(11)].NAME> 天地宝石(神)
+#ACT
+INC N$总回血值 100
+
+
+
+[@自动喝药恢复计算]
+;---------------------------------------------------------------------------------------------
+#IF
+!equal <$HUMAN(甘露回复启动flag)> 1
+#ACT
+break
+#If
+True
+#Act
+MOV N$甘露扣除值 0
+#IF
+equal <$HUMAN(甘露回复类型1)> 1
+#ACT
+MOV N$甘露扣除值 5
+#IF
+equal <$HUMAN(甘露回复类型2)> 1
+#ACT
+MOV N$甘露扣除值 200
+
+#IF
+equal <$HUMAN(甘露回复类型3)> 1
+#ACT
+MOV N$甘露扣除值 1800
+#IF
+!equal <$HUMAN(甘露回复类型1)> 1
+!equal <$HUMAN(甘露回复类型2)> 1
+!equal <$HUMAN(甘露回复类型3)> 1
+#Act
+break
+
+#IF
+true
+#ACT
+MOV N$当前血量比 <$HP>
+MULT N$当前血量比 100
+DIV N$当前血量比 <$MAXHP>
+
+MOV N$当前魔量比 <$MP>
+MULT N$当前魔量比 100
+DIV N$当前魔量比 <$MAXMP>
+#IfONE
+SMALL N$当前血量比 <$HUMAN(甘露回复HP比例)>
+SMALL N$当前魔量比 <$HUMAN(甘露回复MP比例)>
+#elseAct
+break
+
+#If
+equal <$HUMAN(甘露回复类型1)> 1
+CheckLevelEx < 46
+#Act
+SendNumEff 4 30 $x $y
+HumanHP + 30
+HumanMP + 30
+inc N$总回血值 30
+Break
+
+#IF
+SMALL <$HUMAN(甘露值)> <$STR(N$甘露扣除值)>
+#ACT
+break
+#IF
+true
+#ACT
+Calcvar HUMAN 甘露值 - <$STR(N$甘露扣除值)>
+Savevar HUMAN 甘露值
+#IF
+equal <$STR(N$甘露扣除值)> 5
+#ACT
+SendNumEff 4 30 $x $y
+HumanHP + 30
+HumanMP + 30
+inc N$总回血值 30
+#IF
+equal <$STR(N$甘露扣除值)> 200
+#ACT
+SendNumEff 4 80 $x $y
+HumanHP + 80
+HumanMP + 80
+inc N$总回血值 80
+
+#IF
+equal <$STR(N$甘露扣除值)> 1800
+#ACT
+SendNumEff 4 120 $x $y
+HumanHP + 120
+HumanMP + 120
+inc N$总回血值 120
+
+[@押镖到达]
+#If
+Equal <$USERNAME> <$STR(A22)>
+#ACt
+
+MOV S$押镖到达 是
+
+[@OnTimer22]
+#if
+true
+#act
+ChangeMode 3 0
+
+[@OnTimer23]
+#if
+true
+#act
+set [798] 0
+#CALL [\封号系统\在线封号.txt] @临时封号
+
+[@OnTimer24]
+#IF
+EQUAL <$HUMAN(新手任务ID)> 10001
+#act
+Navigation 160 10001 寻找书店老板#2#5 1

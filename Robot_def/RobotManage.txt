@@ -1,0 +1,583 @@
+
+;---------------------------------------------------
+[@1秒计时]
+#IF
+TRUE
+#ACT
+INC G3 1
+;INC N$临时记录变量1 1
+;INC N$临时记录变量2 1
+#IF
+true
+#ACT
+GMEXECUTE StartQuest @检测管理操作
+GMEXECUTE StartQuest @检测自动吃药操作
+
+
+[@每日数据恢复]
+#IF
+RANDOM 1
+#ACT
+INC G2 1
+ClearNameList ..\QuestDiary\数据文件\捐献排行榜.txt
+INSERTVARLIST 1 暂无|0 ..\QuestDiary\数据文件\捐献排行榜.txt 1
+INSERTVARLIST 1 暂无|0 ..\QuestDiary\数据文件\捐献排行榜.txt 1
+INSERTVARLIST 1 暂无|0 ..\QuestDiary\数据文件\捐献排行榜.txt 1
+CALCVAR GLOBAL 捐献第一名 = 
+SAVEVAR GLOBAL 捐献第一名
+CALCVAR GLOBAL 捐献第一名数量 = 0
+SAVEVAR GLOBAL 捐献第一名数量
+
+CALCVAR GLOBAL 捐献第二名 = 
+SAVEVAR GLOBAL 捐献第二名
+CALCVAR GLOBAL 捐献第二名数量 = 0
+SAVEVAR GLOBAL 捐献第二名数量
+
+CALCVAR GLOBAL 捐献第三名 = 
+SAVEVAR GLOBAL 捐献第三名
+CALCVAR GLOBAL 捐献第三名数量 = 0
+SAVEVAR GLOBAL 捐献第三名数量
+
+#IF
+TRUE
+#ACT
+MOV N$系统榜单重置加一 -1
+LOOPGOTO @循环榜单实时重置 7
+
+[@循环榜单实时重置]
+#IF
+RANDOM 1
+#ACT
+#CALL [\登陆设置\藏宝阁重置.txt] @藏宝阁重置
+#CALL [\登陆设置\全局变量重置.txt] @全局变量重置
+GMEXECUTE StartQuest @每日数据重置
+SENDMSG 0 夜深了！请各位玩家合理安排游戏时间，注意休息！
+break
+
+
+
+
+[@开区时间记录]
+#IF
+RANDOM 1
+#ACT
+
+INC G1 1
+MOV G80 <$LONGDATE>
+INC G80 6
+;sendmsg 0 开始刷新BOSS绿毒
+
+GMEXECUTE StartQuest @清除新手BUFF
+MOV N$修改 0
+;goto @福利放送开始
+;新区活动启动
+
+#if
+equal $CLIENTFLAG 1
+#act
+GMEXECUTE StartQuest @端游超值礼包倒计时更新
+
+
+#IF
+equal G1 240
+#ACT
+goto @开启超级夺宝
+#IF
+equal G1 300
+#ACT
+goto @关闭超级夺宝
+#IF
+equal G1 61
+#ACT
+goto @新区经验放送开始
+#IF
+equal G1 121
+#ACT
+goto @新区经验放送结束
+#IF
+equal G1 161
+#ACT
+goto @新区经验放送开始
+#IF
+equal G1 221
+#ACT
+goto @新区经验放送结束
+#IF
+equal G1 261
+#ACT
+goto @新区经验放送开始
+#IF
+equal G1 321
+#ACT
+goto @新区经验放送结束
+
+#IF
+equal G1 91
+#ACT
+goto @新区福利使者开始
+#IF
+equal G1 151
+#ACT
+goto @新区福利使者结束
+#IF
+equal G1 211
+#ACT
+goto @新区福利使者开始
+#IF
+equal G1 371
+#ACT
+goto @新区福利使者结束
+#IF
+equal G1 361
+#ACT
+goto @新区福利使者开始
+#IF
+equal G1 491
+#ACT
+goto @新区福利使者结束
+
+#IF
+equal G1 300
+#ACT
+goto @新区终极使者开始
+#IF
+equal G1 360
+#ACT
+goto @新区终极使者结束
+
+#If
+!equal G59 1
+#Act
+MOV G59 1
+MOV G58 <$HFCOUNT>
+#If
+Large <$HFCOUNT> 1
+!equal G58 <$HFCOUNT>
+#ACT
+;清除沙城
+CLEARCASTLEOWNER 沙城
+MOV G58 <$HFCOUNT>
+
+;开区6小时后， 降为90%(减少10%)
+#IF
+LARGE G1 360
+EQUAL <$HFCOUNT> 0
+!EQUAL G93 10
+#ACT
+MOV G93 10
+MOV N$修改 1
+
+;1合区后降为80% (减少20%)
+#IF
+EQUAL <$HFCOUNT> 1
+!EQUAL G93 20
+#ACT
+MOV G93 20
+MOV N$修改 1
+
+;2合 降为70%(减少30%)
+#IF
+EQUAL <$HFCOUNT> 2
+!EQUAL G93 30
+#ACT
+MOV G93 30
+MOV N$修改 1
+
+;3合开区。降为60%(减少40%)
+#IF
+EQUAL <$HFCOUNT> 3
+!EQUAL G93 40
+#ACT
+MOV G93 40
+MOV N$修改 1
+
+;4合 降为50%(减少50%)
+#IF
+EQUAL <$HFCOUNT> 4
+!EQUAL G93 50
+#ACT
+MOV G93 50
+MOV N$修改 1
+
+#IF
+EQUAL N$修改 1
+#ACT
+#CALL [\封号系统\在线封号.txt] @临时封号
+
+
+;===================================================================超级夺宝
+[@开启超级夺宝]
+#If
+True
+#ACt
+MOV G21 0
+MOV A14 绑定元宝
+MOV A15 10000
+CLEARMAPMON CJDB1
+MONGENEX CJDB1 42 42 通天教主2 1 1
+CALCVAR GLOBAL 超级夺宝 = 开启
+SAVEVAR GLOBAL 超级夺宝
+GMEXECUTE StartQuest @超级夺宝开始活动通知
+BREAK
+[@关闭超级夺宝]
+#IF
+True
+#ACT
+CLEARMAPMON CJDB1
+CALCVAR GLOBAL 超级夺宝 = 未开始
+SAVEVAR GLOBAL 超级夺宝
+SENDMSG 0 超级夺宝提示:超级夺宝已经关闭！
+SENDMSG 26 超级夺宝提示:超级夺宝已经关闭！
+SENDMSG 14 超级夺宝提示:超级夺宝已经关闭！
+
+;===================================================================夺宝奇兵
+[@开启夺宝奇兵]
+#If
+Small G2 2
+#ACt
+break
+#If
+True
+#ACt
+MOV G21 0
+MOV A14 绑定元宝
+MOV A15 6666
+CLEARMAPMON DBQB1
+MONGENEX DBQB1 42 42 通天教主1 1 1
+CALCVAR GLOBAL 夺宝奇兵 = 开启
+SAVEVAR GLOBAL 夺宝奇兵
+GMEXECUTE StartQuest @夺宝奇兵开始活动通知
+BREAK
+[@关闭夺宝奇兵]
+#If
+Small G2 2
+#ACt
+break
+#IF
+true
+#ACT
+CLEARMAPMON DBQB1
+CALCVAR GLOBAL 夺宝奇兵 = 未开始
+SAVEVAR GLOBAL 夺宝奇兵
+SENDMSG 0 夺宝奇兵提示:夺宝奇兵已经关闭！
+SENDMSG 26 夺宝奇兵提示:夺宝奇兵已经关闭！
+SENDMSG 14 夺宝奇兵提示:夺宝奇兵已经关闭！
+
+[@开启夺宝奇兵1]
+#IF
+Large <$HFCOUNT> 0
+#ACT
+Break
+#If
+True
+#ACt
+MOV G21 0
+MOV A14 绑定元宝
+MOV A15 6666
+CLEARMAPMON DBQB1
+MONGENEX DBQB1 42 42 通天教主1 1 1
+CALCVAR GLOBAL 夺宝奇兵 = 开启
+SAVEVAR GLOBAL 夺宝奇兵
+GMEXECUTE StartQuest @夺宝奇兵开始活动通知
+BREAK
+[@关闭夺宝奇兵1]
+#IF
+Large <$HFCOUNT> 0
+#ACT
+Break
+#IF
+True
+#ACT
+CLEARMAPMON DBQB1
+CALCVAR GLOBAL 夺宝奇兵 = 未开始
+SAVEVAR GLOBAL 夺宝奇兵
+SENDMSG 0 夺宝奇兵提示:夺宝奇兵已经关闭！
+SENDMSG 26 夺宝奇兵提示:夺宝奇兵已经关闭！
+SENDMSG 14 夺宝奇兵提示:夺宝奇兵已经关闭！
+;===================================================================新区经验放送
+[@新区经验放送开始]
+#If
+True
+#ACt
+;G42用来记录经验放送波数
+CLEARMAPMON HDJY
+MONGENEX HDJY 25 25 幸运兔1 30 20
+MOV G42 1
+CALCVAR GLOBAL 经验放送 = 开启
+SAVEVAR GLOBAL 经验放送
+GMEXECUTE StartQuest @经验放送开始活动通知
+BREAK
+
+[@新区经验放送结束]
+#IF
+True
+#ACT
+MOV G42 0
+CLEARMAPMON HDJY
+CALCVAR GLOBAL 经验放送 = 未开始
+SAVEVAR GLOBAL 经验放送
+SENDMSG 0 经验放送提示:经验放送已经关闭！
+SENDMSG 26 经验放送提示:经验放送已经关闭！
+SENDMSG 14 经验放送提示:经验放送已经关闭！
+;===================================================================经验放送
+[@经验放送开始]
+#If
+Small G2 2
+#ACt
+break
+#If
+True
+#ACt
+;G42用来记录经验放送波数
+CLEARMAPMON HDJY
+MONGENEX HDJY 25 25 幸运兔1 30 20
+MOV G42 1
+CALCVAR GLOBAL 经验放送 = 开启
+SAVEVAR GLOBAL 经验放送
+GMEXECUTE StartQuest @经验放送开始活动通知
+BREAK
+
+[@经验放送结束]
+#If
+Small G2 2
+#ACt
+break
+#IF
+True
+#ACT
+MOV G42 0
+CLEARMAPMON HDJY
+CALCVAR GLOBAL 经验放送 = 未开始
+SAVEVAR GLOBAL 经验放送
+SENDMSG 0 经验放送提示:经验放送已经关闭！
+SENDMSG 26 经验放送提示:经验放送已经关闭！
+SENDMSG 14 经验放送提示:经验放送已经关闭！
+;===================================================================新区福利使者
+[@新区福利使者开始]
+#If
+True
+#ACt
+;G43用来记录福利使者波数
+
+CLEARMAPMON HDFL
+MONGENEX HDFL 25 25 招财猪1 30 10
+MOV G43 1
+CALCVAR GLOBAL 福利使者 = 开启
+SAVEVAR GLOBAL 福利使者
+GMEXECUTE StartQuest @福利使者开始活动通知
+BREAK
+
+[@新区福利使者结束]
+#IF
+True
+#ACT
+MOV G43 0
+CLEARMAPMON HDFL
+CALCVAR GLOBAL 福利使者 = 未开始
+SAVEVAR GLOBAL 福利使者
+SENDMSG 0 福利使者提示:福利使者已经关闭！
+SENDMSG 26 福利使者提示:福利使者已经关闭！
+SENDMSG 14 福利使者提示:福利使者已经关闭！
+;===================================================================福利使者
+[@福利使者开始]
+#If
+Small G2 2
+#ACt
+break
+#If
+True
+#ACt
+;G43用来记录福利使者波数
+
+CLEARMAPMON HDFL
+MONGENEX HDFL 25 25 招财猪1 30 10
+MOV G43 1
+CALCVAR GLOBAL 福利使者 = 开启
+SAVEVAR GLOBAL 福利使者
+GMEXECUTE StartQuest @福利使者开始活动通知
+BREAK
+
+[@福利使者结束]
+#If
+Small G2 2
+#ACt
+break
+#IF
+True
+#ACT
+MOV G43 0
+CLEARMAPMON HDFL
+CALCVAR GLOBAL 福利使者 = 未开始
+SAVEVAR GLOBAL 福利使者
+SENDMSG 0 福利使者提示:福利使者已经关闭！
+SENDMSG 26 福利使者提示:福利使者已经关闭！
+SENDMSG 14 福利使者提示:福利使者已经关闭！
+;===================================================================新区终极使者
+[@新区终极使者开始]
+#If
+True
+#ACt
+;G44用来记录终极使者波数
+
+CLEARMAPMON HDZJ
+MONGENEX HDZJ 25 25 尸霸 2 1
+MOV G44 1
+CALCVAR GLOBAL 终极使者 = 开启
+SAVEVAR GLOBAL 终极使者
+GMEXECUTE StartQuest @终极使者开始活动通知
+BREAK
+[@新区终极使者结束]
+#IF
+True
+#ACT
+CLEARMAPMON HDZJ
+MOV G44 0
+CALCVAR GLOBAL 终极使者 = 未开始
+SAVEVAR GLOBAL 终极使者
+SENDMSG 0 终极使者提示:终极使者已经关闭！
+SENDMSG 26 终极使者提示:终极使者已经关闭！
+SENDMSG 14 终极使者提示:终极使者已经关闭！
+;===================================================================终极使者
+[@终极使者开始]
+#If
+Small G2 2
+#ACt
+break
+#If
+True
+#ACt
+;G44用来记录终极使者波数
+
+CLEARMAPMON HDZJ
+MONGENEX HDZJ 25 25 尸霸 2 1
+MOV G44 1
+CALCVAR GLOBAL 终极使者 = 开启
+SAVEVAR GLOBAL 终极使者
+GMEXECUTE StartQuest @终极使者开始活动通知
+BREAK
+[@终极使者结束]
+#If
+Small G2 2
+#ACt
+break
+#IF
+True
+#ACT
+CLEARMAPMON HDZJ
+MOV G44 0
+CALCVAR GLOBAL 终极使者 = 未开始
+SAVEVAR GLOBAL 终极使者
+SENDMSG 0 终极使者提示:终极使者已经关闭！
+SENDMSG 26 终极使者提示:终极使者已经关闭！
+SENDMSG 14 终极使者提示:终极使者已经关闭！
+;===================================================================沙城争霸
+[@沙城争霸准备]
+#If
+Small <$HFCOUNT> 1
+#ACt
+Break
+
+#If
+True
+#ACt
+MOV G21 0
+ADDCASTLEWARGUILD ALL 沙城 0
+SENDMSG 0 (*)全服所有行会攻沙启动，攻城战将在10分过后开启。
+SENDMSG 14 (*)全服所有行会攻沙启动，攻城战将在10分过后开启。
+SENDMSG 16 (*)全服所有行会攻沙启动，攻城战将在10分过后开启。
+break
+[@开启沙城争霸]
+#If
+True
+#ACt
+MOV A18 元宝
+MOV A19 20000
+MOV A40 正在攻城
+SENDMSG 0 (*)全服所有行会沙城争霸活动已开启。
+SENDMSG 14 (*)全服所有行会沙城争霸活动已开启。
+SENDMSG 16 (*)全服所有行会沙城争霸活动已开启。
+CALCVAR GLOBAL 沙城争霸 = 开启
+SAVEVAR GLOBAL 沙城争霸
+GMEXECUTE StartQuest @沙城争霸开始活动通知
+BREAK
+[@关闭沙城争霸]
+#IF
+True
+#ACT
+CALCVAR GLOBAL 沙城争霸 = 未开始
+SAVEVAR GLOBAL 沙城争霸
+MOV A40 攻城结束
+MOV A105 未领取
+SENDMSG 0 (*)全服所有行会沙城争霸活动已结束。
+SENDMSG 14 (*)全服所有行会沙城争霸活动已结束。
+SENDMSG 16 (*)全服所有行会沙城争霸活动已结束。
+
+
+;=======================================
+[@重置天下第一]
+#ACT
+
+HCall <$GLOBAL(男战名字)> @天下第一被取消
+HCall <$GLOBAL(女战名字)> @天下第一被取消
+HCall <$GLOBAL(男法名字)> @天下第一被取消
+HCall <$GLOBAL(女法名字)> @天下第一被取消
+HCall <$GLOBAL(男道名字)> @天下第一被取消
+HCall <$GLOBAL(女道名字)> @天下第一被取消
+
+CALCVAR GLOBAL 男战名字 = 暂无
+CALCVAR GLOBAL 女战名字 = 暂无
+CALCVAR GLOBAL 男法名字 = 暂无
+CALCVAR GLOBAL 女法名字 = 暂无
+CALCVAR GLOBAL 男道名字 = 暂无
+CALCVAR GLOBAL 女道名字 = 暂无
+CALCVAR GLOBAL 男战等级 = 0
+CALCVAR GLOBAL 女战等级 = 0
+CALCVAR GLOBAL 男法等级 = 0
+CALCVAR GLOBAL 女法等级 = 0
+CALCVAR GLOBAL 男道等级 = 0
+CALCVAR GLOBAL 女道等级 = 0
+CALCVAR GLOBAL 男战属性 = 0
+CALCVAR GLOBAL 女战属性 = 0
+CALCVAR GLOBAL 男法属性 = 0
+CALCVAR GLOBAL 女法属性 = 0
+CALCVAR GLOBAL 男道属性 = 0
+CALCVAR GLOBAL 女道属性 = 0
+CALCVAR GLOBAL 男战经验 = 0
+CALCVAR GLOBAL 女战经验 = 0
+CALCVAR GLOBAL 男法经验 = 0
+CALCVAR GLOBAL 女法经验 = 0
+CALCVAR GLOBAL 男道经验 = 0
+CALCVAR GLOBAL 女道经验 = 0
+CALCVAR GLOBAL 男战时间 = 
+CALCVAR GLOBAL 女战时间 = 
+CALCVAR GLOBAL 男法时间 = 
+CALCVAR GLOBAL 女法时间 = 
+CALCVAR GLOBAL 男道时间 = 
+CALCVAR GLOBAL 女道时间 = 
+CALCVAR GLOBAL 男战工会 = 
+CALCVAR GLOBAL 女战工会 = 
+CALCVAR GLOBAL 男法工会 = 
+CALCVAR GLOBAL 女法工会 = 
+CALCVAR GLOBAL 男道工会 = 
+CALCVAR GLOBAL 女道工会 = 
+SENDMSG 9 》：{【天下第一】：}天下第一已经重置，想要上榜的玩家赶紧来申请吧... 254
+SENDMSG 9 》：{【天下第一】：}天下第一已经重置，想要上榜的玩家赶紧来申请吧... 254
+
+
+
+
+[@_物品掉落触发]
+#If
+CHECKVARLIST <$PARAM(4)> ..\QuestDiary\数据文件\游戏道具掉落名单.txt
+#ACT 
+;时间|人名|地图|怪物名字|装备名字
+MOV S$游戏道具掉落记录 <$DATETIME>|<$PARAM(10)>|<$PARAM(1)>|<$PARAM(3)>|<$PARAM(4)>
+INSERTVARLIST -1 <$STR(S$游戏道具掉落记录)> ..\QuestDiary\数据文件\游戏道具掉落记录.txt
+
+
+[@_镖车到达终点]
+#If
+True
+#ACT
+MOV A22 <$PARAM(1)>
+GMEXECUTE StartQuest @押镖到达

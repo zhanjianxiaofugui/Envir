@@ -1,0 +1,31 @@
+;此脚本为功能脚本，用于实现手游技能快捷键界面自定义触发
+[@MAIN]
+#IF
+!EQUAL $CLIENTFLAG 1
+#ACT
+SETSKILLKEYCFG 0 0 60011 370 20 10 20
+#SAY
+<Button|id=10|children={101}|x=842.0|y=0.0|loadDelay=0|percentwidth=6|percentheight=20|size=26|color=243|nimg=public/button/btn_push_08.png|pimg=public/button/btn_push_08.png|link=@技能界面>
+<RText|id=101|x=21.0|y=30.0|rotate=0|color=7|size=24|text=技\能|link=@nil>
+<Button|id=11|children={102}|x=842.0|y=112.0|percentwidth=6|percentheight=20|size=26|color=243|nimg=public/button/btn_push_09.png|pimg=public/button/btn_push_09.png|link=@配置界面>
+<RText|id=102|x=21.0|y=30.0|rotate=0|color=243|size=24|text=配\置|link=@nil>
+<Button|x=648.0|y=20.0|nimg=public/button/btn_close_01.png|pimg=public/button/btn_close_01.png|link=@关闭角色面板>
+
+
+
+
+
+
+[@技能界面]
+#IF
+RANDOM 1
+#ACT
+OPENUI 104 1
+BREAK
+
+[@配置界面]
+#IF
+RANDOM 1
+#ACT
+OPENUI 1401 1
+BREAK

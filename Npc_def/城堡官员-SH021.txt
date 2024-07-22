@@ -1,0 +1,145 @@
+[@main]
+#IF
+ISCASTLEMASTER
+#SAY
+这个城堡的库存货币是<$CASTLEGOLD>金币，今天的收入是\
+<$TODAYINCOME>金币.\\
+<取回资金/@withdrawal>           <存储资金/@receipts>\
+<申请城主雕像/@diaoxiang>  <编辑行会宣言/@xuanyan>\
+<开关城门命令/@treatdoor>\
+<城门城墙维修命令/@repaircastle>\
+<门卫的命令/@hirearchers>\
+<关闭/@exit>\
+#ELSESAY
+这个城堡的库存货币是<$CASTLEGOLD>金币，今天的收入是\
+<$TODAYINCOME>金币.\\
+
+[@diaoxiang]
+#IF
+ISCASTLEMASTER
+#SAY
+恭喜您成功占领沙城，荣登沙城城主的宝座。为了纪念这\
+个伟大的时刻，我们会在沙城（190 405）树立以您的大名\
+命名的个人雕像，您还可以输入您的城主宣言\
+（不超过50个汉字）！\
+<编辑城主宣言/@xuanyan>   <想好再来写/@exit>\
+#ACT
+MOV S1 $GENDER
+INC S1 $JOB
+CALCVAR GLOBAL 城主名 = $USERNAME
+SAVEVAR GLOBAL 城主名 ..\QuestDiary\数据文件\全局变量\全局变量.txt
+CALCVAR GLOBAL 城主职 = $STR(S1)
+SAVEVAR GLOBAL 城主职 ..\QuestDiary\数据文件\全局变量\全局变量.txt
+CALCVAR GLOBAL 城主级 = $LEVEL
+SAVEVAR GLOBAL 城主级 ..\QuestDiary\数据文件\全局变量\全局变量.txt
+#ELSESAY
+对不起，您不能申请沙城城主雕像。只有沙城第一位城主\
+才能申请\
+#ELSEACT
+break
+#IF
+CHECKJOB WARR
+GENDER MAN
+#ACT
+SETNPCAPPR 7 100
+break
+#IF
+CHECKJOB WARR
+GENDER WOMAN
+#ACT
+SETNPCAPPR 7 101
+break
+#IF
+CHECKJOB WIZARD
+GENDER MAN
+#ACT
+SETNPCAPPR 7 104
+break
+#IF
+CHECKJOB WIZARD
+GENDER WOMAN
+#ACT
+SETNPCAPPR 7 105
+break
+#IF
+CHECKJOB TAOS
+GENDER MAN
+#ACT
+SETNPCAPPR 7 102
+break
+#IF
+CHECKJOB TAOS
+GENDER WOMAN
+#ACT
+SETNPCAPPR 7 103
+break
+
+[@xuanyan]
+#IF
+ISCASTLEMASTER
+#SAY
+#ELSESAY
+你不是沙城城主。\
+#ELSEACT
+break
+#IF
+CHECKVAR GLOBAL 城主名 = $USERNAME
+#ACT
+QUERYVAL 0 0 100 @rzf_liuyan 请输入你的宣言
+break
+#ELSESAY
+沙城之主的雕像还没有树起来呢。
+
+[@rzf_liuyan]
+#IF
+ISCASTLEMASTER
+#SAY
+您的宣言已经保存成功！
+#ACT
+MOV A0 $STR(S0)
+break
+#ELSESAY
+保存宣言失败。
+
+[@treatdoor]
+城门当前状态为:<$CASTLEDOORSTATE>\ \
+ <关城门/@CLOSEMAINdoor>\
+ <开城门/@openMAINdoor>\ \
+ <返回/@MAIN>\
+
+[@openMAINdoor]
+城门已经打开。\ \
+ <返回/@treatdoor>\
+
+[@CLOSEMAINdoor]
+城门已经关闭。\ \
+ <返回/@treatdoor>\
+
+[@repaircastle]
+请选择要修理的位置？\ \
+ <修理城门/@repairdoor>\
+ <修理城墙/@repairwalls>\ \
+ <返回/@MAIN>\
+
+[@repairdoor]
+修理城门所需费用为:<$REPAIRDOORGOLD>金币。\ \
+ <修理城门/@repairdoornow>\
+ <返回/@repaircastle>\
+
+[@repairwalls]
+修理城墙所需费用为:<$REPAIRWALLGOLD>金币。\ \
+ <修理城墙一/@repairwallnow1>\
+ <修理城墙二/@repairwallnow2>\
+ <修理城墙三/@repairwallnow3>\ \
+ <返回/@repaircastle>\
+
+[@hirearchers]
+雇用弓箭手可保护城堡的安全，并维护城堡的治安。\
+每个弓箭手的雇用费用为<$ARCHERFEE>金币。\
+请选择要雇用弓箭手放置位置: \
+ <城门左攻箭手一/@hirearchernow1>  <城门左攻箭手二/@hirearchernow2>  <城门左攻箭手三/@hirearchernow3>\
+ <城门右弓箭手一/@hirearchernow4>  <城门右弓箭手二/@hirearchernow5>  <城门右弓箭手三/@hirearchernow6>\
+ <皇宫上左弓箭手/@hirearchernow11>  <皇宫上右弓箭手/@hirearchernow12>\
+ <皇宫下左弓箭手一/@hirearchernow7>  <皇宫下左弓箭手二/@hirearchernow8>\
+ <皇宫下右弓箭手一/@hirearchernow9>  <皇宫下右弓箭手二/@hirearchernow10>\
+ <返回/@MAIN>\

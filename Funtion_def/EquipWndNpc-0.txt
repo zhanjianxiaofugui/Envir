@@ -1,0 +1,1355 @@
+;此脚本为功能脚本，用于实现手游装备栏自定义触发
+[@MAIN]
+
+#IF
+EQUAL <$JOB> 道士
+#ACT
+MOV S$主属性 道术
+MOV S$技能伤害1 宠物数量
+MOV S$技能伤害2 宠物等阶
+MOV S$特殊属性 宠物伤害转移
+
+#IF
+EQUAL <$JOB> 战士
+#ACT
+MOV S$主属性 攻击
+MOV S$技能伤害1 烈火剑法
+MOV S$技能伤害2 怒斩天下
+MOV S$特殊属性 杀怪几率打出绿毒
+
+#IF
+EQUAL <$JOB> 法师
+#ACT
+MOV S$主属性 魔法
+MOV S$技能伤害1 流星火雨
+MOV S$技能伤害2 天怒惊雷
+MOV S$特殊属性 免疫所受所有伤害
+
+#IF
+LARGE <$HUMAN(法宝等级)> 0
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\法宝配置.ini  法宝配置  <$JOB><$HUMAN(法宝等级)>  S$法宝配置
+
+#IF
+!EQUAL <$STR(S$法宝配置)> 
+#ACT
+SPLIT <$STR(S$法宝配置)> | S$法宝配置数组
+MOV S$物品名称 <$STR(S$法宝配置数组_0)>
+MOV N$物品编号 <$STR(S$法宝配置数组_1)>
+MOV N$升级经验 <$STR(S$法宝配置数组_2)>
+
+
+#IF
+true
+#ACT
+MOV S$角色选中颜色 149
+MOV S$角色未选中颜色 89
+MOV N$法定显示 0
+
+#IF
+CHECKJOB Warrior
+#ACT
+MOV S$攻击属性颜色 250
+MOV S$魔法属性颜色 255
+MOV S$道术属性颜色 255
+
+#IF
+CHECKJOB Wizard
+#ACT
+MOV S$攻击属性颜色 255
+MOV S$魔法属性颜色 250
+MOV S$道术属性颜色 255
+
+#IF
+CHECKJOB Taoist
+#ACT
+MOV S$攻击属性颜色 255
+MOV S$魔法属性颜色 255
+MOV S$道术属性颜色 250
+
+#IF
+RANDOM 1
+#ACT
+MOV S$转职 关
+MOV S$升级 关
+MOV S$属性界面 普通属性
+;GOTO @开启角色面板
+GOTO @人物角色
+BREAK
+
+[@人物角色]
+#IF
+!EQUAL <$HUMAN(当前佩戴法宝)> 
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\短寿法宝.ini <$HUMAN(当前佩戴法宝)> <$JOB>第<$HUMAN(<$HUMAN(当前佩戴法宝)>重数)>阶 S$角色显示法宝
+split <$STR(S$角色显示法宝)> | S$角色显示法宝
+
+#IF
+EQUAL $CLIENTFLAG 1
+#ACT
+; GOTO @端游人物界面
+BREAK
+#IF
+!EQUAL $CLIENTFLAG 1
+#ACT
+GOTO @手游人物界面
+
+[@端游人物界面] NPC(15151)
+#IF
+true
+#SAY
+<@@!BTN 3,63206,3,63206,3,63217,535,-25,关闭/@EXIT>\
+
+[@手游人物界面]
+#IF
+TRUE
+#ACT
+SETEQUIPCFG 10002 1 0 0 0
+#SAY
+<Button|x=370.0|y=-5.0|nimg=public/025.png|color=255|size=18|link=@关闭>
+<Button|x=205.0|y=82.0|a=2|pimg=public/zdy/60277png|mimg=public/zdy/60277.png|nimg=public/zdy/60277.png|scale=1|size=18|color=125|text={$USERNAME}>
+<Button|x=205.0|y=102.0|a=2|pimg=public/zdy/60277png|mimg=public/zdy/60277.png|nimg=public/zdy/60277.png|scale=1|size=18|color=215|text={$GUILDNAME}>
+
+<Button|id=12|children={12a,12b,12c}|a=4|x=385|y=130|pimg=public/button/btn_push_08.png|outlinecolor=0|nimg=public/button/btn_push_09.png|outline=2|size=16|color=251|link=@手游人物界面>
+<RText|id=12a|x=18.0|y=15.0|color=251|size=18|text=角>
+<RText|id=12b|x=18.0|y=47.0|color=251|size=18|text=色>
+<Layout|id=12c|width=40|height=80|link=@手游人物界面>
+
+<Button|id=13|children={13a,13b,13c}|a=4|x=385|y=207|pimg=public/button/btn_push_09.png|outlinecolor=0|nimg=public/button/btn_push_08.png|outline=2|size=16|color=251|link=@人物属性>
+<RText|id=13a|x=18.0|y=15.0|color=247|size=18|text=属>
+<RText|id=13b|x=18.0|y=47.0|color=247|size=18|text=性>
+<Layout|id=13c|width=40|height=80|link=@人物属性>
+
+<Button|id=14|children={14a,14b,14c}|a=4|x=385|y=284|pimg=public/button/btn_push_09.png|outlinecolor=0|nimg=public/button/btn_push_08.png|outline=2|size=16|color=251|link=@人物属性>
+<RText|id=14a|x=18.0|y=15.0|color=247|size=18|text=称>
+<RText|id=14b|x=18.0|y=47.0|color=247|size=18|text=号>
+<Layout|id=14c|width=40|height=80|link=@人物称号>
+
+[@人物称号]
+#if
+true
+#act
+SETEQUIPCFG 10004 1 1 20 -30
+goto @手游当前佩戴的称号
+goto @手游称号初始化
+goto @手游拥有称号显示初始化
+#SAY
+<Button|x=370.0|y=-5.0|nimg=public/025.png|color=255|size=18|link=@关闭>
+; <Text|x=175.0|y=50.0|color=251|size=24|text=称号>
+
+<Button|id=12|children={12a,12b,12c}|a=4|x=385|y=130|pimg=public/button/btn_push_09.png|outlinecolor=0|nimg=public/button/btn_push_08.png|outline=2|size=16|color=251|link=@手游人物界面>
+<RText|id=12a|x=18.0|y=15.0|color=247|size=18|text=角>
+<RText|id=12b|x=18.0|y=47.0|color=247|size=18|text=色>
+<Layout|id=12c|width=40|height=80|link=@手游人物界面>
+
+<Button|id=13|children={13a,13b,13c}|a=4|x=385|y=207|pimg=public/button/btn_push_09.png|outlinecolor=0|nimg=public/button/btn_push_08.png|outline=2|size=16|color=251|link=@人物属性>
+<RText|id=13a|x=18.0|y=15.0|color=247|size=18|text=属>
+<RText|id=13b|x=18.0|y=47.0|color=247|size=18|text=性>
+<Layout|id=13c|width=40|height=80|link=@人物属性>
+
+<Button|id=14|children={14a,14b,14c}|a=4|x=385|y=284|pimg=public/button/btn_push_08.png|outlinecolor=0|nimg=public/button/btn_push_09.png|outline=2|size=16|color=251|link=@人物属性>
+<RText|id=14a|x=18.0|y=15.0|color=251|size=18|text=称>
+<RText|id=14b|x=18.0|y=47.0|color=251|size=18|text=号>
+<Layout|id=14c|width=40|height=80|link=@人物称号>
+
+<Img|x=95.0|y=50.0|img=public/fuli/w.png|esc=0>
+<Img|x=160.0|y=62.0|width=|height=42|img=public/fuli/jindu1.png|esc=0>
+
+<Button|x=130.0|y=125.0|nimg=public/043.png|size=16|color=251|text=我的称号>
+
+<ListView|x=20.0|y=160.0|children={ch_1,ch_2,ch_3,ch_4,ch_5,ch_6,ch_7,ch_8}|width=362|height=365|move=0|color=x>
+
+<$STR(S$手游拥有称号显示1)>
+<$STR(S$手游拥有称号显示2)>
+<$STR(S$手游拥有称号显示3)>
+<$STR(S$手游拥有称号显示4)>
+<$STR(S$手游拥有称号显示5)>
+<$STR(S$手游拥有称号显示6)>
+<$STR(S$手游拥有称号显示7)>
+<$STR(S$手游拥有称号显示8)>
+<Img|id=ch_1a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_1b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+<Img|id=ch_2a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_2b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+<Img|id=ch_3a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_3b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+<Img|id=ch_4a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_4b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+<Img|id=ch_5a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_5b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+<Img|id=ch_6a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_6b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+<Img|id=ch_7a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_7b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+<Img|id=ch_8a|x=20.0|y=65.0|img=public/024.png|esc=0>
+<Img|id=ch_8b|x=0.0|y=0.0|img=public/fuli/w.png|scale=0.9|esc=0>
+
+
+
+;当前佩戴的称号
+#if
+!equal <$human(当前佩戴称号素材)>
+#act
+goto @手游佩戴中称号坐标调整
+#say
+<ItemShow|x=95.0|y=50.0|itemid=1|itemcount=1|showtips=1|name=测试称号1>
+<$STR(S$手游佩戴中称号显示)>
+; <RText|a=2|x=225.0|y=70.0|color=251|size=18|text=<$STR(S$当前佩戴的称号名字)>>
+
+;已拥有的称号列表
+#if
+large N$拥有称号数量 0
+#say
+<ItemShow|id=ch_1c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Img|id=ch_1d|x=140.0|y=20.0|img=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_0)>.png|scale=1|esc=0>
+#if
+large N$拥有称号数量 1
+#say
+<ItemShow|id=ch_2c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Img|id=ch_2d|x=136.0|y=15.0|img=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_1)>.png|scale=1|esc=0>
+#if
+large N$拥有称号数量 2
+#say
+<ItemShow|id=ch_3c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Frames|id=ch_3d|x=128.0|y=0.0|count=20|prefix=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_2)>_|suffix=.png|loop=-1|speed=20>
+#if
+large N$拥有称号数量 3
+#say
+<ItemShow|id=ch_4c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Frames|id=ch_4d|x=110.0|y=0.0|count=15|prefix=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_3)>_|suffix=.png|loop=-1|speed=20>
+#if
+large N$拥有称号数量 4
+#say
+<ItemShow|id=ch_5c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Frames|id=ch_5d|x=100.0|y=-5.0|count=10|prefix=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_4)>_|suffix=.png|loop=-1|speed=20>
+#if
+large N$拥有称号数量 5
+#say
+<ItemShow|id=ch_6c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Frames|id=ch_6d|x=101.0|y=-5.0|count=11|prefix=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_5)>_|suffix=.png|loop=-1|speed=20>
+#if
+large N$拥有称号数量 6
+#say
+<ItemShow|id=ch_7c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Frames|id=ch_7d|x=100.0|y=3.0|count=15|prefix=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_6)>_|suffix=.png|loop=-1|speed=20>
+#if
+large N$拥有称号数量 7
+#say
+<ItemShow|id=ch_8c|x=-4.0|y=-4.0|itemid=1|itemcount=1|bgtype=1|showtips=1|name=测试称号1>
+<Frames|id=ch_8d|x=135.0|y=3.0|count=20|prefix=picpackage/3/<$STR(S$拥有称号的素材编号列表分割_7)>_|suffix=.png|loop=-1|speed=20>
+
+[@手游佩戴中称号坐标调整]
+#if
+true
+#act
+mov S$手游佩戴中称号显示 
+
+#If
+equal <$human(当前佩戴称号素材)> 60000
+#act
+mov S$手游佩戴中称号显示 <Img|x=190.0|y=67.0|img=picpackage/3/<$human(当前佩戴称号素材)>.png|scale=1|esc=0>
+#If
+equal <$human(当前佩戴称号素材)> 60001
+#act
+mov S$手游佩戴中称号显示 <Img|x=185.0|y=60.0|img=picpackage/3/<$human(当前佩戴称号素材)>.png|scale=1|esc=0>
+#If
+equal <$human(当前佩戴称号素材)> 60002
+#act
+mov S$手游佩戴中称号显示 <Frames|x=175.0|y=52.0|count=20|prefix=picpackage/3/<$human(当前佩戴称号素材)>_|suffix=.png|loop=-1|speed=20>
+#If
+equal <$human(当前佩戴称号素材)> 60003
+#act
+mov S$手游佩戴中称号显示 <Frames|x=160.0|y=55.0|count=15|prefix=picpackage/3/<$human(当前佩戴称号素材)>_|suffix=.png|loop=-1|speed=20>
+#If
+equal <$human(当前佩戴称号素材)> 60004
+#act
+mov S$手游佩戴中称号显示 <Frames|x=147.0|y=43.0|count=10|prefix=picpackage/3/<$human(当前佩戴称号素材)>_|suffix=.png|loop=-1|speed=20>
+#If
+equal <$human(当前佩戴称号素材)> 60005
+#act
+mov S$手游佩戴中称号显示 <Frames|x=147.0|y=43.0|count=11|prefix=picpackage/3/<$human(当前佩戴称号素材)>_|suffix=.png|loop=-1|speed=20>
+#If
+equal <$human(当前佩戴称号素材)> 60006
+#act
+mov S$手游佩戴中称号显示 <Frames|x=145.0|y=55.0|count=15|prefix=picpackage/3/<$human(当前佩戴称号素材)>_|suffix=.png|loop=-1|speed=20>
+#If
+equal <$human(当前佩戴称号素材)> 60010
+#act
+mov S$手游佩戴中称号显示 <Frames|x=180.0|y=55.0|count=20|prefix=picpackage/3/<$human(当前佩戴称号素材)>_|suffix=.png|loop=-1|speed=20>
+
+[@手游拥有称号显示初始化]
+#if
+true
+#act
+mov S$手游拥有称号显示1
+mov S$手游拥有称号显示2
+mov S$手游拥有称号显示3
+mov S$手游拥有称号显示4
+mov S$手游拥有称号显示5
+mov S$手游拥有称号显示6
+mov S$手游拥有称号显示7
+mov S$手游拥有称号显示8
+
+#if
+large N$拥有称号数量 0
+#act
+mov S$手游拥有称号显示1 <Layout|id=ch_1|children={ch_1a,ch_1b,ch_1c,ch_1d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_0)>>
+#elseact
+mov S$手游拥有称号显示1 <Layout|id=ch_1|children={ch_1a,ch_1b,ch_1c,ch_1d}|width=362|height=67|color=x>
+
+#if
+large N$拥有称号数量 1
+#act
+mov S$手游拥有称号显示2 <Layout|id=ch_2|children={ch_2a,ch_2b,ch_2c,ch_2d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_1)>>
+#elseact
+mov S$手游拥有称号显示2 <Layout|id=ch_2|children={ch_2a,ch_2b,ch_2c,ch_2d}|width=362|height=67|color=x>
+
+#if
+large N$拥有称号数量 2
+#act
+mov S$手游拥有称号显示3 <Layout|id=ch_3|children={ch_3a,ch_3b,ch_3c,ch_3d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_2)>>
+#elseact
+mov S$手游拥有称号显示3 <Layout|id=ch_3|children={ch_3a,ch_3b,ch_3c,ch_3d}|width=362|height=67|color=x>
+
+#if
+large N$拥有称号数量 3
+#act
+mov S$手游拥有称号显示4 <Layout|id=ch_4|children={ch_4a,ch_4b,ch_4c,ch_4d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_3)>>
+#elseact
+mov S$手游拥有称号显示4 <Layout|id=ch_4|children={ch_4a,ch_4b,ch_4c,ch_4d}|width=362|height=67|color=x>
+
+#if
+large N$拥有称号数量 4
+#act
+mov S$手游拥有称号显示5 <Layout|id=ch_5|children={ch_5a,ch_5b,ch_5c,ch_5d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_4)>>
+#elseact
+mov S$手游拥有称号显示5 <Layout|id=ch_5|children={ch_5a,ch_5b,ch_5c,ch_5d}|width=362|height=67|color=x>
+
+#if
+large N$拥有称号数量 5
+#act
+mov S$手游拥有称号显示6 <Layout|id=ch_6|children={ch_6a,ch_6b,ch_6c,ch_6d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_5)>>
+#elseact
+mov S$手游拥有称号显示6 <Layout|id=ch_6|children={ch_6a,ch_6b,ch_6c,ch_6d}|width=362|height=67|color=x>
+
+#if
+large N$拥有称号数量 6
+#act
+mov S$手游拥有称号显示7 <Layout|id=ch_7|children={ch_7a,ch_7b,ch_7c,ch_7d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_6)>>
+#elseact
+mov S$手游拥有称号显示7 <Layout|id=ch_7|children={ch_7a,ch_7b,ch_7c,ch_7d}|width=362|height=67|color=x>
+
+#if
+large N$拥有称号数量 7
+#act
+mov S$手游拥有称号显示8 <Layout|id=ch_8|children={ch_8a,ch_8b,ch_8c,ch_8d}|width=362|height=67|color=x|link=@手游佩戴称号&<$STR(S$拥有称号的素材编号列表分割_7)>>
+#elseact
+mov S$手游拥有称号显示8 <Layout|id=ch_8|children={ch_8a,ch_8b,ch_8c,ch_8d}|width=362|height=67|color=x>
+
+
+
+[@手游当前佩戴的称号]
+#if
+equal <$human(当前佩戴称号素材)>
+#act
+mov S$当前佩戴的称号名字
+#if
+equal <$human(当前佩戴称号素材)> 60000
+#act
+mov S$当前佩戴的称号名字 王城勇士
+#if
+equal <$human(当前佩戴称号素材)> 60001
+#act
+mov S$当前佩戴的称号名字 荣耀战神
+#if
+equal <$human(当前佩戴称号素材)> 60002
+#act
+mov S$当前佩戴的称号名字 圣武天王
+#if
+equal <$human(当前佩戴称号素材)> 60003
+#act
+mov S$当前佩戴的称号名字 勇冠三军
+#if
+equal <$human(当前佩戴称号素材)> 60004
+#act
+mov S$当前佩戴的称号名字 壕无人性
+#if
+equal <$human(当前佩戴称号素材)> 60005
+#act
+mov S$当前佩戴的称号名字 至尊主宰
+#if
+equal <$human(当前佩戴称号素材)> 60006
+#act
+mov S$当前佩戴的称号名字 傲视诸神
+#if
+equal <$human(当前佩戴称号素材)> 60010
+#act
+mov S$当前佩戴的称号名字 第一战神
+#if
+equal <$human(当前佩戴称号素材)> 60011
+#act
+mov S$当前佩戴的称号名字 第一法王
+#if
+equal <$human(当前佩戴称号素材)> 60012
+#act
+mov S$当前佩戴的称号名字 第一道尊
+
+
+[@手游称号初始化]
+#if
+true
+#act
+mov S$拥有称号列表
+mov S$拥有称号的素材编号列表
+mov N$拥有称号数量 0
+
+
+#if
+!equal A23
+#act
+SPLIT <$STR(A23)> | S$战士天下第一存储分割
+#if
+!equal A24
+#act
+SPLIT <$STR(A24)> | S$法师天下第一存储分割
+#if
+!equal A25
+#act
+SPLIT <$STR(A25)> | S$道士天下第一存储分割
+
+
+#if
+large <$human(排资论辈等级)> 0
+#act
+INC S$拥有称号列表 王城勇士|
+INC S$拥有称号的素材编号列表 60000|
+#if
+large <$human(排资论辈等级)> 1
+#act
+INC S$拥有称号列表 荣耀战神|
+INC S$拥有称号的素材编号列表 60001|
+#if
+large <$human(排资论辈等级)> 2
+#act
+INC S$拥有称号列表 圣武天王|
+INC S$拥有称号的素材编号列表 60002|
+#if
+large <$human(排资论辈等级)> 3
+#act
+INC S$拥有称号列表 勇冠三军|
+INC S$拥有称号的素材编号列表 60003|
+#if
+large <$human(排资论辈等级)> 4
+#act
+INC S$拥有称号列表 壕无人性|
+INC S$拥有称号的素材编号列表 60004|
+#if
+large <$human(排资论辈等级)> 5
+#act
+INC S$拥有称号列表 至尊主宰|
+INC S$拥有称号的素材编号列表 60005|
+#if
+large <$human(排资论辈等级)> 6
+#act
+INC S$拥有称号列表 傲视诸神|
+INC S$拥有称号的素材编号列表 60006|
+#if
+!equal A23
+equal <$username> <$STR(S$战士天下第一存储分割_0)>
+#act
+INC S$拥有称号列表 第一战神
+INC S$拥有称号的素材编号列表 60010
+#if
+!equal A24
+equal <$username> <$STR(S$法师天下第一存储分割_0)>
+#act
+INC S$拥有称号列表 第一法王
+INC S$拥有称号的素材编号列表 60011
+#if
+!equal A25
+equal <$username> <$STR(S$道士天下第一存储分割_0)>
+#act
+INC S$拥有称号列表 第一道尊
+INC S$拥有称号的素材编号列表 60012
+
+
+#if
+!equal S$拥有称号列表
+#act
+SPLIT <$STR(S$拥有称号列表)> | S$拥有称号列表分割 N$拥有称号数量
+SPLIT <$STR(S$拥有称号的素材编号列表)> | S$拥有称号的素材编号列表分割
+
+
+
+
+[@手游佩戴称号]
+#if
+true
+#act
+mov S$要使用的称号素材
+mov S$要使用的称号素材 <$SCRIPTPARAM(1)>
+QueryMsg  是否佩戴此称号？ @确定佩戴此称号
+
+[@确定佩戴此称号1]
+#if
+true
+#act
+CALCVAR HUMAN 当前佩戴称号素材 = <$STR(S$要使用的称号素材)>
+SAVEVAR HUMAN 当前佩戴称号素材
+#CALL [\封号系统\在线封号.txt] @临时封号
+goto @人物称号
+
+
+[@人物属性]
+#IF
+TRUE
+#ACT
+MOV N$吸血点数 0
+MOV N$对怪伤害 0
+MOV N$吸血百分比 0
+#CALL [\封号系统\在线封号.txt] @临时封号
+INC N$吸血百分比 <$STR(P20)>
+;INC N$吸血百分比 <$ABSORDLOOD>
+SETEQUIPCFG 10004 1 1 20 -30
+#SAY
+<Button|x=370.0|y=-5.0|nimg=public/025.png|color=255|size=18|link=@关闭>
+<Text|x=162.0|y=50.0|color=251|size=24|text=人物属性>
+
+<Button|id=12|children={12a,12b,12c}|a=4|x=385|y=130|pimg=public/button/btn_push_09.png|outlinecolor=0|nimg=public/button/btn_push_08.png|outline=2|size=16|color=251|link=@手游人物界面>
+<RText|id=12a|x=18.0|y=15.0|color=247|size=18|text=角>
+<RText|id=12b|x=18.0|y=47.0|color=247|size=18|text=色>
+<Layout|id=12c|width=40|height=80|link=@手游人物界面>
+
+<Button|id=13|children={13a,13b,13c}|a=4|x=385|y=207|pimg=public/button/btn_push_08.png|outlinecolor=0|nimg=public/button/btn_push_09.png|outline=2|size=16|color=251|link=@人物属性>
+<RText|id=13a|x=18.0|y=15.0|color=251|size=18|text=属>
+<RText|id=13b|x=18.0|y=47.0|color=251|size=18|text=性>
+<Layout|id=13c|width=40|height=80|link=@人物属性>
+
+<Button|id=14|children={14a,14b,14c}|a=4|x=385|y=284|pimg=public/button/btn_push_09.png|outlinecolor=0|nimg=public/button/btn_push_08.png|outline=2|size=16|color=251|link=@人物属性>
+<RText|id=14a|x=18.0|y=15.0|color=247|size=18|text=称>
+<RText|id=14b|x=18.0|y=47.0|color=247|size=18|text=号>
+<Layout|id=14c|width=40|height=80|link=@人物称号>
+
+#If
+equal <$ITEMINFO[<$USEITEMMAKEINDEX(12)>].VALUEEX(187)> 26
+#ACt
+INC N$吸血点数 <$ITEMINFO[<$USEITEMMAKEINDEX(12)>].VALUEEX(170)>
+#If
+equal <$ITEMINFO[<$USEITEMMAKEINDEX(3)>].VALUEEX(187)> 15
+#ACt
+INC N$对怪伤害 <$ITEMINFO[<$USEITEMMAKEINDEX(12)>].VALUEEX(170)>
+
+#If
+equal <$ITEMINFO[<$USEITEMMAKEINDEX(12)>].VALUEEX(186)> 8
+#ACt
+INC N$对怪伤害 5
+
+#If
+equal <$ITEMINFO[<$USEITEMMAKEINDEX(12)>].VALUEEX(186)> 31
+#ACt
+INC N$对怪伤害 15
+#If
+true
+#ACt
+MOV N$TEMP <$CUSTOMVALUE(35)>
+DEC N$TEMP 100
+MOV S$临时显示倍攻 1.
+#IF
+large N$TEMP 9
+#ACT
+INC S$临时显示倍攻 <$STR(N$TEMP)>
+#elseACT
+INC S$临时显示倍攻 0
+INC S$临时显示倍攻 <$STR(N$TEMP)>
+
+#If
+true
+#ACt
+MOV N$TEMP <$CUSTOMVALUE(37)>
+DEC N$TEMP 100
+MOV S$临时显示倍防 1.
+#IF
+large N$TEMP 9
+#ACT
+INC S$临时显示倍防 <$STR(N$TEMP)>
+#elseACT
+INC S$临时显示倍防 0
+INC S$临时显示倍防 <$STR(N$TEMP)>
+
+
+#If
+true
+#ACt
+MOV N$临时显示爆率 <$CUSTOMVALUE(33)>
+DEC N$临时显示爆率 100
+#IF
+True
+#say
+<ListView|id=300|children={20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60}|x=60|y=100|width=300|height=400|rotate=0|color=x|img=public/down.png>
+
+<RText|id=20|children=20a|x=0.0|y=0.0|color=255|size=18|text=<生命值:/FCOLOR=255>>
+<Button|id=20a|x=90.0|y=0.0|pimg=public/zdy/60278.png|mimg=public/zdy/60278.png|nimg=public/zdy/60278.png|scale=1|size=18|color=255|text=<$HP>/<$MAXHP>>
+
+<RText|id=21|children=21a|x=0.0|y=0.0|color=255|size=18|text=<魔法值:/FCOLOR=255>>
+<Button|id=21a|x=90.0|y=0.0|pimg=public/zdy/60279.png|mimg=public/zdy/60279.png|nimg=public/zdy/60279.png|scale=1|size=18|color=255|text=<$MP>/<$MAXMP>>
+
+<RText|id=22|children=22a|x=0.0|y=0.0|color=255|size=18|text=<当前经验值:/FCOLOR=255>>
+<Button|id=22a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$EXP>>
+
+<RText|id=23|children=23a|x=0.0|y=0.0|color=255|size=18|text=<升级经验值:/FCOLOR=255>>
+<Button|id=23a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$MAXEXP>>
+
+<RText|id=24|children=24a|x=0.0|y=0.0|color=<$STR(S$攻击属性颜色)>|size=18|text=<攻击力:/FCOLOR=255>>
+<Button|id=24a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=<$STR(S$攻击属性颜色)>|text=<$DC>-<$MAXDC>>
+
+<RText|id=25|children=25a|x=0.0|y=0.0|color=<$STR(S$魔法属性颜色)>|size=18|text=<魔法力:/FCOLOR=255>>
+<Button|id=25a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=<$STR(S$魔法属性颜色)>|text=<$MC>-<$MAXMC>>
+
+<RText|id=26|children=26a|x=0.0|y=0.0|color=<$STR(S$道术属性颜色)>|size=18|text=<道术力:/FCOLOR=255>>
+<Button|id=26a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=<$STR(S$道术属性颜色)>|text=<$SC>-<$MAXSC>>
+
+<RText|id=27|children=27a|x=0.0|y=0.0|color=255|size=18|text=<防御力:/FCOLOR=255>>
+<Button|id=27a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$AC>-<$MAXAC>>
+
+<RText|id=28|children=28a|x=0.0|y=0.0|color=255|size=18|text=<魔防力:/FCOLOR=255>>
+<Button|id=28a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$MAC>-<$MAXMAC>>
+
+<RText|id=29|children=29a|x=0.0|y=0.0|color=255|size=18|text=<腕　力:/FCOLOR=255>>
+<Button|id=29a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$HW>/<$MAXHW>>
+
+<RText|id=30|children=30a|x=0.0|y=0.0|color=255|size=18|text=<负　重:/FCOLOR=255>>
+<Button|id=30a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$WW>/<$MAXWW>>
+
+<RText|id=31|children=31a|x=0.0|y=0.0|color=255|size=18|text=<命　中:/FCOLOR=255>>
+<Button|id=31a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$HIT>>
+
+<RText|id=32|children=32a|x=0.0|y=0.0|color=255|size=18|text=<躲　避:/FCOLOR=255>>
+<Button|id=32a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$SPD>>
+
+<RText|id=33|children=33a|x=0.0|y=0.0|color=255|size=18|text=<魔法命中:/FCOLOR=255>>
+<Button|id=33a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$MAGNICETY>%>
+
+<RText|id=34|children=34a|x=0.0|y=0.0|color=255|size=18|text=<魔法躲避:/FCOLOR=255>>
+<Button|id=34a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$ANTIMAGIC>%>
+
+<RText|id=35|children=35a|x=0.0|y=0.0|color=255|size=18|text=<PK　值:/FCOLOR=255>>
+<Button|id=35a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$PKPOINT>>
+
+<RText|id=36|children=36a|x=0.0|y=0.0|color=255|size=18|text=<声望值:/FCOLOR=255>>
+<Button|id=36a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$money(声望)>>
+
+<RText|id=37|children=37a|x=0.0|y=0.0|color=255|size=18|text=<幸　运:/FCOLOR=255>>
+<Button|id=37a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$LUCK>>
+
+<RText|id=38|children=38a|x=0.0|y=0.0|color=255|size=18|text=<诅　咒:/FCOLOR=255>>
+<Button|id=38a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$CURSE>>
+
+<RText|id=39|children=39a|x=0.0|y=0.0|color=255|size=18|text=<暴　击:/FCOLOR=255>>
+<Button|id=39a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$THUMPRATE>%>
+
+<RText|id=40|children=40a|x=0.0|y=0.0|color=255|size=18|text=<吸　血:/FCOLOR=255>>
+<Button|id=40a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(N$吸血百分比)>%>
+
+<RText|id=41|children=41a|x=0.0|y=0.0|color=255|size=18|text=<免　伤:/FCOLOR=255>>
+<Button|id=41a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$CustomValue(36)>%>
+
+<RText|id=42|children=42a|x=0.0|y=0.0|color=255|size=18|text=<对怪伤害:/FCOLOR=255>>
+<Button|id=42a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(N$对怪伤害)>>
+
+<RText|id=43|children=43a|x=0.0|y=0.0|color=255|size=18|text=<忽视物防:/FCOLOR=255>>
+<Button|id=43a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$REDUCEAC>>
+
+<RText|id=44|children=44a|x=0.0|y=0.0|color=255|size=18|text=<忽视魔防:/FCOLOR=255>>
+<Button|id=44a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$REDUCEMAC>>
+
+<RText|id=45|children=45a|x=0.0|y=0.0|color=255|size=18|text=<暴伤减免:/FCOLOR=255>>
+<Button|id=45a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(P37)>>
+
+<RText|id=46|children=46a|x=0.0|y=0.0|color=255|size=18|text=<暴击抵抗:/FCOLOR=255>>
+<Button|id=46a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(P45)>>
+
+<RText|id=47|children=47a|x=0.0|y=0.0|color=255|size=18|text=<暴击伤害:/FCOLOR=255>>
+<Button|id=47a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(P46)>>
+
+<RText|id=48|children=48a|x=0.0|y=0.0|color=255|size=18|text=<吸血点数:/FCOLOR=255>>
+<Button|id=48a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(N$吸血点数)>>
+
+<RText|id=49|children=49a|x=0.0|y=0.0|color=255|size=18|text=<攻击速度:/FCOLOR=255>>
+<Button|id=49a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(N$临时攻击速度)>>
+
+<RText|id=50|children=50a|x=0.0|y=0.0|color=255|size=18|text=<伤害反射:/FCOLOR=255>>
+<Button|id=50a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(P22)>>
+
+<RText|id=51|children=51a|x=0.0|y=0.0|color=255|size=18|text=<中毒躲避:/FCOLOR=255>>
+<Button|id=51a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(P16)>>
+
+<RText|id=52|children=52a|x=0.0|y=0.0|color=255|size=18|text=<攻击倍数:/FCOLOR=255>>
+<Button|id=52a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(S$临时显示倍攻)>>
+
+<RText|id=53|children=53a|x=0.0|y=0.0|color=255|size=18|text=<防御倍数:/FCOLOR=255>>
+<Button|id=53a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(S$临时显示倍防)>>
+
+<RText|id=54|children=54a|x=0.0|y=0.0|color=255|size=18|text=<爆率加成:/FCOLOR=255>>
+<Button|id=54a|x=90.0|y=0.0|pimg=public/zdy/60281.png|mimg=public/zdy/60281.png|nimg=public/zdy/60281.png|scale=1|size=18|color=255|text=<$STR(N$临时显示爆率)>%>
+
+
+
+[@领域之力]
+#If
+large <$HUMAN(领域之力1级别)> 0
+#Act
+ReadConfigFileItem ..\QuestDiary\配置文件\领域之力配置.ini 绝地反击  <$HUMAN(领域之力1级别)>  S$绝地反击显示
+#If
+large <$HUMAN(领域之力2级别)> 0
+#Act
+ReadConfigFileItem ..\QuestDiary\配置文件\领域之力配置.ini 职业仇视  <$HUMAN(领域之力2级别)>  S$职业仇视显示
+#If
+large <$HUMAN(领域之力3级别)> 0
+#Act
+ReadConfigFileItem ..\QuestDiary\配置文件\领域之力配置.ini 暴走模式  <$HUMAN(领域之力3级别)>  S$暴走模式显示
+#If
+large <$HUMAN(领域之力4级别)> 0
+#Act
+ReadConfigFileItem ..\QuestDiary\配置文件\领域之力配置.ini 三尺剑罡  <$HUMAN(领域之力4级别)>  S$三尺剑罡显示
+#If
+large <$HUMAN(领域之力5级别)> 0
+#Act
+ReadConfigFileItem ..\QuestDiary\配置文件\领域之力配置.ini 怒海凶涛  <$HUMAN(领域之力5级别)>  S$怒海凶涛显示
+#IF
+TRUE
+#ACT
+SETEQUIPCFG 60265 1 1 20 -30
+#SAY
+<Button|x=400.0|y=-5.0|nimg=public/025.png|color=255|size=18|link=@关闭>
+<Text|x=162.0|y=28.0|color=251|size=24|text=领域天赋>
+
+<Button|id=1003|x=440.0|y=80.0|nimg=public/zdy/js1.png|pimg=public/zdy/js1.png|mimg=public/zdy/js2.png|size=20|color=<$STR(S$角色未选中颜色)>|link=@人物角色>
+<Button|id=1004|x=440.0|y=140.0|nimg=public/zdy/sx1.png|pimg=public/zdy/sx1.png|mimg=public/zdy/sx2.png|size=20|color=<$STR(S$角色未选中颜色)>|link=@人物属性>
+<Button|id=1000|x=440.0|y=200.0|nimg=public/zdy/ly2.png|pimg=public/zdy/ly2.png|mimg=public/zdy/ly1.png|size=20|color=<$STR(S$角色选中颜色)>|link=@领域之力>
+
+<RText|x=175.0|y=90.0|color=154|size=22|text=<领域<$HUMAN(领域之力层数)>重/FCOLOR=250>>
+<Img|x=30.0|y=150.0|children={1,2,3,4,5,6,7,8,9}|width=383|height=60|scale=1|img=public/lingyu/bg_tianfu.png|esc=0>
+<Img|id=1|x=0.0|y=0.0|width=58|height=58|scale=1|img=public/lingyu/fanji.png|esc=0>
+<Img|x=30.0|y=230.0|children={10,11,12,13,14,15,16,17,18,19}|width=383|height=60|scale=1|img=public/lingyu/bg_tianfu.png|esc=0>
+<Img|id=10|x=0.0|y=0.0|width=58|height=58|scale=1|img=public/lingyu/choushi.png|esc=0>
+<Img|x=30.0|y=310.0|children={20,21,22,23,24,25,26,27,28,29}|width=383|height=60|scale=1|img=public/lingyu/bg_tianfu.png|esc=0>
+<Img|id=20|x=0.0|y=0.0|width=58|height=58|scale=1|img=public/lingyu/baozou.png|esc=0>
+<Img|x=30.0|y=390.0|children={30,31,32,33,34,35,36,37,38,39}|width=383|height=60|scale=1|img=public/lingyu/bg_tianfu.png|esc=0>
+<Img|id=30|x=0.0|y=0.0|width=58|height=58|scale=1|img=public/lingyu/jiangang.png|esc=0>
+<Img|x=30.0|y=470.0|children={40,41,42,43,44,45,46,47,48,49}|width=383|height=60|scale=1|img=public/lingyu/bg_tianfu.png|esc=0>
+<Img|id=40|x=0.0|y=0.0|width=58|height=58|scale=1|img=public/lingyu/xiongtao.png|esc=0>
+#IF
+large <$HUMAN(领域之力1级别)> 0
+;true
+#SAY
+<RText|id=2|x=70.0|y=0.0|color=154|size=18|text=<绝地反击(Lv.<$HUMAN(领域之力1级别)>)/FCOLOR=250>>
+;<RText|id=3|x=70.0|y=25.0|color=154|size=16|text=<最高级:当自身HP低于40%,对敌伤害增加5%/FCOLOR=250>>
+<RText|id=4|x=70.0|y=25.0|color=154|size=16|text=<<$STR(S$绝地反击显示)>/FCOLOR=250>>
+#ELSESAY
+<RText|id=2|x=155.0|y=12.0|color=154|size=22|text=<未激活/FCOLOR=250>>
+
+
+#IF
+large <$HUMAN(领域之力2级别)> 0
+#SAY
+<RText|id=11|x=70.0|y=0.0|color=154|size=18|text=<职业仇视(Lv.<$HUMAN(领域之力2级别)>)/FCOLOR=250>>
+;<RText|id=12|x=70.0|y=25.0|color=154|size=16|text=<最高级:攻击其他职业伤害提高5%/FCOLOR=250>>
+<RText|id=13|x=70|y=25.0|color=154|size=16|text=<<$STR(S$职业仇视显示)>/FCOLOR=250>>
+#ELSESAY
+<RText|id=11|x=155.0|y=12.0|color=154|size=22|text=<未激活/FCOLOR=250>>
+
+
+#IF
+large <$HUMAN(领域之力3级别)> 0
+#SAY
+<RText|id=21|x=70.0|y=0.0|color=154|size=18|text=<暴走模式(Lv.<$HUMAN(领域之力3级别)>)/FCOLOR=250>>
+;<RText|id=22|x=70.0|y=25.0|color=154|size=16|text=<最高级:当自身HP低于60%,暴击+6/FCOLOR=250>>
+<RText|id=23|x=70|y=25.0|color=154|size=16|text=<<$STR(S$暴走模式显示)>/FCOLOR=250>>
+#ELSESAY
+<RText|id=21|x=155.0|y=12.0|color=154|size=22|text=<未激活/FCOLOR=250>>
+
+
+#IF
+large <$HUMAN(领域之力4级别)> 0
+#SAY
+<RText|id=31|x=70.0|y=0.0|color=154|size=18|text=<三尺剑罡(Lv.<$HUMAN(领域之力4级别)>)/FCOLOR=250>>
+;<RText|id=32|x=70.0|y=25.0|color=154|size=16|text=<最高级:5%几率造成攻魔道上限100%真实伤害/FCOLOR=250>>
+<RText|id=33|x=70|y=25.0|color=154|size=16|text=<<$STR(S$三尺剑罡显示)>/FCOLOR=250>>
+#ELSESAY
+<RText|id=31|x=155.0|y=12.0|color=154|size=22|text=<未激活/FCOLOR=250>>
+
+
+#IF
+large <$HUMAN(领域之力5级别)> 0
+checkjob warrior
+#SAY
+<RText|id=41|x=70.0|y=0.0|color=154|size=18|text=<怒海凶涛(Lv.<$HUMAN(领域之力5级别)>)/FCOLOR=250>>
+;<RText|id=42|x=70.0|y=25.0|color=154|size=16|text=<最高级:使用烈火有5%概率造成双倍伤害/FCOLOR=250>>
+<RText|id=43|x=70|y=25.0|color=154|size=16|text=<使用烈火有<$HUMAN(领域之力5级别)>%概率造成双倍伤害/FCOLOR=250>>
+#IF
+large <$HUMAN(领域之力5级别)> 0
+checkjob wizard
+#SAY
+<RText|id=41|x=70.0|y=0.0|color=154|size=18|text=<怒海凶涛(Lv.<$HUMAN(领域之力5级别)>)/FCOLOR=250>>
+;<RText|id=42|x=70.0|y=25.0|color=154|size=16|text=<最高级:使用火咒有5%概率造成双倍伤害/FCOLOR=250>>
+<RText|id=43|x=70|y=25.0|color=154|size=16|text=<使用狂龙有<$HUMAN(领域之力5级别)>%概率造成双倍伤害/FCOLOR=250>>
+#IF
+large <$HUMAN(领域之力5级别)> 0
+checkjob taoist
+#SAY
+<RText|id=41|x=70.0|y=0.0|color=154|size=18|text=<怒海凶涛(Lv.<$HUMAN(领域之力5级别)>)/FCOLOR=250>>
+;<RText|id=42|x=70.0|y=25.0|color=154|size=16|text=<最高级:使用狂龙有5%概率造成双倍伤害/FCOLOR=250>>
+<RText|id=43|x=70|y=25.0|color=154|size=16|text=<使用火咒有<$HUMAN(领域之力5级别)>%概率造成双倍伤害/FCOLOR=250>>
+#IF
+equal <$HUMAN(领域之力5级别)> 0
+#SAY
+<RText|id=41|x=155.0|y=12.0|color=154|size=22|text=<未激活/FCOLOR=250>>
+
+
+
+[@关闭界面]
+#IF
+TRUE
+#ACT
+GOTO @MAIN
+
+[@改名咯]
+#IF
+TRUE
+#ACT
+QueryMsg 改名需要收费30000元宝，你确实要改名吗？ @确定
+
+[@确定1]
+#ACT
+QueryVal 1 0 14 @ChangeHumName_1 请输入人物新名字：
+Break
+
+[@ChangeHumName_1]
+#IF
+Large $Length.$Str(S1) 14
+#ACT
+SendMsg 5 名字过长，最多14个字符。
+Break
+
+#IF
+TRUE
+#ACT
+MOV N$货币 <$BINDGAMEGOLD>
+INC N$货币 <$GAMEGOLD>
+
+#IF
+SMALL N$货币 30000
+#ACT
+SENDMSG 7 对不起，您没有30000元宝，我不能帮助你。
+BREAK
+
+#IF
+!CHECKMONEY 绑定元宝 < 30000
+#ACT
+MONEY 绑定元宝 - 30000
+#ELSEACT
+MOV N$剩余 30000
+DEC N$剩余 <$BINDGAMEGOLD>
+MONEY 绑定元宝 - <$BINDGAMEGOLD>
+MONEY 元宝 - <$STR(N$剩余)>
+
+#IF
+TRUE
+#ACT
+MOV S$NewName $Str(S1)
+;检测是否存在玩家名<$Str(s$NewName)>
+QueryHumNameExist $STR(s$NewName)
+Break
+
+
+[@关闭]
+#IF
+TRUE
+#ACT
+MOV S$刷新颜色 关
+OpenUi 101 2
+BREAK
+
+[@关闭弹窗]
+#ACT
+GOTO @MAIN
+
+
+[@提升等级]
+#IF
+TRUE
+#ACT
+MOV S$升级 开
+GOTO @装备属性
+
+[@转换职业]
+#IF
+TRUE
+#ACT
+MOV S$转职 开
+GOTO @main
+
+
+[@创建行会]
+#IF
+TRUE
+#ACT
+OpenUi 1202 1
+break
+
+
+[@导航心法]
+#IF
+SMALL <$LEVEL> 65
+#ACT
+messagebox 等级不足65级!
+BREAK
+
+#IF
+true
+#ACT
+goto @心法界面
+
+[@心法界面]
+#IF
+TRUE
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\天元心法.ini 天元心法 <$JOB>第<$HUMAN(天元心法重数)>重 S$心法内容
+split <$STR(S$心法内容)> | S$心法内容
+GOTO @心法自动突破
+
+
+#IF
+TRUE
+#ACT
+SETEQUIPCFG 50301 1 1
+#SAY
+;<Img|children={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27}|x=117.0|y=14.0|rotate=0|esc=0|img=public/tianyuanxinfa/bg.png|move=0|loadDelay=0|bg=1>
+<Button|id=0|x=826.0|y=-1.0|nimg=public/tianyuanxinfa/a3.png|size=18|color=255|link=@一起关闭>
+
+<RText|id=2|x=50.0|y=475.0|color=125|size=18|text=<LV.[<$HUMAN(天元心法重数)>]/FCOLOR=254>>
+<Img|id=3|x=120.0|y=480.0|img=public/tianyuanxinfa/jindu2.png|scale=1|esc=0>
+<LoadingBar|id=4|x=123.0|y=483|maxLen=<$STR(S$心法内容_11)>|curLen=<$HUMAN(天元心法经验)>|img=public/tianyuanxinfa/jindu1.png>
+
+<RText|id=5|x=220.0|y=500.0|color=125|size=18|text=< <$HUMAN(天元心法经验)>/<$STR(S$心法内容_11)> /FCOLOR=255>>
+
+<RText|id=6|x=500.0|y=137.0|color=125|size=16|text=< 生命: /FCOLOR=255>    < <$STR(S$心法内容_20)>/FCOLOR=255>>
+<RText|id=7|x=500.0|y=164.0|color=125|size=16|text=< <$STR(S$心法内容_12)>: /FCOLOR=255>    < <$STR(S$心法内容_14)>-<$STR(S$心法内容_17)>/FCOLOR=255>>
+<RText|id=8|x=500.0|y=190.0|color=125|size=16|text=< 防御: /FCOLOR=255>    < <$STR(S$心法内容_22)>-<$STR(S$心法内容_24)>/FCOLOR=255>>
+<RText|id=9|x=500.0|y=216.0|color=125|size=16|text=< 魔防: /FCOLOR=255>    < <$STR(S$心法内容_26)>-<$STR(S$心法内容_28)>/FCOLOR=255>>
+
+<RText|id=10|x=680.0|y=137.0|color=125|size=16|text=< 生命: /FCOLOR=255>    < <$STR(S$心法内容_42)>/FCOLOR=255>>
+<RText|id=11|x=680.0|y=164.0|color=125|size=16|text=< <$STR(S$心法内容_12)>: /FCOLOR=255>    < <$STR(S$心法内容_38)>-<$STR(S$心法内容_40)>/FCOLOR=255>>
+<RText|id=12|x=680.0|y=190.0|color=125|size=16|text=< 防御: /FCOLOR=255>    < <$STR(S$心法内容_44)>-<$STR(S$心法内容_46)>/FCOLOR=255>>
+<RText|id=13|x=680.0|y=216.0|color=125|size=16|text=< 魔防: /FCOLOR=255>    < <$STR(S$心法内容_48)>-<$STR(S$心法内容_50)>/FCOLOR=255>>
+
+
+<RText|id=14|x=500.0|y=305.0|color=125|size=16|text=< 暴击: /FCOLOR=255>      < <$STR(S$心法内容_30)>/FCOLOR=255>>
+<RText|id=15|x=500.0|y=330.0|color=125|size=16|text=< 抗性: /FCOLOR=255>      < <$STR(S$心法内容_32)>/FCOLOR=255>>
+<RText|id=16|x=472.0|y=355.0|color=125|size=16|text=<<$STR(S$心法内容_33)>: /FCOLOR=255>      < +<$STR(S$心法内容_34)>/FCOLOR=255>>
+
+<RText|id=17|x=680.0|y=305.0|color=125|size=16|text=< 暴击: /FCOLOR=255>      < <$STR(S$心法内容_52)>/FCOLOR=255>>
+<RText|id=18|x=680.0|y=330.0|color=125|size=16|text=< 抗性: /FCOLOR=255>      < <$STR(S$心法内容_54)>/FCOLOR=255>>
+<RText|id=19|x=652.0|y=355.0|color=125|size=16|text=<<$STR(S$心法内容_33)>: /FCOLOR=255>      < <$STR(S$心法内容_56)>/FCOLOR=255>>
+
+<RText|id=20|x=443.0|y=418.0|color=125|size=16|text=<下一重需要:/FCOLOR=255>>
+<ItemShow|id=21|x=560.0|y=413.0|width=70|height=70|itemid=1|itemcount=<$STR(S$心法内容_7)>|bgtype=1|showtips=1|name=<$STR(S$心法内容_6)>>
+<ItemShow|id=22|x=650.0|y=413.0|width=70|height=70|itemid=1|itemcount=<$STR(S$心法内容_9)>|bgtype=1|showtips=1|name=<$STR(S$心法内容_8)>>
+
+
+<Button|id=23|x=560.0|y=483.0|nimg=public/tianyuanxinfa/a1.png|mimg=public/tianyuanxinfa/a2.png|size=18|color=255|text=提升|link=@提升心法>
+
+<Frames|id=24|x=10.0|y=20.0|count=30|suffix=.png|speed=10|prefix=public/tianyuanxinfa/dz/1_|loop=-1|scale=1>
+
+
+
+[@提升心法]
+#if
+EQUAL <$HUMAN(勇战江湖)> 2
+#ACT
+mov S$心法内容_7 0
+mov S$心法内容_9 0
+mov S$心法内容_59 0
+
+#IF
+large <$HUMAN(天元心法重数)> 99
+#ACT
+MESSAGEBOX 天元心法已经到了至臻境界!
+break
+
+
+#IF
+!CHECKITEM <$STR(S$心法内容_6)> <$STR(S$心法内容_7)>
+#ACT
+MESSAGEBOX 背包没有<$STR(S$心法内容_7)>个<$STR(S$心法内容_6)>!
+break
+
+#IF
+CHECKMONEY <$STR(S$心法内容_8)> < <$STR(S$心法内容_9)>
+#ACT
+MESSAGEBOX <$STR(S$心法内容_8)>不足<$STR(S$心法内容_9)>!
+break
+
+
+#IF
+TRUE
+#ACT
+take <$STR(S$心法内容_6)> <$STR(S$心法内容_7)>
+MONEY <$STR(S$心法内容_8)> - <$STR(S$心法内容_9)>
+CALCVAR HUMAN 天元心法经验 + 10
+SAVEVAR HUMAN 天元心法经验
+
+#IF
+TRUE
+#ACT
+GOTO @心法自动突破
+GOTO @导航心法
+
+[@动画结束]
+#IF
+TRUE
+#ACT
+MOV S$心法特效开关 关
+GOTO @导航心法
+
+
+[@心法自动突破]
+#IF
+small <$HUMAN(天元心法重数)> 100
+!SMALL <$HUMAN(天元心法经验)> <$STR(S$心法内容_11)>
+#ACT
+CALCVAR HUMAN 天元心法经验 = 0
+SAVEVAR HUMAN 天元心法经验
+CALCVAR HUMAN 天元心法重数 + 1
+SAVEVAR HUMAN 天元心法重数
+#CALL [\封号系统\在线封号.txt] @临时封号
+SENDMSG 7 你的心法竟然突破了!
+
+[@一起关闭]
+#IF
+TRUE
+#ACT
+openui 101 2
+
+
+
+[@导航羽翼]
+#IF
+SMALL <$LEVEL> 45
+#ACT
+messagebox 等级不足45级!
+BREAK
+
+#IF
+true
+#ACT
+goto @羽翼界面
+
+[@羽翼界面]
+#IF
+TRUE
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\羽翼配置.ini 好看的羽翼 <$JOB>第<$HUMAN(羽翼阶级)>阶 S$羽翼内容
+split <$STR(S$羽翼内容)> | S$羽翼内容
+GOTO @羽翼自动进阶
+
+
+#IF
+true
+#ACT
+SETEQUIPCFG 50302 1 1
+#SAY
+;<Img|children={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24}|x=117.0|y=14.0|rotate=0|esc=0|img=public/yuyi/bg.png|move=0|loadDelay=0|bg=1>
+<Button|id=0|x=826.0|y=-1.0|nimg=public/tianyuanxinfa/a3.png|size=18|color=255|link=@一起关闭>
+
+
+<RText|id=1|x=70.0|y=475.0|color=125|size=18|text=<[<$HUMAN(羽翼阶级)>]/FCOLOR=70><阶/FCOLOR=70>>
+<Img|id=2|x=110.0|y=480.0|img=public/tianyuanxinfa/jindu2.png|scale=1|esc=0>
+<LoadingBar|id=3|x=113.0|y=483|maxLen=<$STR(S$羽翼内容_11)>|curLen=<$HUMAN(羽翼经验)>|img=public/tianyuanxinfa/jindu1.png>
+
+<RText|id=4|x=220.0|y=500.0|color=125|size=18|text=< <$HUMAN(羽翼经验)>/<$STR(S$羽翼内容_11)> /FCOLOR=255>>
+
+<RText|id=5|x=480.0|y=120.0|color=125|size=16|text=<羽翼的加成主要是生命、职业攻击、物防、魔防/FCOLOR=251>>
+<RText|id=6|x=480.0|y=145.0|color=125|size=16|text=<羽翼的进阶是通过消耗幻羽之翎来进行的/FCOLOR=251>>
+<RText|id=7|x=480.0|y=170.0|color=125|size=16|text=<幻羽之翎可以在日常副本获取/FCOLOR=251>>
+
+
+
+<RText|id=9|x=495.0|y=287.0|color=125|size=16|text=< 生命: /FCOLOR=255>      < <$STR(S$羽翼内容_20)>/FCOLOR=255>>
+<RText|id=10|x=495.0|y=310.0|color=125|size=16|text=< 职攻: /FCOLOR=255>      < <$STR(S$羽翼内容_14)>-<$STR(S$羽翼内容_17)>/FCOLOR=255>>
+<RText|id=11|x=495.0|y=333.0|color=125|size=16|text=< 防御: /FCOLOR=255>      < <$STR(S$羽翼内容_22)>-<$STR(S$羽翼内容_24)>/FCOLOR=255>>
+<RText|id=12|x=495.0|y=357.0|color=125|size=16|text=< 魔防: /FCOLOR=255>      < <$STR(S$羽翼内容_26)>-<$STR(S$羽翼内容_28)>/FCOLOR=255>>
+
+<RText|id=13|x=690.0|y=287.0|color=125|size=16|text=< 生命: /FCOLOR=255>      < <$STR(S$羽翼内容_35)>/FCOLOR=255>>
+<RText|id=14|x=690.0|y=310.0|color=125|size=16|text=< 职攻: /FCOLOR=255>      < <$STR(S$羽翼内容_31)>-<$STR(S$羽翼内容_33)>/FCOLOR=255>>
+<RText|id=15|x=690.0|y=333.0|color=125|size=16|text=< 防御: /FCOLOR=255>      < <$STR(S$羽翼内容_37)>-<$STR(S$羽翼内容_39)>/FCOLOR=255>>
+<RText|id=16|x=690.0|y=357.0|color=125|size=16|text=< 魔防: /FCOLOR=255>      < <$STR(S$羽翼内容_41)>-<$STR(S$羽翼内容_43)>/FCOLOR=255>>
+
+<RText|id=17|x=450.0|y=418.0|color=125|size=16|text=< 下一阶需要:/FCOLOR=255>>
+<ItemShow|id=18|x=565.0|y=415.0|width=70|height=70|itemid=1|itemcount=<$STR(S$羽翼内容_7)>|bgtype=1|showtips=1|name=<$STR(S$羽翼内容_6)>>
+<ItemShow|id=19|x=650.0|y=415.0|width=70|height=70|itemid=1|itemcount=<$STR(S$羽翼内容_9)>|bgtype=1|showtips=1|name=<$STR(S$羽翼内容_8)>>
+
+<Button|id=20|x=560.0|y=483.0|nimg=public/tianyuanxinfa/a1.png|mimg=public/tianyuanxinfa/a2.png|size=18|color=255|text=提升|link=@提升羽翼>
+
+<Img|id=21|x=-40.0|y=50.0|img=public/yuyi/<$STR(S$羽翼内容_5)>.png|scale=1|esc=0>
+
+
+[@提升羽翼]
+#IF
+EQUAL <$HUMAN(小试牛刀)> 13
+#ACT
+MOV S$羽翼内容_7 0
+MOV S$羽翼内容_9 0
+
+#IF
+large <$HUMAN(羽翼阶级)> 10
+#ACT
+MESSAGEBOX 羽翼已经到顶!
+break
+
+#IF
+!CHECKITEM <$STR(S$羽翼内容_6)> <$STR(S$羽翼内容_7)>
+#ACT
+MESSAGEBOX 背包没有<$STR(S$羽翼内容_7)>个<$STR(S$羽翼内容_6)>!
+break
+
+#IF
+CHECKMONEY <$STR(S$羽翼内容_8)> < <$STR(S$羽翼内容_9)>
+#ACT
+MESSAGEBOX <$STR(S$羽翼内容_8)>不足<$STR(S$羽翼内容_9)>!
+break
+
+
+#IF
+TRUE
+#ACT
+TAKE <$STR(S$羽翼内容_6)> <$STR(S$羽翼内容_7)>
+MONEY <$STR(S$羽翼内容_8)> - <$STR(S$羽翼内容_9)>
+CALCVAR HUMAN 羽翼经验 + 10
+SAVEVAR HUMAN 羽翼经验
+GOTO @羽翼自动进阶
+GOTO @导航羽翼
+
+[@羽翼自动进阶]
+#IF
+small <$HUMAN(羽翼阶级)> 10
+!SMALL <$HUMAN(羽翼经验)> <$STR(S$羽翼内容_11)>
+#ACT
+CALCVAR HUMAN 羽翼经验 = 0
+SAVEVAR HUMAN 羽翼经验
+CALCVAR HUMAN 羽翼阶级 + 1
+SAVEVAR HUMAN 羽翼阶级
+#CALL [\封号系统\在线封号.txt] @临时封号
+SENDMSG 7 你的羽翼竟然突破了!
+break
+
+
+[@导航法宝]
+#IF
+SMALL <$LEVEL> 71
+#ACT
+messagebox 等级不足71级!
+BREAK
+
+#IF
+TRUE
+#ACT
+MOV S$选择法宝 镇妖碑
+MOV N$法宝位置 0
+goto @法宝界面
+
+
+[@法宝界面]
+#IF
+TRUE
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\短寿法宝.ini <$STR(S$选择法宝)> <$JOB>第<$HUMAN(<$STR(S$选择法宝)>重数)>阶 S$法宝内容
+ReadConfigFileItem ..\QuestDiary\配置文件\短寿法宝.ini 法宝切换 法宝加一 S$法宝加一
+ReadConfigFileItem ..\QuestDiary\配置文件\短寿法宝.ini 法宝切换 法宝减一 S$法宝减一
+split <$STR(S$法宝内容)> | S$法宝内容
+split <$STR(S$法宝加一)> | S$法宝加一
+split <$STR(S$法宝减一)> | S$法宝减一
+GOTO @法宝自动突破
+
+
+#IF
+true
+#ACT
+SETEQUIPCFG 50303 1 1
+#SAY
+;<Img|children={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26}|x=117.0|y=14.0|rotate=0|esc=0|img=public/fabao/bg.png|move=0|loadDelay=0|bg=1>
+<Button|id=0|x=826.0|y=-1.0|nimg=public/tianyuanxinfa/a3.png|size=18|color=255|link=@一起关闭>
+
+<Frames|id=1|x=-157.0|y=-80.0|count=<$STR(S$法宝内容_7)>|suffix=.png|speed=10|prefix=public/fabao/<$STR(S$法宝内容_5)>/100_|loop=-1|scale=1>
+<Img|id=2|x=55.0|y=100.0|img=public/fabao/<$STR(S$法宝内容_5)>.png|scale=1|esc=0>
+<Img|id=3|x=60.0|y=250.0|img=public/fabao/<$STR(S$法宝内容_1)>.png|scale=1|esc=0>
+
+<Button|id=4|x=60.0|y=300.0|nimg=public/fabao/b5.png|mimg=public/fabao/b6.png|size=18|color=255|link=@法宝减一>
+<Button|id=5|x=380.0|y=300.0|nimg=public/fabao/b3.png|mimg=public/fabao/b4.png|size=18|color=255|link=@法宝加一>
+
+<RText|id=6|x=50.0|y=476.0|color=125|size=18|text=<LV.<$HUMAN(<$STR(S$选择法宝)>重数)>/FCOLOR=250>>
+<Img|id=7|x=85.0|y=480.0|img=public/fabao/jdt2.png|scale=1|esc=0>
+<LoadingBar|id=8|x=85.0|y=480|maxLen=<$STR(S$法宝内容_13)>|curLen=<$HUMAN(<$STR(S$选择法宝)>经验)>|img=public/fabao/jdt1.png>
+
+<RText|id=9|x=220.0|y=500.0|color=125|size=18|text=< <$HUMAN(<$STR(S$选择法宝)>经验)>/<$STR(S$法宝内容_13)> /FCOLOR=255>>
+
+<RText|id=10|x=495.0|y=137.0|color=125|size=16|text=< <$STR(S$法宝内容_15)>: /FCOLOR=255>      < <$STR(S$法宝内容_16)>/FCOLOR=255>>
+<RText|id=11|x=495.0|y=163.0|color=125|size=16|text=< <$STR(S$法宝内容_17)>: /FCOLOR=255>      < <$STR(S$法宝内容_19)>-<$STR(S$法宝内容_22)>/FCOLOR=255>>
+<RText|id=12|x=495.0|y=188.0|color=125|size=16|text=< 防御: /FCOLOR=255>      < <$STR(S$法宝内容_25)>-<$STR(S$法宝内容_27)>/FCOLOR=255>>
+<RText|id=13|x=495.0|y=213.0|color=125|size=16|text=< 魔防: /FCOLOR=255>      < <$STR(S$法宝内容_29)>-<$STR(S$法宝内容_31)>/FCOLOR=255>>
+<RText|id=14|x=467.0|y=236.0|color=125|size=16|text=<<$STR(S$法宝内容_32)>: /FCOLOR=251>      < <$STR(S$法宝内容_33)>%/FCOLOR=250>>
+
+<RText|id=15|x=688.0|y=137.0|color=125|size=16|text=< <$STR(S$法宝内容_15)>: /FCOLOR=255>      < <$STR(S$法宝内容_39)>/FCOLOR=255>>
+<RText|id=16|x=688.0|y=163.0|color=125|size=16|text=< <$STR(S$法宝内容_17)>: /FCOLOR=255>      < <$STR(S$法宝内容_41)>-<$STR(S$法宝内容_43)>/FCOLOR=255>>
+<RText|id=17|x=688.0|y=188.0|color=125|size=16|text=< 防御: /FCOLOR=255>      < <$STR(S$法宝内容_45)>-<$STR(S$法宝内容_47)>/FCOLOR=255>>
+<RText|id=18|x=688.0|y=213.0|color=125|size=16|text=< 魔防: /FCOLOR=255>      < <$STR(S$法宝内容_49)>-<$STR(S$法宝内容_51)>/FCOLOR=255>>
+<RText|id=19|x=660.0|y=236.0|color=125|size=16|text=<<$STR(S$法宝内容_32)>: /FCOLOR=251>      < <$STR(S$法宝内容_53)>%/FCOLOR=250>>
+
+<RText|id=20|x=520.0|y=300.0|color=125|size=16|text=<专属属性:/FCOLOR=254>< <$STR(S$法宝内容_34)>/FCOLOR=254> <+<$STR(S$法宝内容_35)>/FCOLOR=250>>
+
+<RText|id=21|x=450.0|y=420.0|color=125|size=16|text=<下一重需要:/FCOLOR=251>>
+<ItemShow|id=22|x=565.0|y=405.0|width=70|height=70|itemid=1|itemcount=<$STR(S$法宝内容_9)>>|bgtype=1|showtips=1|name=<$STR(S$法宝内容_8)>>
+<ItemShow|id=23|x=650.0|y=405.0|width=70|height=70|itemid=1|itemcount=<$STR(S$法宝内容_11)>|bgtype=1|showtips=1|name=<$STR(S$法宝内容_10)>>
+
+
+<Button|id=24|x=570.0|y=483.0|nimg=public/tq/63306.png|pimg=public/tq/63307.png|mimg=public/tq/63307.png|size=18|color=255|text=提升|link=@提升法宝>
+
+#IF
+!EQUAL <$HUMAN(当前佩戴法宝)> <$STR(S$选择法宝)>
+#SAY
+<Button|id=25|x=180.0|y=420.0|nimg=public/fabao/cd1.png|mimg=public/fabao/cd1.png|size=18|color=255|link=@穿戴法宝>
+#ELSESAY
+<Button|id=25|x=180.0|y=420.0|nimg=public/fabao/cd2.png|mimg=public/fabao/cd2.png|size=18|color=255|link=@卸下法宝>
+
+
+
+[@法宝加一]
+#IF
+TRUE
+#ACT
+INC N$法宝位置 1
+
+#IF
+LARGE <$STR(N$法宝位置)> 3
+#ACT
+MOV N$法宝位置 3
+SENDMSG 19 不能往后翻了!
+BREAK
+
+#IF
+TRUE
+#ACT
+MOV S$选择法宝 <$STR(S$法宝加一_<$STR(N$法宝位置)>)>
+
+goto @法宝界面
+
+[@法宝减一]
+#IF
+TRUE
+#ACT
+DEC N$法宝位置 1
+
+#IF
+SMALL <$STR(N$法宝位置)> 0
+#ACT
+MOV N$法宝位置 0
+SENDMSG 19 不能往前翻了!
+BREAK
+
+#IF
+TRUE
+#ACT
+MOV S$选择法宝 <$STR(S$法宝加一_<$STR(N$法宝位置)>)>
+goto @法宝界面
+
+[@提升法宝]
+#if
+EQUAL <$HUMAN(勇战江湖)> 4
+#ACT
+mov S$法宝内容_9 0
+mov S$法宝内容_11 0
+mov S$法宝内容_57 0
+
+#IF
+large <$HUMAN(<$STR(S$选择法宝)>重数)> 9
+#ACT
+MESSAGEBOX <$STR(S$选择法宝)>已经升到顶了!
+break
+
+#IF
+!CHECKITEM <$STR(S$法宝内容_8)> <$STR(S$法宝内容_9)>
+#ACT
+MESSAGEBOX 背包没有<$STR(S$法宝内容_8)>个<$STR(S$法宝内容_9)>!
+break
+
+#IF
+CHECKMONEY <$STR(S$法宝内容_10)> < <$STR(S$法宝内容_11)>
+#ACT
+MESSAGEBOX <$STR(S$法宝内容_10)>不足<$STR(S$法宝内容_11)>!
+break
+
+
+#IF
+TRUE
+#ACT
+TAKE <$STR(S$法宝内容_8)> <$STR(S$法宝内容_9)>
+MONEY <$STR(S$法宝内容_10)> - <$STR(S$法宝内容_11)>
+CALCVAR HUMAN <$STR(S$选择法宝)>经验 + 10
+SAVEVAR HUMAN <$STR(S$选择法宝)>经验
+GOTO @法宝自动突破
+GOTO @法宝界面
+
+#if
+EQUAL <$HUMAN(勇战江湖)> 4
+#ACT
+CALCVAR HUMAN 勇战江湖 = 5
+SAVEVAR HUMAN 勇战江湖
+delTask 102
+sendmsg 7 完成任务<勇战江湖4>!
+Mailgive 法宝碎片 10 1
+Sendmail 1 勇战江湖奖励 你好[<$Username>]:勇战江湖奖励物品已发放! 
+
+
+[@法宝自动突破]
+#IF
+small <$HUMAN(<$STR(S$选择法宝)>重数)> 10
+!SMALL <$HUMAN(<$STR(S$选择法宝)>经验)> <$STR(S$法宝内容_13)>
+#ACT
+CALCVAR HUMAN <$STR(S$选择法宝)>经验 = 0
+SAVEVAR HUMAN <$STR(S$选择法宝)>经验
+CALCVAR HUMAN <$STR(S$选择法宝)>重数 + 1
+SAVEVAR HUMAN <$STR(S$选择法宝)>重数
+CALCVAR HUMAN <$STR(S$选择法宝)>触发 = <$STR(S$法宝内容_33)>
+SAVEVAR HUMAN <$STR(S$选择法宝)>触发
+SENDMSG 7 你的法宝竟然突破了!
+
+[@穿戴法宝]
+#IF
+true
+#ACT
+CALCVAR HUMAN 当前佩戴法宝 = <$STR(S$选择法宝)>
+SAVEVAR HUMAN 当前佩戴法宝
+sendmsg 19 你成功穿戴了法宝【<$STR(S$选择法宝)>】!
+#CALL [\封号系统\在线封号.txt] @临时封号
+GOTO @法宝界面
+break
+
+[@卸下法宝]
+#IF
+EQUAL <$HUMAN(当前佩戴法宝)> <$STR(S$选择法宝)>
+#ACT
+CALCVAR HUMAN 当前佩戴法宝 = 
+SAVEVAR HUMAN 当前佩戴法宝
+sendmsg 19 你成功卸下了法宝【<$STR(S$选择法宝)>】!
+#CALL [\封号系统\在线封号.txt] @临时封号
+GOTO @法宝界面
+break
+
+[@法定Tip界面]
+#IF
+TRUE
+#ACT
+MOV N$法定显示 1
+GOTO @人物角色
+BREAK
+

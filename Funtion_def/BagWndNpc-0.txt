@@ -1,0 +1,1549 @@
+;此脚本为功能脚本，用于实现手游背包界面自定义触发
+(@Storage @getback @FastStorge)
+%100
+[@MAIN]
+
+;血量+1000，双防加15-15，每秒回血+20，多个主动技能，回血10%，30sCD
+;攻魔道+50，暴击+20%,爆伤+50%
+;攻击附带10点切割，易伤+30%，攻速+2
+;每回合随机召唤一个宠物，幸运+1
+;把怪的移速什么的都带上，然后整个能看的路线面板。
+
+#IF
+true
+#ACT
+MOV N$配置空格数 0
+LOOPGOTO @初始化背包 127
+MOV S$回收拼接字符 暂无|＋１|＋２|＋３|＋４|＋５
+split <$STR(S$回收拼接字符)> | S$回收拼接字符分割
+
+#IF
+TRUE
+#ACT
+ReadConfigFileItem ..\QuestDiary\配置文件\角色背包.ini  人物背包  快捷购买一  S$快捷购买一
+ReadConfigFileItem ..\QuestDiary\配置文件\角色背包.ini  人物背包  快捷购买二  S$快捷购买二
+ReadConfigFileItem ..\QuestDiary\配置文件\角色背包.ini  人物背包  快捷购买三  S$快捷购买三
+ReadConfigFileItem ..\QuestDiary\配置文件\角色背包.ini  人物背包  快捷购买四  S$快捷购买四
+split <$STR(S$快捷购买一)> | S$快捷购买一
+split <$STR(S$快捷购买二)> | S$快捷购买二
+split <$STR(S$快捷购买三)> | S$快捷购买三
+split <$STR(S$快捷购买四)> | S$快捷购买四
+
+
+MOV S$所在背包页面 包裹一
+MOV S$特权开通 关
+
+
+#if
+equal $CLIENTFLAG 1
+#act
+goto @确定背包
+#elseact
+SetBagCfg 127 102 10001
+;SETBAGCFG 125 55 99999
+GOTO @确定背包
+
+[@确定背包]
+
+#IF
+!EQUAL $CLIENTFLAG 1
+#ACT
+MOV S$金币回收id列表
+SelectBagItems
+Mov S$金币回收页面flag 关
+Mov S$材料回收页面flag 关
+GOTO @手游背包
+
+#IF
+EQUAL $CLIENTFLAG 1
+#ACT
+GOTO @端游背包
+
+[@端游背包]
+#IF
+EQUAL $CLIENTFLAG 1
+#SAY
+; <@@!BTN 3,63206,3,63206,3,63217,500,-15,关闭/@关闭包裹>\
+; <@@!BTN 3,60284,3,60284,3,60284,-5,-20,/@回收页面>\
+; <@@!BTN 3,60284,3,60284,3,60284,-5,5,/@FastStorge>\
+; <@@!BTN 3,60284,3,60284,3,60284,-5,5,/@WLQN刷新>\
+; 
+; <@@!BTN 3,60284,3,60284,3,60284,-5,50,/@第一页背包>\
+; <@@!BTN 3,60284,3,60284,3,60284,-5,5,/@第二页背包>\
+; <@@!BTN 3,60284,3,60284,3,60284,-5,5,/@第三页背包>\
+; <offx=|15|y=|-277|fontsize=|14|font=|0|><color=FFB200 装备回收><|off>\
+; <offx=|15|y=|-235|fontsize=|14|font=|0|><color=FFB200 快捷仓库><|off>\
+; <offx=|15|y=|-193|fontsize=|14|font=|0|><color=FFB200 整理包裹><|off>\
+; <offx=|15|y=|-108|fontsize=|14|font=|0|><color=<$STR(S$端游背包一颜色)> 第一页><|off>\
+; <offx=|15|y=|-67|fontsize=|14|font=|0|><color=<$STR(S$端游背包二颜色)> 第二页><|off>\
+; <offx=|15|y=|-25|fontsize=|14|font=|0|><color=<$STR(S$端游背包三颜色)> 第三页><|off>\
+; <offx=|155|y=|6|fontsize=|12|font=|0|><color=FFB200 <$MONEY(金币)>><|off>\
+; <offx=|300|y=|-16|fontsize=|12|font=|0|><color=FFB200 <$MONEY(元宝)>><|off>\ 
+;<offx=|440|y=|-18|fontsize=|12|font=|5|><color=FFB200 <$MONEY(灵符)>><|off>\ 
+
+<@@!BTN 3,63206,3,63206,3,63217,495,-10,关闭/@关闭包裹>\
+<@@!BTN 3,60284,3,60284,3,60284,330,265,/@端游回收>\
+<@@!BTN 3,60284,3,60284,3,60284,330,-5,/@FastStorge>\
+; <@@!BTN 3,60284,3,60284,3,60284,-5,5,/@WLQN刷新>\
+
+; <@@!BTN 3,60284,3,60284,3,60284,-5,50,/@第一页背包>\
+; <@@!BTN 3,60284,3,60284,3,60284,-5,5,/@第二页背包>\
+<offx=|345|y=|-55|fontsize=|14|font=|0|><color=FFB200 装备回收><|off>\
+<offx=|345|y=|-25|fontsize=|14|font=|0|><color=FFB200 快捷仓库><|off>\
+; <offx=|15|y=|-153|fontsize=|14|font=|0|><color=FFB200 整理包裹><|off>\
+; <offx=|15|y=|-68|fontsize=|14|font=|0|><color=<$STR(S$端游背包一颜色)> 第一页><|off>\
+; <offx=|15|y=|-25|fontsize=|14|font=|0|><color=<$STR(S$端游背包二颜色)> 第二页><|off>\
+; <offx=|155|y=|53|fontsize=|12|font=|0|><color=FFB200 <$MONEY(金币)>><|off>\
+; <offx=|300|y=|-15|fontsize=|12|font=|0|><color=FFB200 <$MONEY(元宝)>><|off>\ 
+
+<offx=|17|y=|-330|fontsize=|16|font=|1|><color=FFB200 快捷购买><|off>\
+
+<offx=|25|y=|-300|><@@!PIC2 3,60316,0,0><|off>\
+<offx=|25|y=|-245|><@@!PIC2 3,60316,0,0><|off>\
+<offx=|25|y=|-190|><@@!PIC2 3,60316,0,0><|off>\
+<offx=|25|y=|-135|><@@!PIC2 3,60316,0,0><|off>\
+<offx=|25|y=|-80|><@@!PIC2 3,60316,0,0><|off>\
+[@端游回收]
+#If
+True
+#ACt
+FUNC 1 @端游回收界面跳转
+
+;=========================================================================================================================回收装备模块
+
+[@手游背包]
+#IF
+EQUAL $STR(S$所在背包页面) 包裹一
+#SAY
+<Button|x=580.0|y=-3.0|nimg=public/025.png|link=@关闭包裹>
+;<Text|x=280.0|y=20.0|color=125|size=22|text=包裹>
+
+<Button|x=120.0|y=40.0|size=18|nimg=public/button/btn_push_05.png|color=<$STR(S$背包一颜色)>|text=第一页|link=@第一页背包>
+<Button|x=210.0|y=40.0|size=18|nimg=public/button/btn_push_05.png|color=<$STR(S$背包二颜色)>|text=第二页|link=@第二页背包>
+<Button|x=300.0|y=40.0|size=18|nimg=public/button/btn_push_05.png|color=<$STR(S$背包三颜色)>|text=第三页|link=@第三页背包>
+
+<Button|x=500.0|y=460|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=装备回收|link=@回收页面初始化&1>
+<Button|x=25.0|y=415.0|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=快捷仓库|link=@FastStorge>
+<Button|x=500.0|y=500.0|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=整理包裹|link=@WLQN刷新>
+
+;绑定金币
+<Text|x=160|y=510|a=2|color=94|size=16|text=<$BINDGOLD>>
+;金币
+<Text|x=160|y=470|a=2|color=94|size=16|text=<$GOLDCOUNT>>
+;元宝
+<Text|x=396|y=470|a=2|color=94|size=16|text=<$GAMEGOLD>>
+;绑定元宝
+<Text|x=396|y=510|a=2|color=94|size=16|text=<$BINDGAMEGOLD>>
+#If
+Equal S$金币回收页面flag 开
+#say
+<Img|x=-400.0|y=-5.0|width=500|height=570|children={0,1,2,3,4,5,6,7,8,9,10,11,14}|img=public/046.png>
+<Button|id=0|x=460.0|y=0.0|nimg=public/025.png|color=255|scale=1|link=@关闭回收界面>
+
+<Img|id=1|x=10.0|y=85.0|width=480|height=3|img=public/bg_yyxsz_04.png>
+<Img|id=2|x=10.0|y=440.0|width=480|height=3|img=public/bg_yyxsz_04.png>
+<Img|id=3|x=80.0|y=87.0|width=3|height=353|img=public/bg_yyxsz_03.png>
+<Button|id=4|x=10.0|y=40.0|nimg=public/button/btn_push_05.png|pimg=public/button/btn_push_06.png|scale=1|size=16|color=251|text=金币回收|link=@回收页面初始化&1>
+<Button|id=5|x=105.0|y=40.0|nimg=public/button/btn_push_06.png|pimg=public/button/btn_push_05.png|scale=1|size=16|color=161|text=材料回收|link=@材料回收界面初始化&1>
+
+<Layout|id=6|children={6aa}|x=12.0|y=95.0|width=68.0|height=460|link=@暂无>
+
+
+<ListView|id=6aa|children={<$STR(S$左边按钮子节点记录)>}|width=68.0|height=460|color=x|img=public/down.png|loadDelay=0|direction=1|margin=10|bounce=0>
+<$STR(S$左边按钮显示)>
+<Img|id=8|children={7a,7b,7c,7d,7e,7f,7g,7h,7l,7u,7p,7m,7n}|x=82.0|y=130.0|width=408|height=3|img=public/bg_yyxsz_04.png>
+<Button|id=7a|x=0|y=-45|width=110|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=装备名称>
+<Button|id=7b|x=112|y=-45|width=50|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=普通|link=@当前列全选&0>
+<Button|id=7c|x=162|y=-45|width=50|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+1|link=@当前列全选&1>
+<Button|id=7d|x=212|y=-45|width=50|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+2|link=@当前列全选&2>
+<Button|id=7e|x=262|y=-45|width=50|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+3|link=@当前列全选&3>
+<Button|id=7f|x=312|y=-45|width=50|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+4|link=@当前列全选&4>
+<Button|id=7g|x=362|y=-45|width=50|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+5|link=@当前列全选&5>
+
+
+<Img|id=7h|x=110.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7l|x=160.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7u|x=210.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7p|x=260.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7m|x=310.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7n|x=360.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+
+<Layout|id=7|children={7aa}|x=82.0|y=132.0|width=440.0|height=310|link=@暂无>
+
+<ListView|id=7aa|children={<$STR(S$右边分类子节点记录)>}|width=440.0|height=310|color=x|img=public/down.png|loadDelay=0|direction=1|margin=1|bounce=1>
+<$STR(S$右边分类显示)>
+
+<Text|id=9|x=40|y=460|color=94|size=16|text=回收金币：<$STR(N$金币回收总值)>>
+<Text|id=10|x=40|y=500|color=94|size=16|text=回收经验：<$STR(N$金币回收总经验)>>
+<Button|id=11|x=370.0|y=490.0|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=一键回收|link=@一键回收>
+<CheckBox|id=14|children=14a|x=370.0|y=450.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$HUMAN(自动回收)>|link=@自动回收勾选>
+<Text|id=14a|x=40|y=5|color=94|size=16|text=自动回收>
+[@关闭回收界面]
+#If
+True
+#ACt
+SelectBagItems
+MOV S$金币回收页面flag 关
+MOV S$材料回收页面flag 关
+Goto @手游背包
+[@当前材料列全选]
+#If
+Equal <$STR(S$回收一级页面id)> 1
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 9 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 2
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 15 装备名称  S$右边分类列表
+#If
+True
+#ACt
+SPLIT <$STR(S$右边分类列表)> | S$右边分类列表分割 N$右边分类列表数量
+MOV N$种子id 0
+MOV N$列id <$SCRIPTPARAM(1)>
+For N$种子id = <$STR(N$右边分类列表数量)>
+goto @当前选择装备回收材料&<$STR(N$种子id)>&<$STR(N$列id)>
+inc N$种子id 1
+EndFor
+goto @材料回收界面初始化&<$STR(S$回收一级页面id)>
+[@当前选择装备回收材料]
+;先操作总，在操作分支，分支用来快速算
+;操作总
+#IF
+true
+#ACT
+MOV N$一号参数 <$SCRIPTPARAM(1)>
+MOV N$二号参数 <$SCRIPTPARAM(2)>
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$一号参数)>)><$STR(S$回收拼接字符分割_<$STR(N$二号参数)>)>
+MOV S$选中物品名称总 <$HUMAN(材料回收列表总)>
+
+#If
+POS <$HUMAN(材料回收列表总)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称总 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+goto @金币和材料互斥&2
+INC S$选中物品名称总 <$STR(S$回收装备名称)>|
+;操作总完成
+;操作分
+#If
+Equal <$STR(S$回收一级页面id)> 1
+#ACT
+MOV N$材料回收分支列表id -1
+INC N$材料回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 2
+#ACT
+MOV N$材料回收分支列表id 3
+INC N$材料回收分支列表id <$STR(N$二号参数)>
+#If
+True
+#ACt
+MOV S$选中物品名称分支 <$HUMAN(材料回收列表<$STR(N$材料回收分支列表id)>)>
+#If
+POS <$HUMAN(材料回收列表<$STR(N$材料回收分支列表id)>)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称分支 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+INC S$选中物品名称分支 <$STR(S$回收装备名称)>|
+
+#If
+True
+#ACt
+Calcvar HUMAN 材料回收列表总 = <$STR(S$选中物品名称总)>
+Savevar HUMAN 材料回收列表总
+Calcvar HUMAN 材料回收列表<$STR(N$材料回收分支列表id)> = <$STR(S$选中物品名称分支)>
+Savevar HUMAN 材料回收列表<$STR(N$材料回收分支列表id)>
+
+
+
+[@当前列全选]
+#If
+Equal <$STR(S$回收一级页面id)> 1
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 1 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 2
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 2 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 3
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 3 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 4
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 9 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 5
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 15 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 6
+#ACt
+MOV S$右边分类列表
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 21 装备名称  S$右边分类子列表
+INC S$右边分类列表 <$STR(S$右边分类子列表)>
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 22 装备名称  S$右边分类子列表
+INC S$右边分类列表 <$STR(S$右边分类子列表)>
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 23 装备名称  S$右边分类子列表
+INC S$右边分类列表 <$STR(S$右边分类子列表)>
+
+
+#If
+True
+#ACt
+SPLIT <$STR(S$右边分类列表)> | S$右边分类列表分割 N$右边分类列表数量
+MOV N$种子id 0
+MOV N$列id <$SCRIPTPARAM(1)>
+For N$种子id = <$STR(N$右边分类列表数量)>
+goto @当前列选择装备回收&<$STR(N$种子id)>&<$STR(N$列id)>
+inc N$种子id 1
+EndFor
+goto @回收页面初始化&<$STR(S$回收一级页面id)>
+[@当前列选择装备回收]
+#If
+True
+#ACt
+MOV N$一号参数 <$SCRIPTPARAM(1)>
+MOV N$二号参数 <$SCRIPTPARAM(2)>
+;这里提前判断一下是否不应该给他们点
+#IfONE
+Equal <$STR(S$回收一级页面id)> 1
+Equal <$STR(S$回收一级页面id)> 2
+Equal <$STR(S$回收一级页面id)> 6
+#ACT
+MOV N$FLAG 1
+#elseACT
+MOV N$FLAG 0
+#IF
+!equal <$STR(N$二号参数)> 0
+equal N$FLAG 1
+#ACT
+break
+
+;先操作总，在操作分支，分支用来快速算
+;操作总
+#IF
+!equal <$STR(N$二号参数)> 0
+#ACT
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$一号参数)>)><$STR(S$回收拼接字符分割_<$STR(N$二号参数)>)>
+#elseACT
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$一号参数)>)>
+#IF
+true
+#ACT
+MOV S$选中物品名称总 <$HUMAN(金币回收列表总)>
+#If
+POS <$HUMAN(金币回收列表总)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称总 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+goto @金币和材料互斥&1
+INC S$选中物品名称总 <$STR(S$回收装备名称)>|
+;操作总完成
+;操作分
+#IfONE
+Equal <$STR(S$回收一级页面id)> 1
+Equal <$STR(S$回收一级页面id)> 2
+#ACT
+MOV N$金币回收分支列表id <$STR(S$回收一级页面id)>
+#If
+Equal <$STR(S$回收一级页面id)> 3
+#ACT
+MOV N$金币回收分支列表id <$STR(S$回收一级页面id)>
+INC N$金币回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 4
+#ACT
+MOV N$金币回收分支列表id 9
+INC N$金币回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 5
+#ACT
+MOV N$金币回收分支列表id 15
+INC N$金币回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 6
+#ACT
+goto @特殊判断衣服武器
+
+#If
+True
+#ACt
+MOV S$选中物品名称分支 <$HUMAN(金币回收列表<$STR(N$金币回收分支列表id)>)>
+#If
+POS <$HUMAN(金币回收列表<$STR(N$金币回收分支列表id)>)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称分支 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+INC S$选中物品名称分支 <$STR(S$回收装备名称)>|
+
+#If
+True
+#ACt
+Calcvar HUMAN 金币回收列表总 = <$STR(S$选中物品名称总)>
+Savevar HUMAN 金币回收列表总
+Calcvar HUMAN 金币回收列表<$STR(N$金币回收分支列表id)> = <$STR(S$选中物品名称分支)>
+Savevar HUMAN 金币回收列表<$STR(N$金币回收分支列表id)>
+
+[@一键回收]
+#IF
+true
+#ACT
+MOV N$执行回收金币 0
+MOV N$执行回收经验 0
+MOV N$TEMP 1
+For N$TEMP = 24
+TakeBagItem <$HUMAN(金币回收列表<$STR(N$TEMP)>)> 1000 M10 0
+
+MOV N$本次收取金币  <$STR(N$回收金币价格<$STR(N$TEMP)>)>
+MULT N$本次收取金币 <$STR(M10)>
+INC N$执行回收金币 <$STR(N$本次收取金币)>
+
+
+MOV N$本次收取经验  <$STR(N$回收金币经验值<$STR(N$TEMP)>)>
+MULT N$本次收取经验 <$STR(M10)>
+INC N$执行回收经验 <$STR(N$本次收取经验)>
+Inc N$TEMP 1
+EndFor
+MONEY 金币 + <$STR(N$执行回收金币)>
+#If
+checklevelEX < 60
+#ACt
+CHANGEEXP + <$STR(N$执行回收经验)>
+
+;回收材料
+#If
+True
+#ACt
+MOV N$绿晶石材料回收 0
+MOV N$黑曜石材料回收 0
+MOV N$流荧石材料回收 0
+MOV N$玄天石材料回收 0
+Goto @材料回收执行
+goto @回收页面初始化&<$STR(S$回收一级页面id)>
+[@材料回收执行]
+#If
+true
+#ACt
+MOV N$TEMP 1
+For N$TEMP = 17
+TakeBagItem <$HUMAN(材料回收列表<$STR(N$TEMP)>)> 1000 M10 0
+MOV S$材料回收名称
+MOV N$材料回收数值 0
+Goto @材料回收执行细节
+MULT N$材料回收数值 <$STR(M10)>
+INC N$<$STR(S$材料回收名称)> <$STR(N$材料回收数值)>
+Inc N$TEMP 1
+EndFor
+#If
+Large <$STR(N$绿晶石材料回收)> 0
+#ACt
+GIVE 绿晶石 <$STR(N$绿晶石材料回收)>
+#If
+Large <$STR(N$黑曜石材料回收)> 0
+#ACt
+GIVE 黑曜石 <$STR(N$黑曜石材料回收)>
+#If
+Large <$STR(N$流荧石材料回收)> 0
+#ACt
+GIVE 流荧石 <$STR(N$流荧石材料回收)>
+#If
+Large <$STR(N$玄天石材料回收)> 0
+#ACt
+GIVE 玄天石 <$STR(N$玄天石材料回收)>
+
+[@材料回收执行细节]
+#IF
+equal N$TEMP 1
+#ACT
+MOV S$材料回收名称 绿晶石材料回收
+MOV N$材料回收数值 1
+#IF
+equal N$TEMP 2
+#ACT
+MOV S$材料回收名称 绿晶石材料回收
+MOV N$材料回收数值 3
+#IF
+equal N$TEMP 3
+#ACT
+MOV S$材料回收名称 绿晶石材料回收
+MOV N$材料回收数值 5
+#IF
+equal N$TEMP 4
+#ACT
+MOV S$材料回收名称 绿晶石材料回收
+MOV N$材料回收数值 10
+#IF
+equal N$TEMP 5
+#ACT
+MOV S$材料回收名称 黑曜石材料回收
+MOV N$材料回收数值 1
+#IF
+equal N$TEMP 6
+#ACT
+MOV S$材料回收名称 黑曜石材料回收
+MOV N$材料回收数值 3
+#IF
+equal N$TEMP 7
+#ACT
+MOV S$材料回收名称 黑曜石材料回收
+MOV N$材料回收数值 10
+#IF
+equal N$TEMP 8
+#ACT
+MOV S$材料回收名称 黑曜石材料回收
+MOV N$材料回收数值 30
+#IF
+equal N$TEMP 9
+#ACT
+MOV S$材料回收名称 流荧石材料回收
+MOV N$材料回收数值 1
+#IF
+equal N$TEMP 10
+#ACT
+MOV S$材料回收名称 流荧石材料回收
+MOV N$材料回收数值 3
+#IF
+equal N$TEMP 11
+#ACT
+MOV S$材料回收名称 流荧石材料回收
+MOV N$材料回收数值 10
+#IF
+equal N$TEMP 12
+#ACT
+MOV S$材料回收名称 流荧石材料回收
+MOV N$材料回收数值 30
+#IF
+equal N$TEMP 13
+#ACT
+MOV S$材料回收名称 玄天石材料回收
+MOV N$材料回收数值 1
+#IF
+equal N$TEMP 14
+#ACT
+MOV S$材料回收名称 玄天石材料回收
+MOV N$材料回收数值 3
+#IF
+equal N$TEMP 15
+#ACT
+MOV S$材料回收名称 玄天石材料回收
+MOV N$材料回收数值 10
+#IF
+equal N$TEMP 16
+#ACT
+MOV S$材料回收名称 玄天石材料回收
+MOV N$材料回收数值 30
+[@拾取开关]
+#IF
+EQUAL <$HUMAN(全屏拾取)> 1
+#ACT
+Calcvar HUMAN 全屏拾取 = 0
+Savevar HUMAN 全屏拾取
+SENDMSG 7 已经关闭全屏拾取!
+messagebox 已经关闭全屏拾取!
+break
+#ELSEACT
+Calcvar HUMAN 全屏拾取 = 1
+Savevar HUMAN 全屏拾取
+SENDMSG 7 已经开启全屏拾取!
+messagebox 已经开启全屏拾取!
+break
+
+[@回收页面初始化]
+#If
+True
+#ACT
+;增加变量$SkillKey(x) 返回指定技能键的技能ID
+;增加$Magic(A).B $UserMagic(A).B 中的参数B增加Key 返回快捷键编号
+;RandomStr
+;AddFh 可以做成春夏秋冬四个BOSS，挨着顺序杀，如果被四个BOSS一起打了，那就直接死，春回血，夏灼烧，秋中毒，冬冰冻
+;POWERRATE攻击倍数，有有效刀数，这个说法
+;AddSuiteAbil 
+;ChangeMode 41 有很多状态
+; 扩展支持SetSkillKey 支持手游普攻设定 普攻编号 10101
+MOV S$回收一级页面id <$SCRIPTPARAM(1)>
+MOV S$左按钮子节点按钮1 public/button/btn_tab2_01.png
+MOV S$左按钮子节点按钮2 public/button/btn_tab2_01.png
+MOV S$左按钮子节点按钮3 public/button/btn_tab2_01.png
+MOV S$左按钮子节点按钮4 public/button/btn_tab2_01.png
+MOV S$左按钮子节点按钮5 public/button/btn_tab2_01.png
+MOV S$左按钮子节点按钮6 public/button/btn_tab2_01.png
+
+MOV S$左按钮子节点按钮<$STR(S$回收一级页面id)> public/button/btn_tab2_02.png
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 装备分类汇总  分类名称总  S$手游回收左边框按钮列表
+SPLIT <$STR(S$手游回收左边框按钮列表)> | S$手游回收左边框按钮列表分割 N$手游回收左边框按钮列表数量
+
+MOV N$种子id 1
+MOV S$左边按钮显示
+MOV S$左边按钮子节点记录
+For N$种子id = <$STR(N$手游回收左边框按钮列表数量)>
+INC S$左边按钮显示 <Button|id=左按钮子节点<$STR(N$种子id)>|width=70|height=38|nimg=<$STR(S$左按钮子节点按钮<$STR(N$种子id)>)>|size=16|color=161|text=<$STR(S$手游回收左边框按钮列表分割_<$STR(N$种子id)>)>|link=@回收页面初始化&<$STR(N$种子id)>>
+INC S$左边按钮子节点记录 左按钮子节点<$STR(N$种子id)>,
+inc N$种子id 1
+EndFor
+
+Mov S$金币回收页面flag 开
+MOV S$材料回收页面flag 关
+
+goto @拼接右边分类
+
+[@拼接右边分类]
+#If
+Equal <$STR(S$回收一级页面id)> 1
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 1 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 2
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 2 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 3
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 3 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 4
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 9 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 5
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 15 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 6
+#ACt
+MOV S$右边分类列表
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 21 装备名称  S$右边分类子列表
+INC S$右边分类列表 <$STR(S$右边分类子列表)>
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 22 装备名称  S$右边分类子列表
+INC S$右边分类列表 <$STR(S$右边分类子列表)>
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 23 装备名称  S$右边分类子列表
+INC S$右边分类列表 <$STR(S$右边分类子列表)>
+
+
+#If
+True
+#ACt
+SPLIT <$STR(S$右边分类列表)> | S$右边分类列表分割 N$右边分类列表数量
+
+MOV N$种子id 0
+MOV S$右边分类显示
+MOV S$右边分类子节点记录
+
+For N$种子id = <$STR(N$右边分类列表数量)>
+INC S$右边分类显示 <Img|id=右边分类子节点<$STR(N$种子id)>|children={右边分类子节点<$STR(N$种子id)>a,右边分类子节点<$STR(N$种子id)>b,右边分类子节点<$STR(N$种子id)>c,右边分类子节点<$STR(N$种子id)>d,右边分类子节点<$STR(N$种子id)>e,右边分类子节点<$STR(N$种子id)>f,右边分类子节点<$STR(N$种子id)>g}|width=410|height=50|img=picpackage/3/60139.png>
+INC S$右边分类显示 <Text|id=右边分类子节点<$STR(N$种子id)>a|x=57|y=15|a=2|color=255|size=16|text=<$STR(S$右边分类列表分割_<$STR(N$种子id)>)>>
+GOTO @判断当前装备是否被选择&0
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>b|x=120.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割0_<$STR(N$种子id)>)>|link=@选择装备回收&<$STR(N$种子id)>&0>
+GOTO @判断当前装备是否被选择&1
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>c|x=170.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割1_<$STR(N$种子id)>)>|link=@选择装备回收&<$STR(N$种子id)>&1>
+GOTO @判断当前装备是否被选择&2
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>d|x=220.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割2_<$STR(N$种子id)>)>|link=@选择装备回收&<$STR(N$种子id)>&2>
+GOTO @判断当前装备是否被选择&3
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>e|x=270.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割3_<$STR(N$种子id)>)>|link=@选择装备回收&<$STR(N$种子id)>&3>
+GOTO @判断当前装备是否被选择&4
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>f|x=320.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割4_<$STR(N$种子id)>)>|link=@选择装备回收&<$STR(N$种子id)>&4>
+GOTO @判断当前装备是否被选择&5
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>g|x=370.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割5_<$STR(N$种子id)>)>|link=@选择装备回收&<$STR(N$种子id)>&5>
+
+INC S$右边分类子节点记录 右边分类子节点<$STR(N$种子id)>,
+inc N$种子id 1
+EndFor
+
+#If
+true
+#ACt
+MOV N$金币回收总值 0
+MOV N$金币回收总经验 0
+Mov S$金币回收id列表
+Goto @回收金币经验价格初始化
+LoopBagItems @SelectItem n$MakeIndex
+SelectBagItems = <$STR(S$金币回收id列表)>
+goto @手游背包
+Break
+[@判断当前装备是否被选择]
+#IF
+!equal <$SCRIPTPARAM(1)> 0
+#ACT
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$种子id)>)><$STR(S$回收拼接字符分割_<$SCRIPTPARAM(1)>)>
+#elseACT
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$种子id)>)>
+#If
+POS <$HUMAN(金币回收列表总)> <$STR(S$回收装备名称)>|
+#ACt
+MOV N$右边分类列表分割<$SCRIPTPARAM(1)>_<$STR(N$种子id)> 1
+#elseACT
+MOV N$右边分类列表分割<$SCRIPTPARAM(1)>_<$STR(N$种子id)> 0
+
+[@选择装备回收]
+#If
+True
+#ACt
+MOV N$一号参数 <$SCRIPTPARAM(1)>
+MOV N$二号参数 <$SCRIPTPARAM(2)>
+;这里提前判断一下是否不应该给他们点
+#IfONE
+Equal <$STR(S$回收一级页面id)> 1
+Equal <$STR(S$回收一级页面id)> 2
+Equal <$STR(S$回收一级页面id)> 6
+#ACT
+MOV N$FLAG 1
+#elseACT
+MOV N$FLAG 0
+#IF
+!equal <$STR(N$二号参数)> 0
+equal N$FLAG 1
+#ACT
+break
+
+;先操作总，在操作分支，分支用来快速算
+;操作总
+#IF
+!equal <$STR(N$二号参数)> 0
+#ACT
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$一号参数)>)><$STR(S$回收拼接字符分割_<$STR(N$二号参数)>)>
+#elseACT
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$一号参数)>)>
+#IF
+true
+#ACT
+MOV S$选中物品名称总 <$HUMAN(金币回收列表总)>
+#If
+POS <$HUMAN(金币回收列表总)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称总 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+goto @金币和材料互斥&1
+INC S$选中物品名称总 <$STR(S$回收装备名称)>|
+;操作总完成
+;操作分
+#IfONE
+Equal <$STR(S$回收一级页面id)> 1
+Equal <$STR(S$回收一级页面id)> 2
+#ACT
+MOV N$金币回收分支列表id <$STR(S$回收一级页面id)>
+#If
+Equal <$STR(S$回收一级页面id)> 3
+#ACT
+MOV N$金币回收分支列表id <$STR(S$回收一级页面id)>
+INC N$金币回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 4
+#ACT
+MOV N$金币回收分支列表id 9
+INC N$金币回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 5
+#ACT
+MOV N$金币回收分支列表id 15
+INC N$金币回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 6
+#ACT
+goto @特殊判断衣服武器
+
+#If
+True
+#ACt
+MOV S$选中物品名称分支 <$HUMAN(金币回收列表<$STR(N$金币回收分支列表id)>)>
+#If
+POS <$HUMAN(金币回收列表<$STR(N$金币回收分支列表id)>)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称分支 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+INC S$选中物品名称分支 <$STR(S$回收装备名称)>|
+
+#If
+True
+#ACt
+Calcvar HUMAN 金币回收列表总 = <$STR(S$选中物品名称总)>
+Savevar HUMAN 金币回收列表总
+Calcvar HUMAN 金币回收列表<$STR(N$金币回收分支列表id)> = <$STR(S$选中物品名称分支)>
+Savevar HUMAN 金币回收列表<$STR(N$金币回收分支列表id)>
+Goto @拼接右边分类 
+[@特殊判断衣服武器]
+#If
+POS |恶魔长袍(男)|恶魔长袍(女)|幽灵战甲(男)|幽灵战甲(女)|战神(男)|战神(女)|裁决|骨玉|龙纹| <$STR(S$回收装备名称)> 
+#ACt
+MOV N$金币回收分支列表id 21
+#If
+POS |天魔战甲|法神披风|天尊道袍|圣战战甲|法神羽衣|天师道袍|雷霆怒斩|龙牙利刃|逍遥无极扇| <$STR(S$回收装备名称)> 
+#ACt
+MOV N$金币回收分支列表id 22
+#If
+POS |神武战甲|神武战袍|幻魔披风|幻魔羽衣|天玄道袍|天玄道衣|屠龙刀|倚天剑|嗜魂| <$STR(S$回收装备名称)> 
+#ACt
+MOV N$金币回收分支列表id 23
+
+
+[@SelectItem]
+;幸运装备，强化武器这块的回收判断还没做，要等这个几个功能出来，才能确定如何判断
+
+#IF
+POS <$HUMAN(金币回收列表总)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACT
+Inc S$金币回收id列表 ,<$Str(n$MakeIndex)>,
+#elseACT
+Break
+#If
+POS <$HUMAN(金币回收列表1)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格1)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值1)>
+#If
+POS <$HUMAN(金币回收列表2)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格2)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值2)>
+#If
+POS <$HUMAN(金币回收列表3)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格3)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值3)>
+#If
+POS <$HUMAN(金币回收列表4)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格4)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值4)>
+#If
+POS <$HUMAN(金币回收列表5)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格5)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值5)>
+#If
+POS <$HUMAN(金币回收列表6)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格6)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值6)>
+#If
+POS <$HUMAN(金币回收列表7)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格7)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值7)>
+#If
+POS <$HUMAN(金币回收列表8)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格8)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值8)>
+#If
+POS <$HUMAN(金币回收列表9)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格9)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值9)>
+#If
+POS <$HUMAN(金币回收列表10)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格10)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值10)>
+#If
+POS <$HUMAN(金币回收列表11)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格11)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值11)>
+#If
+POS <$HUMAN(金币回收列表12)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格12)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值12)>
+#If
+POS <$HUMAN(金币回收列表13)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格13)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值13)>
+#If
+POS <$HUMAN(金币回收列表14)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格14)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值14)>
+#If
+POS <$HUMAN(金币回收列表15)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格15)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值15)>
+#If
+POS <$HUMAN(金币回收列表16)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格16)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值16)>
+#If
+POS <$HUMAN(金币回收列表17)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格17)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值17)>
+#If
+POS <$HUMAN(金币回收列表18)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格18)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值18)>
+#If
+POS <$HUMAN(金币回收列表19)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格19)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值19)>
+#If
+POS <$HUMAN(金币回收列表20)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格20)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值20)>
+#If
+POS <$HUMAN(金币回收列表21)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格21)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值21)>
+#If
+POS <$HUMAN(金币回收列表22)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格22)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值22)>
+#If
+POS <$HUMAN(金币回收列表23)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>
+#ACt
+INC N$金币回收总值 <$STR(N$回收金币价格23)>
+INC N$金币回收总经验 <$STR(N$回收金币经验值23)>
+
+[@回收金币经验价格初始化]
+#If
+True
+#ACt
+MOV N$回收金币价格1 0
+MOV N$回收金币价格2 25
+MOV N$回收金币价格3 60
+MOV N$回收金币价格4 100
+MOV N$回收金币价格5 150
+MOV N$回收金币价格6 200
+MOV N$回收金币价格7 250
+MOV N$回收金币价格8 350
+MOV N$回收金币价格9 200
+MOV N$回收金币价格10 250
+MOV N$回收金币价格11 350
+MOV N$回收金币价格12 500
+MOV N$回收金币价格13 1000
+MOV N$回收金币价格14 2000
+MOV N$回收金币价格15 3000
+MOV N$回收金币价格16 10000
+MOV N$回收金币价格17 20000
+MOV N$回收金币价格18 100000
+MOV N$回收金币价格19 300000
+MOV N$回收金币价格20 1000000
+MOV N$回收金币价格21 200
+MOV N$回收金币价格22 500
+MOV N$回收金币价格23 200000
+
+MOV N$回收金币经验值1 100
+MOV N$回收金币经验值2 100
+MOV N$回收金币经验值3 150
+MOV N$回收金币经验值4 200
+MOV N$回收金币经验值5 250
+MOV N$回收金币经验值6 300
+MOV N$回收金币经验值7 500
+MOV N$回收金币经验值8 800
+MOV N$回收金币经验值9 500
+MOV N$回收金币经验值10 600
+MOV N$回收金币经验值11 800
+MOV N$回收金币经验值12 1000
+MOV N$回收金币经验值13 1500
+MOV N$回收金币经验值14 2000
+MOV N$回收金币经验值15 10000
+MOV N$回收金币经验值16 20000
+MOV N$回收金币经验值17 50000
+MOV N$回收金币经验值18 200000
+MOV N$回收金币经验值19 500000
+MOV N$回收金币经验值20 1500000
+MOV N$回收金币经验值21 400
+MOV N$回收金币经验值22 1000
+MOV N$回收金币经验值23 500000
+
+;====================================================================================================材料回收
+[@材料回收界面初始化]
+#If
+True
+#ACT
+MOV S$金币回收页面flag 关
+MOV S$材料回收页面flag 开
+MOV S$回收一级页面id <$SCRIPTPARAM(1)>
+MOV S$左按钮子节点按钮1 public/button/btn_tab2_01.png
+MOV S$左按钮子节点按钮2 public/button/btn_tab2_01.png
+
+MOV S$左按钮子节点按钮<$STR(S$回收一级页面id)> public/button/btn_tab2_02.png
+
+MOV S$手游回收左边框按钮列表 暂无|禁地装备|神武装备
+SPLIT <$STR(S$手游回收左边框按钮列表)> | S$手游回收左边框按钮列表分割 N$手游回收左边框按钮列表数量
+
+MOV N$种子id 0
+MOV S$左边按钮显示
+MOV S$左边按钮子节点记录
+For N$种子id = <$STR(N$手游回收左边框按钮列表数量)>
+INC S$左边按钮显示 <Button|id=左按钮子节点<$STR(N$种子id)>|width=70|height=38|nimg=<$STR(S$左按钮子节点按钮<$STR(N$种子id)>)>|size=16|color=161|text=<$STR(S$手游回收左边框按钮列表分割_<$STR(N$种子id)>)>|link=@材料回收界面初始化&<$STR(N$种子id)>>
+INC S$左边按钮子节点记录 左按钮子节点<$STR(N$种子id)>,
+inc N$种子id 1
+EndFor
+
+
+goto @材料拼接右边分类
+
+[@材料拼接右边分类]
+#If
+Equal <$STR(S$回收一级页面id)> 1
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 9 装备名称  S$右边分类列表
+#If
+Equal <$STR(S$回收一级页面id)> 2
+#ACt
+ReadConfigFileItem ..\QuestDiary\配置文件\重构回收配置.ini 15 装备名称  S$右边分类列表
+
+
+#If
+True
+#ACt
+SPLIT <$STR(S$右边分类列表)> | S$右边分类列表分割 N$右边分类列表数量
+
+MOV N$种子id 0
+MOV S$右边分类显示
+MOV S$右边分类子节点记录
+
+For N$种子id = <$STR(N$右边分类列表数量)>
+INC S$右边分类显示 <Img|id=右边分类子节点<$STR(N$种子id)>|children={右边分类子节点<$STR(N$种子id)>a,右边分类子节点<$STR(N$种子id)>b,右边分类子节点<$STR(N$种子id)>c,右边分类子节点<$STR(N$种子id)>d,右边分类子节点<$STR(N$种子id)>e,右边分类子节点<$STR(N$种子id)>f,右边分类子节点<$STR(N$种子id)>g}|width=410|height=50|img=picpackage/3/60139.png>
+INC S$右边分类显示 <Text|id=右边分类子节点<$STR(N$种子id)>a|x=57|y=15|a=2|color=255|size=16|text=<$STR(S$右边分类列表分割_<$STR(N$种子id)>)>>
+GOTO @判断当前装备是否被材料回收选择&2
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>b|x=130.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割2_<$STR(N$种子id)>)>|link=@选择装备回收材料&<$STR(N$种子id)>&2>
+GOTO @判断当前装备是否被材料回收选择&3
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>c|x=205.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割3_<$STR(N$种子id)>)>|link=@选择装备回收材料&<$STR(N$种子id)>&3>
+GOTO @判断当前装备是否被材料回收选择&4
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>d|x=280.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割4_<$STR(N$种子id)>)>|link=@选择装备回收材料&<$STR(N$种子id)>&4>
+GOTO @判断当前装备是否被材料回收选择&5
+INC S$右边分类显示 <CheckBox|id=右边分类子节点<$STR(N$种子id)>e|x=355.0|y=7.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$STR(N$右边分类列表分割5_<$STR(N$种子id)>)>|link=@选择装备回收材料&<$STR(N$种子id)>&5>
+
+INC S$右边分类子节点记录 右边分类子节点<$STR(N$种子id)>,
+inc N$种子id 1
+EndFor
+
+#If
+true
+#ACt
+MOV N$绿晶石材料回收 0
+MOV N$黑曜石材料回收 0
+MOV N$流荧石材料回收 0
+MOV N$玄天石材料回收 0
+Mov S$材料回收id列表
+Goto @回收材料价格初始化
+LoopBagItems @回收材料循环 n$MakeIndex
+SelectBagItems = <$STR(S$材料回收id列表)>
+goto @材料回收界面
+Break
+[@选择装备回收材料]
+;先操作总，在操作分支，分支用来快速算
+;操作总
+#IF
+true
+#ACT
+MOV N$一号参数 <$SCRIPTPARAM(1)>
+MOV N$二号参数 <$SCRIPTPARAM(2)>
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$一号参数)>)><$STR(S$回收拼接字符分割_<$STR(N$二号参数)>)>
+MOV S$选中物品名称总 <$HUMAN(材料回收列表总)>
+
+#If
+POS <$HUMAN(材料回收列表总)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称总 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+goto @金币和材料互斥&2
+INC S$选中物品名称总 <$STR(S$回收装备名称)>|
+;操作总完成
+;操作分
+#If
+Equal <$STR(S$回收一级页面id)> 1
+#ACT
+MOV N$材料回收分支列表id -1
+INC N$材料回收分支列表id <$STR(N$二号参数)>
+#If
+Equal <$STR(S$回收一级页面id)> 2
+#ACT
+MOV N$材料回收分支列表id 3
+INC N$材料回收分支列表id <$STR(N$二号参数)>
+#If
+True
+#ACt
+MOV S$选中物品名称分支 <$HUMAN(材料回收列表<$STR(N$材料回收分支列表id)>)>
+#If
+POS <$HUMAN(材料回收列表<$STR(N$材料回收分支列表id)>)> <$STR(S$回收装备名称)>|
+#ACt
+ReplaceText S$选中物品名称分支 <$STR(S$回收装备名称)>| 1 5
+#elseACT
+INC S$选中物品名称分支 <$STR(S$回收装备名称)>|
+
+#If
+True
+#ACt
+Calcvar HUMAN 材料回收列表总 = <$STR(S$选中物品名称总)>
+Savevar HUMAN 材料回收列表总
+Calcvar HUMAN 材料回收列表<$STR(N$材料回收分支列表id)> = <$STR(S$选中物品名称分支)>
+Savevar HUMAN 材料回收列表<$STR(N$材料回收分支列表id)>
+Goto @材料拼接右边分类
+
+
+[@判断当前装备是否被材料回收选择]
+#IF
+True
+#ACT
+MOV S$回收装备名称 <$STR(S$右边分类列表分割_<$STR(N$种子id)>)><$STR(S$回收拼接字符分割_<$SCRIPTPARAM(1)>)>
+
+#If
+POS <$HUMAN(材料回收列表总)> <$STR(S$回收装备名称)>|
+#ACt
+MOV N$右边分类列表分割<$SCRIPTPARAM(1)>_<$STR(N$种子id)> 1
+#elseACT
+MOV N$右边分类列表分割<$SCRIPTPARAM(1)>_<$STR(N$种子id)> 0
+
+[@回收材料循环]
+#IF
+POS <$HUMAN(材料回收列表总)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACT
+Inc S$材料回收id列表 ,<$Str(n$MakeIndex)>,
+#elseACT
+Break
+#If
+POS <$HUMAN(材料回收列表1)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+INC N$绿晶石材料回收 1
+#If
+POS <$HUMAN(材料回收列表2)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+INC N$绿晶石材料回收 3
+#If
+POS <$HUMAN(材料回收列表3)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+INC N$绿晶石材料回收 5
+#If
+POS <$HUMAN(材料回收列表4)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+INC N$绿晶石材料回收 10
+#If
+POS <$HUMAN(材料回收列表5)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+MOV N$材料数量 1
+Goto @判断材料种类
+#If
+POS <$HUMAN(材料回收列表6)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+MOV N$材料数量 3
+Goto @判断材料种类
+#If
+POS <$HUMAN(材料回收列表7)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+MOV N$材料数量 10
+Goto @判断材料种类
+#If
+POS <$HUMAN(材料回收列表8)> <$ItemInfo[<$Str(n$MakeIndex)>].StdName>|
+#ACt
+MOV N$材料数量 30
+Goto @判断材料种类
+[@判断材料种类]
+#If
+POS <$ItemInfo[<$Str(n$MakeIndex)>].StdName> 神武
+#ACt
+INC N$黑曜石材料回收 <$STR(N$材料数量)>
+#If
+POS <$ItemInfo[<$Str(n$MakeIndex)>].StdName> 幻魔
+#ACt
+INC N$流荧石材料回收 <$STR(N$材料数量)>
+#If
+POS <$ItemInfo[<$Str(n$MakeIndex)>].StdName> 天玄
+#ACt
+INC N$玄天石材料回收 <$STR(N$材料数量)>
+
+[@材料回收界面]
+#IF
+EQUAL $STR(S$所在背包页面) 包裹一
+#SAY
+<Button|x=580.0|y=-3.0|nimg=public/025.png|link=@关闭包裹>
+;<Text|x=280.0|y=20.0|color=125|size=22|text=包裹>
+
+<Button|x=120.0|y=40.0|size=18|nimg=public/button/btn_push_05.png|color=<$STR(S$背包一颜色)>|text=第一页|link=@第一页背包>
+<Button|x=210.0|y=40.0|size=18|nimg=public/button/btn_push_05.png|color=<$STR(S$背包二颜色)>|text=第二页|link=@第二页背包>
+<Button|x=300.0|y=40.0|size=18|nimg=public/button/btn_push_05.png|color=<$STR(S$背包三颜色)>|text=第三页|link=@第三页背包>
+
+<Button|x=500.0|y=460|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=装备回收|link=@回收页面初始化&1>
+<Button|x=25.0|y=415.0|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=快捷仓库|link=@FastStorge>
+<Button|x=500.0|y=500.0|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=整理包裹|link=@WLQN刷新>
+
+;绑定金币
+<Text|x=160|y=510|a=2|color=94|size=16|text=<$BINDGOLD>>
+;金币
+<Text|x=160|y=470|a=2|color=94|size=16|text=<$GOLDCOUNT>>
+;元宝
+<Text|x=396|y=470|a=2|color=94|size=16|text=<$GAMEGOLD>>
+;绑定元宝
+<Text|x=396|y=510|a=2|color=94|size=16|text=<$BINDGAMEGOLD>>
+
+
+#If
+;True
+Equal S$材料回收页面flag 开
+#say
+<Img|x=-400.0|y=-5.0|width=500|height=570|children={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14}|img=public/046.png>
+<Button|id=0|x=460.0|y=0.0|nimg=public/025.png|color=255|scale=1|link=@关闭回收界面>
+<Img|id=1|x=10.0|y=85.0|width=480|height=3|img=public/bg_yyxsz_04.png>
+<Img|id=2|x=10.0|y=440.0|width=480|height=3|img=public/bg_yyxsz_04.png>
+<Img|id=3|x=80.0|y=87.0|width=3|height=353|img=public/bg_yyxsz_03.png>
+<Button|id=4|x=10.0|y=40.0|nimg=public/button/btn_push_06.png|pimg=public/button/btn_push_05.png|scale=1|size=16|color=161|text=金币回收|link=@回收页面初始化&1>
+<Button|id=5|x=105.0|y=40.0|nimg=public/button/btn_push_05.png|pimg=public/button/btn_push_06.png|scale=1|size=16|color=251|text=材料回收|link=@材料回收界面初始化&1>
+
+<Layout|id=6|children={6aa}|x=12.0|y=95.0|width=68.0|height=460|link=@暂无>
+
+
+<ListView|id=6aa|children={<$STR(S$左边按钮子节点记录)>}|width=68.0|height=460|color=x|img=public/down.png|loadDelay=0|direction=1|margin=10|bounce=0>
+<$STR(S$左边按钮显示)>
+<Img|id=8|children={7a,7b,7c,7d,7e,7f,7g,7h,7l,7u,7p,7m,7n}|x=82.0|y=130.0|width=408|height=3|img=public/bg_yyxsz_04.png>
+<Button|id=7a|x=0|y=-45|width=110|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=装备名称>
+<Button|id=7b|x=107|y=-45|width=75|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+2|link=@当前材料列全选&2>
+<Button|id=7c|x=182|y=-45|width=75|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+3|link=@当前材料列全选&3>
+<Button|id=7d|x=257|y=-45|width=75|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+4|link=@当前材料列全选&4>
+<Button|id=7e|x=332|y=-45|width=75|height=45||nimg=public/button/btn_chosen_03.png|outline=2|size=18|color=243|text=+5|link=@当前材料列全选&5>
+
+
+
+<Img|id=7h|x=105.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7l|x=180.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7u|x=255.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+<Img|id=7p|x=330.0|y=-45.0|width=2|height=353|img=public/bg_yyxsz_03.png>
+
+
+<Layout|id=7|children={7aa}|x=82.0|y=132.0|width=440.0|height=310|link=@暂无>
+
+<ListView|id=7aa|children={<$STR(S$右边分类子节点记录)>}|width=440.0|height=310|color=x|img=public/down.png|loadDelay=0|direction=1|margin=1|bounce=1>
+<$STR(S$右边分类显示)>
+
+<Text|id=9|x=40|y=460|color=94|size=16|text=回收绿晶石：<$STR(N$绿晶石材料回收)>>
+<Text|id=10|x=40|y=500|color=94|size=16|text=回收黑曜石：<$STR(N$黑曜石材料回收)>>
+<Text|id=12|x=200|y=460|color=94|size=16|text=回收流荧石：<$STR(N$流荧石材料回收)>>
+<Text|id=13|x=200|y=500|color=94|size=16|text=回收玄天石：<$STR(N$玄天石材料回收)>>
+
+<Button|id=11|x=370.0|y=490.0|nimg=public/zdy/an2.png|scale=1|size=16|color=125|text=一键回收|link=@一键回收>
+<CheckBox|id=14|children=14a|x=370.0|y=450.0|width=35|height=35|nimg=public/1900000550.png|pimg=public/1900000551.png|checkboxid=2|default=<$HUMAN(自动回收)>|link=@自动回收勾选>
+<Text|id=14a|x=40|y=5|color=94|size=16|text=自动回收>
+
+[@自动回收勾选]
+#If
+equal <$HUMAN(自动回收)> 1
+#ACT
+Calcvar HUMAN 自动回收 = 0
+Savevar HUMAN 自动回收
+#elseACT
+Calcvar HUMAN 自动回收 = 1
+Savevar HUMAN 自动回收
+#IF
+Equal S$金币回收页面flag 开
+#ACT
+goto @手游背包&<$STR(S$回收一级页面id)>
+#elseACT
+Goto @材料回收界面&<$STR(S$回收一级页面id)>
+[@金币和材料互斥]
+#If
+True
+#ACt
+MOV S$互斥装备1 |圣战头盔＋２|圣战项链＋２|圣战手镯＋２|圣战戒指＋２|法神头盔＋２|法神项链＋２|法神手镯＋２|法神戒指＋２|天尊头盔＋２|天尊项链＋２|天尊手镯＋２|天尊戒指＋２|圣战靴子＋２|圣战腰带＋２|法神靴子＋２|法神腰带＋２|天尊道靴＋２|天尊腰带＋２|
+MOV S$互斥装备2 |圣战头盔＋３|圣战项链＋３|圣战手镯＋３|圣战戒指＋３|法神头盔＋３|法神项链＋３|法神手镯＋３|法神戒指＋３|天尊头盔＋３|天尊项链＋３|天尊手镯＋３|天尊戒指＋３|圣战靴子＋３|圣战腰带＋３|法神靴子＋３|法神腰带＋３|天尊道靴＋３|天尊腰带＋３|
+MOV S$互斥装备3 |圣战头盔＋４|圣战项链＋４|圣战手镯＋４|圣战戒指＋４|法神头盔＋４|法神项链＋４|法神手镯＋４|法神戒指＋４|天尊头盔＋４|天尊项链＋４|天尊手镯＋４|天尊戒指＋４|圣战靴子＋４|圣战腰带＋４|法神靴子＋４|法神腰带＋４|天尊道靴＋４|天尊腰带＋４|
+MOV S$互斥装备4 |圣战头盔＋５|圣战项链＋５|圣战手镯＋５|圣战戒指＋５|法神头盔＋５|法神项链＋５|法神手镯＋５|法神戒指＋５|天尊头盔＋５|天尊项链＋５|天尊手镯＋５|天尊戒指＋５|圣战靴子＋５|圣战腰带＋５|法神靴子＋５|法神腰带＋５|天尊道靴＋５|天尊腰带＋５|
+
+MOV S$互斥装备5 |神武头盔＋２|神武项链＋２|神武手镯＋２|神武戒指＋２|幻魔头盔＋２|幻魔项链＋２|幻魔手镯＋２|幻魔戒指＋２|天玄头盔＋２|天玄项链＋２|天玄手镯＋２|天玄戒指＋２|神武战靴＋２|神武腰带＋２|幻魔法靴＋２|幻魔腰带＋２|天玄道靴＋２|天玄腰带＋２|
+MOV S$互斥装备6 |神武头盔＋３|神武项链＋３|神武手镯＋３|神武戒指＋３|幻魔头盔＋３|幻魔项链＋３|幻魔手镯＋３|幻魔戒指＋３|天玄头盔＋３|天玄项链＋３|天玄手镯＋３|天玄戒指＋３|神武战靴＋３|神武腰带＋３|幻魔法靴＋３|幻魔腰带＋３|天玄道靴＋３|天玄腰带＋３|
+MOV S$互斥装备7 |神武头盔＋４|神武项链＋４|神武手镯＋４|神武戒指＋４|幻魔头盔＋４|幻魔项链＋４|幻魔手镯＋４|幻魔戒指＋４|天玄头盔＋４|天玄项链＋４|天玄手镯＋４|天玄戒指＋４|神武战靴＋４|神武腰带＋４|幻魔法靴＋４|幻魔腰带＋４|天玄道靴＋４|天玄腰带＋４|
+MOV S$互斥装备8 |神武头盔＋５|神武项链＋５|神武手镯＋５|神武戒指＋５|幻魔头盔＋５|幻魔项链＋５|幻魔手镯＋５|幻魔戒指＋５|天玄头盔＋５|天玄项链＋５|天玄手镯＋５|天玄戒指＋５|神武战靴＋５|神武腰带＋５|幻魔法靴＋５|幻魔腰带＋５|天玄道靴＋５|天玄腰带＋５|
+;金币选择来的
+#IF
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACT
+MOV N$互斥装备分支列表id 0
+#If
+POS <$STR(S$互斥装备1)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 1
+#If
+POS <$STR(S$互斥装备2)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 2
+#If
+POS <$STR(S$互斥装备3)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 3
+#If
+POS <$STR(S$互斥装备4)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 4
+
+#If
+POS <$STR(S$互斥装备5)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 神武
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 5
+#If
+POS <$STR(S$互斥装备6)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 神武
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 6
+#If
+POS <$STR(S$互斥装备7)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 神武
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 7
+#If
+POS <$STR(S$互斥装备8)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 神武
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 8
+
+
+#If
+POS <$STR(S$互斥装备5)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 幻魔
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 9
+#If
+POS <$STR(S$互斥装备6)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 幻魔
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 10
+#If
+POS <$STR(S$互斥装备7)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 幻魔
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 11
+#If
+POS <$STR(S$互斥装备8)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 幻魔
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 12
+#If
+POS <$STR(S$互斥装备5)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 天玄
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 13
+#If
+POS <$STR(S$互斥装备6)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 天玄
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 14
+#If
+POS <$STR(S$互斥装备7)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 天玄
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 15
+#If
+POS <$STR(S$互斥装备8)> <$STR(S$回收装备名称)>|
+POS <$STR(S$回收装备名称)> 天玄
+EQUAL <$SCRIPTPARAM(1)> 1
+#ACt
+MOV N$互斥装备分支列表id 16
+
+#If
+EQUAL <$SCRIPTPARAM(1)> 1
+large N$互斥装备分支列表id 0
+#ACt
+MOV S$互斥选中物品名称总 <$HUMAN(材料回收列表总)>
+MOV S$互斥选中物品名称分支 <$HUMAN(材料回收列表<$STR(N$互斥装备分支列表id)>)>
+ReplaceText S$互斥选中物品名称总 <$STR(S$回收装备名称)>| 1 5
+ReplaceText S$互斥选中物品名称分支 <$STR(S$回收装备名称)>| 1 5
+
+Calcvar HUMAN 材料回收列表总 = <$STR(S$互斥选中物品名称总)>
+Savevar HUMAN 材料回收列表总
+Calcvar HUMAN 材料回收列表<$STR(N$互斥装备分支列表id)> = <$STR(S$互斥选中物品名称分支)>
+Savevar HUMAN 材料回收列表<$STR(N$互斥装备分支列表id)>
+Break
+
+
+;材料选择来的
+#If
+POS <$STR(S$互斥装备1)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 11
+#If
+POS <$STR(S$互斥装备2)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 12
+#If
+POS <$STR(S$互斥装备3)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 13
+#If
+POS <$STR(S$互斥装备4)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 14
+
+#If
+POS <$STR(S$互斥装备5)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 17
+#If
+POS <$STR(S$互斥装备6)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 18
+#If
+POS <$STR(S$互斥装备7)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 19
+#If
+POS <$STR(S$互斥装备8)> <$STR(S$回收装备名称)>|
+EQUAL <$SCRIPTPARAM(1)> 2
+#ACt
+MOV N$互斥装备分支列表id 20
+
+#If
+EQUAL <$SCRIPTPARAM(1)> 2
+large N$互斥装备分支列表id 0
+#ACt
+MOV S$互斥选中物品名称总 <$HUMAN(金币回收列表总)>
+MOV S$互斥选中物品名称分支 <$HUMAN(金币回收列表<$STR(N$互斥装备分支列表id)>)>
+ReplaceText S$互斥选中物品名称总 <$STR(S$回收装备名称)>| 1 5
+ReplaceText S$互斥选中物品名称分支 <$STR(S$回收装备名称)>| 1 5
+
+Calcvar HUMAN 金币回收列表总 = <$STR(S$互斥选中物品名称总)>
+Savevar HUMAN 金币回收列表总
+Calcvar HUMAN 金币回收列表<$STR(N$互斥装备分支列表id)> = <$STR(S$互斥选中物品名称分支)>
+Savevar HUMAN 金币回收列表<$STR(N$互斥装备分支列表id)>
+
+
+
+
+;=========================================================================================================================回收装备模块
+[@前往商城]
+#ACT
+FUNC 1 @打开商城窗体
+
+[@前往充值]
+#ACT
+FUNC 1 @打开充值窗体
+
+[@关闭包裹]
+#IF
+TRUE
+#ACT
+OPENUI 2011 2
+BREAK
+
+[@关闭界面]
+#IF
+TRUE
+#ACT
+GOTO @MAIN
+
+[@第一页背包]
+#IF
+true
+#ACT
+OPENUI 2011 1
+MOV S$所在背包页面 包裹一
+MOV S$包裹页 关
+MOV S$背包一颜色 255
+MOV S$背包二颜色 70
+MOV S$背包三颜色 70
+MOV S$端游背包一颜色 ffffff
+MOV S$端游背包二颜色 ff6600
+MOV S$端游背包三颜色 ff6600
+break
+
+[@第二页背包]
+#IF
+true
+#ACT
+OPENUI 2012 1
+MOV S$包裹页 二
+MOV S$背包一颜色 70
+MOV S$背包二颜色 255
+MOV S$背包三颜色 70
+MOV S$端游背包一颜色 ff6600
+MOV S$端游背包二颜色 ffffff
+MOV S$端游背包三颜色 ff6600
+break
+
+[@第三页背包]
+#IF
+true
+#ACT
+OPENUI 2013 1
+MOV S$包裹页 三
+MOV S$背包一颜色 70
+MOV S$背包二颜色 70
+MOV S$背包三颜色 255
+MOV S$端游背包一颜色 ff6600
+MOV S$端游背包二颜色 ff6600
+MOV S$端游背包三颜色 ffffff
+break
+
+[@WLQN刷新]
+#IF
+true
+#ACT
+BagSort
+BagRef
+GOTO @确定背包
+BREAK
+
+[@快捷购买]
+#IF
+!CheckBagSize 2
+#ACT
+MESSAGEBOX 对不起，您的包裹空格不足，请先整理后再来购买。
+BREAK
+
+#IF
+CHECKMONEY <$SCRIPTPARAM(3)> < <$SCRIPTPARAM(4)>
+#ACT
+MESSAGEBOX 对不起，您没有<$SCRIPTPARAM(4)>个<$SCRIPTPARAM(3)>，无法购买<$SCRIPTPARAM(1)>
+BREAK
+
+#IF
+true
+#ACT
+QUERYMSG 是否花费<$SCRIPTPARAM(4)>个<$SCRIPTPARAM(3)>购买<$SCRIPTPARAM(2)>个<$SCRIPTPARAM(1)> @确定购买
+
+[@确定购买1]
+#IF
+TRUE
+#ACT
+GIVE <$SCRIPTPARAM(1)> <$SCRIPTPARAM(2)>
+CHOOSEPOS 0 474 220 <$PARAM(10)>
+SENDMSG 5 回城石序列号：<$PARAM(10)>
+MONEY <$PTPARAM(3)> - <$SCRIPTPARAM(4)>
+SENDMSG 7 成功购买<$SCRIPTPARAM(2)>个<$SCRIPTPARAM(1)>！
+BREAK
+
+
+[@初始化背包]
+#IF
+LARGE 127 <$STR(N$配置空格数)>
+#ELSEACT
+break
+#ACT
+INC N$配置空格数 1
+
+#IF
+CheckBagSize <$STR(N$配置空格数)>
+#ELSEACT
+break
+#ACT
+MOV N$空格数 <$STR(N$配置空格数)>
+break

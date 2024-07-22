@@ -1,0 +1,55 @@
+#AutoRun NPC Min 1 @开区时间记录
+
+#AutoRun NPC SEC 1 @1秒计时
+;#AutoRun NPC SEC 1 @3秒计时
+#AutoRun NPC RUNONDAY 0:00 @每日数据恢复
+
+
+
+;#AutoRun NPC RUNONDAY 00:00 @重置天下第一
+;#AutoRun NPC RUNONDAY 04:00 @重置天下第一
+;#AutoRun NPC RUNONDAY 08:00 @重置天下第一
+;#AutoRun NPC RUNONDAY 12:00 @重置天下第一
+;#AutoRun NPC RUNONDAY 16:00 @重置天下第一
+;#AutoRun NPC RUNONDAY 20:00 @重置天下第一
+
+;---------------------------------------夺宝奇兵
+#AutoRun NPC RUNONWEEK 1:20:30 @开启夺宝奇兵
+#AutoRun NPC RUNONWEEK 2:20:30 @开启夺宝奇兵
+#AutoRun NPC RUNONWEEK 3:20:30 @开启夺宝奇兵
+#AutoRun NPC RUNONWEEK 4:20:30 @开启夺宝奇兵
+#AutoRun NPC RUNONWEEK 5:20:30 @开启夺宝奇兵
+#AutoRun NPC RUNONWEEK 6:20:30 @开启夺宝奇兵1
+#AutoRun NPC RUNONWEEK 7:20:30 @开启夺宝奇兵
+
+#AutoRun NPC RUNONWEEK 1:21:30 @关闭夺宝奇兵
+#AutoRun NPC RUNONWEEK 2:21:30 @关闭夺宝奇兵
+#AutoRun NPC RUNONWEEK 3:21:30 @关闭夺宝奇兵
+#AutoRun NPC RUNONWEEK 4:21:30 @关闭夺宝奇兵
+#AutoRun NPC RUNONWEEK 5:21:30 @关闭夺宝奇兵
+#AutoRun NPC RUNONWEEK 6:21:30 @关闭夺宝奇兵1
+#AutoRun NPC RUNONWEEK 7:21:30 @关闭夺宝奇兵
+
+;---------------------------------------经验放送
+#AutoRun NPC RUNONDAY 10:45 @经验放送开始
+#AutoRun NPC RUNONDAY 11:45 @经验放送结束
+#AutoRun NPC RUNONDAY 14:45 @经验放送开始
+#AutoRun NPC RUNONDAY 15:45 @经验放送结束
+#AutoRun NPC RUNONDAY 23:45 @经验放送开始
+#AutoRun NPC RUNONDAY 00:45 @经验放送结束
+;---------------------------------------福利使者
+#AutoRun NPC RUNONDAY 13:15 @福利使者开始
+#AutoRun NPC RUNONDAY 14:15 @福利使者结束
+#AutoRun NPC RUNONDAY 17:15 @福利使者开始
+#AutoRun NPC RUNONDAY 18:15 @福利使者结束
+#AutoRun NPC RUNONDAY 22:25 @福利使者开始
+#AutoRun NPC RUNONDAY 23:25 @福利使者结束
+;---------------------------------------终极使者
+#AutoRun NPC RUNONDAY 19:35 @终极使者开始
+#AutoRun NPC RUNONDAY 20:35 @终极使者结束
+;---------------------------------------沙城争霸
+#AutoRun NPC RUNONWEEK 6:19:50 @沙城争霸准备
+#AutoRun NPC RUNONWEEK 6:20:00 @开启沙城争霸
+#AutoRun NPC RUNONWEEK 6:22:00 @关闭沙城争霸
+
+

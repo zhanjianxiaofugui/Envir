@@ -1,0 +1,165 @@
+;此脚本为功能脚本，用于实现手游技能界面自定义触发
+[@MAIN]
+#IF
+Equal $ClientFlag 1
+#ACT
+Break
+#ELSEACT
+SETSKILLCFG 0 1 60012 -10 5 0 0
+
+
+#IF
+EQUAL N$技能 0
+#SAY
+<$STR(S$运算内容)>
+#ACT
+MOV S$运算内容 
+GOTO @运算内容
+REPLACETEXT S$运算内容 ｝ }
+REPLACETEXT S$运算内容 ｛ {
+BREAK
+
+
+
+
+
+
+
+
+[@运算内容]
+#IF
+RANDOM 1
+#ACT
+INC S$运算内容 <Button|id=10|children=｛101｝|x=842.0|y=0.0|loadDelay=0|percentwidth=6|percentheight=20|size=26|color=243|nimg=public/button/btn_push_09.png|pimg=public/button/btn_push_09.png|link=@技能界面>
+INC S$运算内容 <RText|id=101|x=21.0|y=30.0|rotate=0|color=243|size=24|text=技\能|link=@nil>
+INC S$运算内容 <Button|id=11|children=｛102｝|x=842.0|y=112.0|percentwidth=6|percentheight=20|size=26|color=243|nimg=public/button/btn_push_08.png|pimg=public/button/btn_push_08.png|link=@配置界面>
+INC S$运算内容 <RText|id=102|x=21.0|y=30.0|rotate=0|color=7|size=24|text=配\置|link=@nil>
+MOV S$列表容器组件 
+GOTO @算一下组件
+INC S$运算内容 {ListView|id=skilllist|children=｛<$STR(S$列表容器组件)>｝|x=422.0|y=10.0|width=418|height=495|rotate=0|color=255|bounce=0}
+MOV N$技能树 0
+MOV N$技能树2 0
+MOV S$技能图标 
+MOV S$技能 
+MOV S$技能2 
+MOV S$技能3 
+MOV S$技能4 
+GOTO @继续读取技能列表
+BREAK
+
+
+
+[@算一下组件]
+#IF
+EQUAL {$MAGIC(<$STR(N$技能树2)>).NAME} 
+#ACT
+BREAK
+#ELSEACT
+GOTO @判断循环技能2
+BREAK
+
+
+
+[@判断循环技能2]
+#IF
+POSINLIST |{$MAGIC(<$STR(N$技能树2)>).NAME}| ..\QuestDiary\读取数据\技能树配置.txt S$取出技能数据1
+#ACT
+SPLIT $STR(S$取出技能数据1) | S$技能分割2
+#ELSEACT
+BREAK
+#IF
+CHECKMAGIC {$MAGIC(<$STR(N$技能树2)>).NAME}
+#ACT
+INC S$列表容器组件 skillicon-<$STR(S$技能分割2_2)>,
+INC N$技能树2 1
+GOTO @算一下组件
+BREAK
+
+
+
+[@继续读取技能列表]
+#IF
+EQUAL {$MAGIC(<$STR(N$技能树)>).NAME} 
+#ACT
+BREAK
+#ELSEACT
+GOTO @判断循环技能
+BREAK
+
+
+[@判断循环技能]
+#IF
+POSINLIST |{$MAGIC(<$STR(N$技能树)>).NAME}| ..\QuestDiary\读取数据\技能树配置.txt S$取出技能数据
+#ACT
+SPLIT $STR(S$取出技能数据) | S$技能分割
+#ELSEACT
+BREAK
+#IF
+CHECKMAGIC {$MAGIC(<$STR(N$技能树)>).NAME}
+#ACT
+MOV S$技能图标 sicon-<$STR(S$技能分割_2)>,loadimg-<$STR(S$技能分割_2)>,loading-<$STR(S$技能分割_2)>,percent-<$STR(S$技能分割_2)>,skillname1-<$STR(S$技能分割_2)>
+MOV S$技能1 magicicon-<$STR(S$技能分割_2)>
+MOV S$技能2 skillname2-<$STR(S$技能分割_2)>
+MOV S$技能3 skillname3-<$STR(S$技能分割_2)>
+MOV S$技能4 skillname4-<$STR(S$技能分割_2)>
+INC S$运算内容 <Img|id=skillicon-<$STR(S$技能分割_2)>|children=｛<$STR(S$技能图标)>｝|x=0|y=0.0|width=418|height=62|img=private/stall/btn_stall_02.png|esc=0>
+INC S$运算内容 <Img|id=sicon-<$STR(S$技能分割_2)>|children=｛<$STR(S$技能1)>｝|x=0|y=0|width=62|height=62|img=private/look_ui/bg_watch_01.png|esc=0>
+INC S$运算内容 <Img|id=magicicon-<$STR(S$技能分割_2)>|x=4|y=4|width=54|height=54|img=skill_icon/{$STR(S$技能分割_1)}.png|esc=0>
+INC S$运算内容 <Img|id=loadimg-<$STR(S$技能分割_2)>|ax=0|x=66|y=55.0|width=300|height=18|esc=0|img=private/escort_ui/bg_shenlonghy_04.png>
+INC S$运算内容 <LoadingBar|id=loading-<$STR(S$技能分割_2)>|x=67.0|y=37.0|width=300|height=18|maxLen=500|curLen=500|img=private/escort_ui/bg_shenlonghy_05.png>
+INC S$运算内容 <Text|id=percent-<$STR(S$技能分割_2)>|x=371.0|y=33.0|size=18|color=243|text=100%>
+INC S$运算内容 <Text|id=skillname1-<$STR(S$技能分割_2)>|children=｛<$STR(S$技能2)>｝|x=70.0|y=6.0|size=16|color=243|text=技能:>
+INC S$运算内容 <Text|id=skillname2-<$STR(S$技能分割_2)>|children=｛<$STR(S$技能3)>｝|x=40.0|y=0.0|size=16|color=251|text={$STR(S$技能分割_2)}>
+INC S$运算内容 <Text|id=skillname3-<$STR(S$技能分割_2)>|children=｛<$STR(S$技能4)>｝|x=120.0|y=0.0|size=16|color=243|text=等级:>
+INC S$运算内容 <Text|id=skillname4-<$STR(S$技能分割_2)>|x=40.0|y=0.0|color=249|size=16|text={$MAGIC($STR(N$技能树)).LEVEL}>
+INC N$技能树 1
+GOTO @继续读取技能列表
+BREAK
+
+
+
+
+
+
+
+
+
+
+
+
+[@技能界面]
+#IF
+RANDOM 1
+#ACT
+OPENUI 104 1
+BREAK
+
+[@配置界面]
+#IF
+RANDOM 1
+#ACT
+OPENUI 1401 1
+BREAK
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
